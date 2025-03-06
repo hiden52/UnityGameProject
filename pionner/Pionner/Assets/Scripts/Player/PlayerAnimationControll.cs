@@ -5,10 +5,14 @@ using UnityEngine;
 public class PlayerAnimationControll : MonoBehaviour
 {
     [SerializeField] Animator playerAnimator;
+    [SerializeField] PlayerMoveControll playerMoveControll;
+    [SerializeField] Vector3 playerDir;
 
     private void Awake()
     {
         playerAnimator = GetComponent<Animator>();
+        playerMoveControll = GetComponent<PlayerMoveControll>();
+        
     }
     // Start is called before the first frame update
     void Start()
@@ -16,19 +20,47 @@ public class PlayerAnimationControll : MonoBehaviour
         
     }
 
+    void SetForward()
+    {
+        playerAnimator.SetBool("Forward", true);
+        playerAnimator.SetBool("Backward", false);
+    }
+
+    void SetBackward()
+    {
+        playerAnimator.SetBool("Backward", true);
+        playerAnimator.SetBool("Forward", false);
+    }
+
+    void SetIdle()
+    {
+        playerAnimator.SetBool("Move", false);
+        playerAnimator.SetBool("Forward", false);
+        playerAnimator.SetBool("Backward", false);
+    }
+
+
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.W))
+        playerDir = playerMoveControll.direction;
+
+        if (playerDir.z != 0 || playerDir.x != 0)
         {
-            Debug.Log("Start running");
             playerAnimator.SetBool("Move", true);
         }
-
-        if(Input.GetKeyUp(KeyCode.W))
+        else
         {
-            Debug.Log("Stop Moving");
-            playerAnimator.SetBool("Move", false);
+            SetIdle();
         }
+        if (playerDir.z > 0)
+        {
+            SetForward();
+        }
+        else if (playerDir.z < 0)
+        {
+            SetBackward();
+        }
+        
     }
 }
