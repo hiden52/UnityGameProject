@@ -7,32 +7,49 @@ public class PlayerMoveControll : MonoBehaviour
     [SerializeField] Rigidbody rb;
     [SerializeField] float speed;
     [SerializeField] public Vector3 direction;
+    [SerializeField] public Vector3 localDir;
+    [SerializeField] float MousX;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+    }
+
+    private void Start()
+    {
         rb.freezeRotation = true;
     }
 
     private void Update()
     {
-        PlayerInput();  
+        localDir = PlayerInputManger.Instance.Movement;
+        MousX += PlayerInputManger.Instance.MousePos.x;
+
+        direction = transform.TransformDirection(localDir);
     }
 
     private void FixedUpdate()
     {
-        PlayerMove();
+        Rotate();
+        Move();
     }
 
-    void PlayerInput()
+    
+    void Move()
     {
-        direction.x = Input.GetAxisRaw("Horizontal");
-        direction.z = Input.GetAxisRaw("Vertical");
-
-        direction.Normalize();
+        if(PlayerInputManger.Instance.Shift)
+        {
+            rb.MovePosition(rb.position + (direction * (speed + 2f) * Time.fixedDeltaTime));
+        }
+        else
+        {
+            rb.MovePosition(rb.position + (direction * speed * Time.fixedDeltaTime));
+        }    
+        
     }
-    void PlayerMove()
+
+    void Rotate()
     {
-        rb.MovePosition(rb.position + (direction * speed * Time.fixedDeltaTime));
+        transform.localEulerAngles = new Vector3(0, MousX, 0);
     }
 }
