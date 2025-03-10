@@ -48,6 +48,8 @@ public class PlayerMoveControll : MonoBehaviour
         
     }
 
+
+
     void Rotate()
     {
         transform.localEulerAngles = new Vector3(0, MousX, 0);

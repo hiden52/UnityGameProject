@@ -73,4 +73,13 @@ public class PlayerAnimationControll : MonoBehaviour
         }
         
     }
+
+    private void FixedUpdate()
+    {
+        if(PlayerInputManger.Instance.MouseRB)
+        {
+            PlayerInputManger.Instance.HandleMouseLbClick();
+            playerAnimator.SetTrigger("Attack");
+        }
+    }
 }

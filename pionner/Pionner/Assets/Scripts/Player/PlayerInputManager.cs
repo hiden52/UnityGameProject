@@ -19,6 +19,8 @@ public class PlayerInputManger : MonoBehaviour
     public Vector2 MousePos { get { return mousePos; } }
     [SerializeField] bool shift;
     public bool Shift { get { return shift; } }
+    [SerializeField] bool mouseLB;
+    public bool MouseRB { get { return mouseLB; } }
 
     private void Awake()
     {
@@ -35,6 +37,7 @@ public class PlayerInputManger : MonoBehaviour
     {
         mouseSpeed = 1.0f;
         shift = false;
+        mouseLB = false;
     }
 
     void Update()
@@ -50,6 +53,12 @@ public class PlayerInputManger : MonoBehaviour
         {
             shift = false;
         }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            mouseLB = true;
+        }
+
     }
 
     void CheckMousePos()
@@ -64,6 +73,11 @@ public class PlayerInputManger : MonoBehaviour
         movement.z = Input.GetAxisRaw("Vertical");
 
         movement.Normalize();
+    }
+
+    public void HandleMouseLbClick()
+    {
+        if(mouseLB) mouseLB = false;
     }
 
 }
