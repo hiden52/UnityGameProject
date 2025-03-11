@@ -7,40 +7,40 @@ AvatarMask:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Attack
-  m_Mask: 00000000000000000000000000000000000000000100000001000000010000000100000001000000010000000100000001000000
+  m_Mask: 00000000010000000000000000000000000000000100000001000000010000000100000001000000010000000100000001000000
   m_Elements:
   - m_Path: 
     m_Weight: 1
   - m_Path: Armature
-    m_Weight: 0
+    m_Weight: 1
   - m_Path: Armature/Hips
-    m_Weight: 0
+    m_Weight: 1
   - m_Path: Armature/Hips/Left Thigh
-    m_Weight: 0
+    m_Weight: 1
   - m_Path: Armature/Hips/Left Thigh/Left Leg
-    m_Weight: 0
+    m_Weight: 1
   - m_Path: Armature/Hips/Left Thigh/Left Leg/Left Foot
-    m_Weight: 0
+    m_Weight: 1
   - m_Path: Armature/Hips/Left Thigh/Left Leg/Left Foot/Left Toes
-    m_Weight: 0
+    m_Weight: 1
   - m_Path: Armature/Hips/Left Thigh/Left Leg/Left Foot/Left Toes/Left Toes_end
-    m_Weight: 0
+    m_Weight: 1
   - m_Path: Armature/Hips/Right Thigh
-    m_Weight: 0
+    m_Weight: 1
   - m_Path: Armature/Hips/Right Thigh/Right Leg
-    m_Weight: 0
+    m_Weight: 1
   - m_Path: Armature/Hips/Right Thigh/Right Leg/Right Foot
-    m_Weight: 0
+    m_Weight: 1
   - m_Path: Armature/Hips/Right Thigh/Right Leg/Right Foot/Right Toes
-    m_Weight: 0
+    m_Weight: 1
   - m_Path: Armature/Hips/Right Thigh/Right Leg/Right Foot/Right Toes/Right Toes_end
-    m_Weight: 0
+    m_Weight: 1
   - m_Path: Armature/Hips/Spine 1
-    m_Weight: 0
+    m_Weight: 1
   - m_Path: Armature/Hips/Spine 1/Spine 2
-    m_Weight: 0
+    m_Weight: 1
   - m_Path: Armature/Hips/Spine 1/Spine 2/Spine 3
-    m_Weight: 0
+    m_Weight: 1
   - m_Path: Armature/Hips/Spine 1/Spine 2/Spine 3/Left Shoulder
     m_Weight: 1
   - m_Path: Armature/Hips/Spine 1/Spine 2/Spine 3/Left Shoulder/Left Arm
@@ -115,11 +115,11 @@ AvatarMask:
       3_end
     m_Weight: 1
   - m_Path: Armature/Hips/Spine 1/Spine 2/Spine 3/Neck
-    m_Weight: 0
+    m_Weight: 1
   - m_Path: Armature/Hips/Spine 1/Spine 2/Spine 3/Neck/Head
-    m_Weight: 0
+    m_Weight: 1
   - m_Path: Armature/Hips/Spine 1/Spine 2/Spine 3/Neck/Head/Head_end
-    m_Weight: 0
+    m_Weight: 1
   - m_Path: Armature/Hips/Spine 1/Spine 2/Spine 3/Right Shoulder
     m_Weight: 1
   - m_Path: Armature/Hips/Spine 1/Spine 2/Spine 3/Right Shoulder/Right Arm
@@ -197,6 +197,6 @@ AvatarMask:
       Hand Thumb 3_end
     m_Weight: 1
   - m_Path: Body
-    m_Weight: 0
+    m_Weight: 1
   - m_Path: Joints
-    m_Weight: 0
+    m_Weight: 1
