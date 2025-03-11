@@ -4,37 +4,53 @@ using UnityEngine;
 
 public class InvetoryUI : MonoBehaviour
 {
-    public GameObject slotPrefab;
-    public Transform slotPannel;
-    public InventoryManager inventory;
+    [SerializeField] GameObject slotPrefab;
+    [SerializeField] Transform slotPannel;
 
     private List<SlotUI> slots = new List<SlotUI>();
-    private int defaultSlotNum = 20;
+    private int DEFAULT_SLOT_COUNT = 24;
 
     private void Start()
     {
-        for (int i = 0; i < defaultSlotNum; i++)
+        UpdateInventoryUI(InventoryManager.Instance.Items);
+    }
+
+    private void OnEnable()
+    {
+        InventoryManager.OnInventoryChanged += UpdateInventoryUI;
+    }
+
+    public void OnDisable()
+    {
+        InventoryManager.OnInventoryChanged -= UpdateInventoryUI;
+    }
+
+
+
+    public void UpdateInventoryUI(List<Item> items)
+    {
+        // Clear Slots
+        foreach(Transform child in slotPannel)
+        {
+            Destroy(child.gameObject);
+        }
+        slots.Clear();
+
+        // Create Slot
+        foreach(Item item in items)
         {
             GameObject slotObj = Instantiate(slotPrefab, slotPannel);
             SlotUI slotUI = slotObj.GetComponent<SlotUI>();
+            slotUI.SetSlot(item);
             slots.Add(slotUI);
         }
 
-        UpdateInventoryUI();
-    }
-
-    public void UpdateInventoryUI()
-    {
-        for(int i = 0; i < slots.Count;i++)
+        while (slots.Count < DEFAULT_SLOT_COUNT)
         {
-            if(i < InventoryManager.Instance.Items.Count)
-            {
-                slots[i].SetSlot(InventoryManager.Instance.Items[i]);
-            }
-            else
-            {
-                slots[i].SetSlot(null);
-            }
+            GameObject slotObj = Instantiate(slotPrefab, slotPannel);
+            SlotUI slotUI = slotObj.GetComponent< SlotUI>();
+            slotUI.SetSlot(null);
+            slots.Add(slotUI);
         }
     }
 }

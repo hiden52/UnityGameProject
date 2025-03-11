@@ -664,7 +664,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slotPrefab: {fileID: 5912252552843713250, guid: 65203062f0f2ab444ad363ca8125ae8f, type: 3}
   slotPannel: {fileID: 595781570}
-  inventory: {fileID: 0}
 --- !u!1001 &751542122
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1301,7 +1300,7 @@ GameObject:
   - component: {fileID: 1502795497}
   - component: {fileID: 1502795496}
   m_Layer: 0
-  m_Name: Iventory Manger
+  m_Name: Inventory Manger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1319,6 +1318,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5736b1755bc4fd94595eb301648a33c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugPrintItems: 1
 --- !u!4 &1502795497
 Transform:
   m_ObjectHideFlags: 0

@@ -45,6 +45,17 @@ public class PlayerInputManager : MonoBehaviour
 
     void Update()
     {
+        // 인벤토리 비활성화를 위해 Tab 상시 활성화
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            OnTabPressed?.Invoke();
+        }
+
+        // 인벤토리 UI가 활성화 되어 있을 때, 이동, 카메라회전, 캐릭터 상호작용 방지.
+        if (UIManager.Instance.inventoryUI.activeSelf)
+        {
+            return;
+        }
         CheckMousePos();
         CheckMovement();
 
@@ -62,10 +73,7 @@ public class PlayerInputManager : MonoBehaviour
             OnLeftMouseClick?.Invoke();
         }
 
-        if (Input.GetKeyDown(KeyCode.Tab))
-        {
-            OnTabPressed?.Invoke();
-        }
+        
 
     }
 
@@ -86,6 +94,16 @@ public class PlayerInputManager : MonoBehaviour
     public void HandleMouseLbClick()
     {
         if(mouseLB) mouseLB = false;
+    }
+
+    public void ResetMouseDelta()
+    {
+        mousePos = Vector2.zero;
+    }
+
+    public void ResetMovementDelta()
+    {
+        movement = Vector3.zero;
     }
 
 }

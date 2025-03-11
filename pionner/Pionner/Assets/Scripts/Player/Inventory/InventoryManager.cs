@@ -6,11 +6,16 @@ using UnityEngine;
 public class InventoryManager : MonoBehaviour
 {
     public static InventoryManager Instance { get; private set; }
-    [Header("Item list")]
-    [SerializeField] private List<Item> items = new List<Item>();
+    
+    
+    private List<Item> items = new List<Item>();
     public List<Item> Items { get { return items; } }
 
-    public event Action OnInventoryChanged;
+    public static event Action<List<Item>> OnInventoryChanged;
+
+    [Header("Debug")]
+    [SerializeField]
+    private bool debugPrintItems = false;
 
     private void Awake()
     {
@@ -25,10 +30,54 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    public void AddItem(Item item)
+    private void Start()
     {
-        items.Add(item);
-        OnInventoryChanged?.Invoke();
+
+    }
+
+    private void Update()
+    {
+        if(debugPrintItems)
+        {
+            if (items.Count > 0)
+            {
+                foreach (var item in Items)
+                {
+                    Debug.Log(item.data.itemName);
+                }
+            }
+            else
+            {
+                Debug.Log("Invetory is Empty!");
+            }
+
+            debugPrintItems = false;
+        }
+    }
+
+    public void AddItem(ItemData itemData, int amount)
+    {
+        CountableItem existingItem = items.Find(item => item.data == itemData) as CountableItem;
+
+        if(existingItem != null)
+        {
+            int overflow = existingItem.Add(amount);
+            if(overflow > 0)
+            {
+                CountableItem newItem = ItemFactory.CreateItem(itemData, amount) as CountableItem;
+                items.Add(newItem);
+            }
+        }
+        else
+        {
+            Item newItem = ItemFactory.CreateItem(itemData, amount);
+            if(newItem != null)
+            {
+                items.Add(newItem);
+            }
+        }
+
+        OnInventoryChanged?.Invoke(items);
     }
 
     public void RemoveItem(Item item)
@@ -37,7 +86,8 @@ public class InventoryManager : MonoBehaviour
         {
             items.Remove(item);
         }
-        OnInventoryChanged?.Invoke();
+
+        OnInventoryChanged?.Invoke(items);
     }
 
 }
