@@ -1,16 +1,17 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerInputManger : MonoBehaviour
+public class PlayerInputManager : MonoBehaviour
 {
 
     [Header("¼³Á¤")]
     [SerializeField] float mouseSpeed;
 
     [Header("Debug")]
-    private static PlayerInputManger instance = null;
-    public static PlayerInputManger Instance {  get { return instance; } }
+    private static PlayerInputManager instance = null;
+    public static PlayerInputManager Instance {  get { return instance; } }
 
     [SerializeField] private Vector3 movement;
     public Vector3 Movement { get { return movement; } }
@@ -20,7 +21,9 @@ public class PlayerInputManger : MonoBehaviour
     [SerializeField] bool shift;
     public bool Shift { get { return shift; } }
     [SerializeField] bool mouseLB;
-    public bool MouseRB { get { return mouseLB; } }
+
+    public event Action OnTabPressed;
+    public event Action OnLeftMouseClick;
 
     private void Awake()
     {
@@ -30,7 +33,7 @@ public class PlayerInputManger : MonoBehaviour
         }
         else
         {
-            Destroy(this);
+            Destroy(gameObject);
         }
     }
     void Start()
@@ -56,7 +59,12 @@ public class PlayerInputManger : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            mouseLB = true;
+            OnLeftMouseClick?.Invoke();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            OnTabPressed?.Invoke();
         }
 
     }

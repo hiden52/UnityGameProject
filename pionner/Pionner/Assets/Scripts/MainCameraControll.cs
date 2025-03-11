@@ -21,7 +21,7 @@ public class MainCameraControll : MonoBehaviour
 
     void Update()
     {
-        mouseMovement = PlayerInputManger.Instance.MousePos;
+        mouseMovement = PlayerInputManager.Instance.MousePos;
         //MouseX += mouseMovement.x;
         MouseY -= mouseMovement.y;
         MouseY = Mathf.Clamp(MouseY, -50f, 50f);
