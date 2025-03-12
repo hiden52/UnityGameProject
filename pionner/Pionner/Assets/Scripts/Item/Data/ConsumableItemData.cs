@@ -7,6 +7,8 @@ enum EffectType
     Heal,
 
 }
+
+[CreateAssetMenu(fileName = "New Consumable Item Data", menuName = "Items/Consumable Item Data")]
 public class ConsumableItemData : CountableItemData
 {
     EffectType effectType;

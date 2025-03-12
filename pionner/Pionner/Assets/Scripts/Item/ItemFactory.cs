@@ -17,6 +17,7 @@ public static class ItemFactory
                 return newConsumableItem;
 
             case ItemType.Resource:
+                Debug.Log("Create Resource Item in ItemFactory");
                 ResourceItemData resourceData = itemData as ResourceItemData;
                 CountableItem newResourceItem = new CountableItem(resourceData);
                 newResourceItem.Add(amount - 1);

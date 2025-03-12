@@ -41,9 +41,16 @@ public class InventoryManager : MonoBehaviour
         {
             if (items.Count > 0)
             {
-                foreach (var item in Items)
+                foreach (var item in items)
                 {
-                    Debug.Log(item.data.itemName);
+                    if (item is CountableItem countableItem)
+                    {
+                        Debug.Log($"{countableItem.data.itemName} ({countableItem.currentStack})");
+                    }
+                    else
+                    {
+                        Debug.Log(item.data.itemName);
+                    }
                 }
             }
             else
