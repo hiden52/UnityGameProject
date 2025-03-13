@@ -25,7 +25,7 @@ public class CreateStone : MonoBehaviour
             Debug.LogWarning("Missing target Item Data!");
             return;
         }
-        InventoryManager.Instance.AddItem(target, 1);
+        InventoryManager.Instance.AddItem(target, 8);
     }
 
 }

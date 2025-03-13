@@ -64,7 +64,7 @@ public class InventoryManager : MonoBehaviour
 
     public void AddItem(ItemData itemData, int amount)
     {
-        CountableItem existingItem = items.Find(item => item.data == itemData) as CountableItem;
+        CountableItem existingItem = items.Find(item => FindExistItem(item, itemData)) as CountableItem;
 
         if(existingItem != null)
         {
@@ -95,6 +95,24 @@ public class InventoryManager : MonoBehaviour
         }
 
         OnInventoryChanged?.Invoke(items);
+    }
+
+    // CountableItem 이고 최대스택 이하의 아이템일 경우 true
+    bool FindExistItem(Item item, ItemData itemData)
+    {
+        if (item is CountableItem countable && countable.data == itemData)
+        {
+            if (countable.currentStack < ((CountableItemData)countable.data).maxStack)
+            {
+                return true;
+            }
+            return false;
+        }
+        else
+        {
+            return false;
+        }
+        
     }
 
 }
