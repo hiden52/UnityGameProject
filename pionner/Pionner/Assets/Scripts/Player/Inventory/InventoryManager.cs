@@ -3,11 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InventoryManager : MonoBehaviour
+public class InventoryManager : Singleton<InventoryManager>
 {
-    public static InventoryManager Instance { get; private set; }
-    
-    
     private List<Item> items = new List<Item>();
     public List<Item> Items { get { return items; } }
 
@@ -16,19 +13,6 @@ public class InventoryManager : MonoBehaviour
     [Header("Debug")]
     [SerializeField]
     private bool debugPrintItems = false;
-
-    private void Awake()
-    {
-        if(Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
 
     private void Start()
     {

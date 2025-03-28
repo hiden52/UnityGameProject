@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,6 +11,13 @@ public class Slot : MonoBehaviour
     [SerializeField] private TMP_Text stackText;
 
     private Item currentItem;
+    private float lastClickTime = 0;
+    private float doubleClickThreshold = 0.3f;
+
+    private void Awake()
+    {
+        lastClickTime = 0;
+    }
 
     public void SetItem(Item item)
     {
@@ -36,9 +44,23 @@ public class Slot : MonoBehaviour
 
     public void Onclick()
     {
-        if( currentItem != null)
+        if( currentItem == null)
         {
-            Debug.Log(currentItem.data.itemName + " is Seleted");
+            Debug.Log("Missing item");
+            return;
+        }
+
+        float timeSinceLastClick = Time.time - lastClickTime;
+        if (timeSinceLastClick < doubleClickThreshold)
+        {
+            Debug.Log("Double Click");
+            currentItem.Use();
+            lastClickTime = 0;
+        }
+        else
+        {
+            lastClickTime = Time.time;
+            Debug.Log("Single Click");
         }
     }
 }

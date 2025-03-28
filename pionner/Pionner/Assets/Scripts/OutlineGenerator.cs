@@ -22,7 +22,7 @@ public class OutlineGenerator : MonoBehaviour
         var renderer = outlineObj.GetComponent<Renderer>();
         if (renderer != null)
         {
-            Material outlineMat = new Material(Shader.Find("Unlit/Color"));
+            Material outlineMat = new Material(Shader.Find("Custom/Outline"));
             outlineMat.color = outlineColor;
             renderer.material = outlineMat;
 

@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class EquipmentItem : Item
 {
-    public EquipmentItem(EquipmentItemData data) : base(data)
-    {  
 
+    public EquipmentItem(EquipmentItemData data) : base(data)
+    {
+        this.data = data;
     }
     public override void Use()
     {

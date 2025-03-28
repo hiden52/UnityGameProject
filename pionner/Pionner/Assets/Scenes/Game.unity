@@ -1705,7 +1705,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1495124092
 Transform:
   m_ObjectHideFlags: 0
@@ -1734,8 +1734,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 1607639996}
-  outlineColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  outlineWidth: 0.03
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 0.001
 --- !u!1 &1502795495
 GameObject:
   m_ObjectHideFlags: 0
@@ -2281,6 +2281,10 @@ PrefabInstance:
     - target: {fileID: 3427336633755285419, guid: 8bc65629e4b0c2c4b96631fae6ea6c56, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 8773489918311025116, guid: 8bc65629e4b0c2c4b96631fae6ea6c56, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.006
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
