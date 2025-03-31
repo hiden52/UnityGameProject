@@ -48,23 +48,38 @@ public class InventoryManager : Singleton<InventoryManager>
 
     public void AddItem(ItemData itemData, int amount)
     {
-        CountableItem existingItem = items.Find(item => FindExistItem(item, itemData)) as CountableItem;
 
-        if(existingItem != null)
+        if (itemData is EquipmentItemData)
         {
-            int overflow = existingItem.Add(amount);
-            if(overflow > 0)
+            Item newItem = ItemFactory.CreateItem(itemData, amount);
+            if (newItem != null)
             {
-                CountableItem newItem = ItemFactory.CreateItem(itemData, amount) as CountableItem;
                 items.Add(newItem);
             }
         }
         else
         {
-            Item newItem = ItemFactory.CreateItem(itemData, amount);
-            if(newItem != null)
+            // 인벤토리의 CountableItem인 itemData가 존재하는지 확인
+            CountableItem existingItem = items.Find(item => FindExistItem(item, itemData)) as CountableItem;
+
+
+            // 인벤토리 칸을 확인하고, 칸이 모두 찼다면 메세지를 띄우고 AddItem을 실행하지 않도록
+            if (existingItem != null)
             {
-                items.Add(newItem);
+                int overflow = existingItem.Add(amount);
+                if (overflow > 0)
+                {
+                    CountableItem newItem = ItemFactory.CreateItem(itemData, amount) as CountableItem;
+                    items.Add(newItem);
+                }
+            }
+            else
+            {
+                Item newItem = ItemFactory.CreateItem(itemData, amount);
+                if (newItem != null)
+                {
+                    items.Add(newItem);
+                }
             }
         }
 

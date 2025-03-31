@@ -1,17 +1,18 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
-public class PlayerInputManager : MonoBehaviour
+
+
+public class PlayerInputManager : Singleton<PlayerInputManager>
 {
 
     [Header("¼³Á¤")]
     [SerializeField] float mouseSpeed;
 
     [Header("Debug")]
-    private static PlayerInputManager instance = null;
-    public static PlayerInputManager Instance {  get { return instance; } }
 
     [SerializeField] private Vector3 movement;
     public Vector3 Movement { get { return movement; } }
@@ -25,17 +26,6 @@ public class PlayerInputManager : MonoBehaviour
     public event Action OnTabPressed;
     public event Action OnLeftMouseClick;
 
-    private void Awake()
-    {
-        if(instance == null)
-        {
-            instance = this; 
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
     void Start()
     {
         mouseSpeed = 1.0f;
@@ -105,5 +95,8 @@ public class PlayerInputManager : MonoBehaviour
     {
         movement = Vector3.zero;
     }
+
+
+
 
 }

@@ -6,16 +6,19 @@ using UnityEngine;
 
 public class EquipmentManager : Singleton<EquipmentManager>
 {
-    private Dictionary<EuipmentType, EquipmentItem> equipments = new Dictionary<EuipmentType, EquipmentItem>();
+    private Dictionary<EuipmentType, EquipmentItem> equipDictionary = new Dictionary<EuipmentType, EquipmentItem>();
 
-    public void Equip(EquipmentItem equip)
+    public void Equip(EquipmentItem equipItem)
     {
-        EquipmentItemData equipData = equip.data as EquipmentItemData;
-        if (equipData == null) return;
 
         // 여기 작성중
-        equipments.TryGetValue(equipData.euipmentType, out EquipmentItem a);
-        equipments.TryAdd(equipData.euipmentType, equip);
+        equipDictionary.TryGetValue(equipItem.EuipType, out EquipmentItem previousItem);
+        if (previousItem == null)
+        {
+            InventoryManager.Instance.AddItem(previousItem.data, 1);
+        }
+
+        equipDictionary.TryAdd(equipItem.EuipType, equipItem);
     }
 
 }

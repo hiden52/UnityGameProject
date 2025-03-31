@@ -2,20 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EquipmentItem : Item
+public abstract class EquipmentItem : Item
 {
+    public EquipmentItemData EquipData => data as EquipmentItemData;
+    public EuipmentType EuipType => EquipData.euipmentType;
 
-    public EquipmentItem(EquipmentItemData data) : base(data)
-    {
-        this.data = data;
-    }
-    public override void Use()
-    {
-        Equip();
-    }
+    public EquipmentItem(EquipmentItemData data) : base(data) { }
 
-    public void Equip()
-    {
-
-    }
+    public abstract void Equip();
 }

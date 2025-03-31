@@ -4,9 +4,11 @@ using UnityEngine;
 
 public enum ItemType
 {
-    Resource = 0b0001,
-    Equipment = 0b0010,
-    Consumable = 0b0100,
+    Resource = 0b0010000,
+    Equipment = 0b0100000,
+    Consumable = 0b1000000,
+    Weapon = 0b0100001,
+    Armor = 0b0100010,
 }
 
 public abstract class ItemData : ScriptableObject

@@ -17,14 +17,13 @@ public static class ItemFactory
                 return newConsumableItem;
 
             case ItemType.Resource:
-                // Debug.Log("Create Resource Item in ItemFactory");
                 ResourceItemData resourceData = itemData as ResourceItemData;
                 CountableItem newResourceItem = new CountableItem(resourceData);
                 newResourceItem.Add(amount - 1);
                 return newResourceItem;
 
-            case ItemType.Equipment:
-                return new EquipmentItem(itemData as EquipmentItemData);
+            case ItemType.Weapon:
+                return new WeaponItem(itemData as EquipmentItemData);
 
             default:
                 Debug.LogWarning("Invalid Item Type");
