@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour
     public GameObject crosshairUI;
     public GameObject statusUI;
     public GameObject quickMenuUI;
+    public GameObject interactionUI;
 
 
     private void Awake()
@@ -47,6 +48,11 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void SetStateInteractUI(bool active)
+    {
+        interactionUI.SetActive(active);
+    }
+
     // int state => 0: Free, 1: Lock
     public void SetMouseState(int state)
     {
@@ -78,5 +84,7 @@ public class UIManager : MonoBehaviour
         //statusUI.SetActive(true);
         crosshairUI.SetActive(true);
         inventoryUI.SetActive(false);
+        interactionUI.SetActive(false);
     }
+
 }

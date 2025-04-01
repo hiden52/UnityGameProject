@@ -25,7 +25,7 @@ public class FnCreateItem : MonoBehaviour
             Debug.LogWarning("Missing target Item Data!");
             return;
         }
-        InventoryManager.Instance.AddItem(target, 8);
+        InventoryManager.Instance.AddItem(target, 32);
     }
 
 }

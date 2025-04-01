@@ -33,11 +33,11 @@ public class InventoryManager : Singleton<InventoryManager>
                 {
                     if (item is CountableItem countableItem)
                     {
-                        Debug.Log($"{countableItem.data.itemName} ({countableItem.currentStack})");
+                        //Debug.Log($"{countableItem.data.itemName} ({countableItem.currentStack})");
                     }
                     else
                     {
-                        Debug.Log(item.data.itemName);
+                        //Debug.Log(item.data.itemName);
                     }
                 }
             }
@@ -52,7 +52,7 @@ public class InventoryManager : Singleton<InventoryManager>
 
     public void AddItem(ItemData itemData, int amount)
     {
-        if(Items.Count >= CurrentSlotCount)
+        if(Items.Count > CurrentSlotCount)
         {
             Debug.LogError("활성화 된 인벤토리 칸 보다 소지한 아이템이 더 많다.");
             return;

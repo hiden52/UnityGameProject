@@ -9,8 +9,11 @@ public class InventoryUIController : MonoBehaviour
     [SerializeField] private InventoryData inventoryData;
 
     private List<SlotUI> slots = new List<SlotUI>();
-    
 
+    private void Awake()
+    {
+        
+    }
     private void Start()
     {
         // 슬롯 초기화
@@ -53,7 +56,7 @@ public class InventoryUIController : MonoBehaviour
 
         // 현재 활성화된 슬롯 수
         int activeSlotCount = inventoryData.currentSlotCount;
-        Debug.Log("activeSlotCout : " + activeSlotCount);
+        //Debug.Log("activeSlotCout : " + activeSlotCount);
 
         for(int i=0; i<items.Count; i++)
         {

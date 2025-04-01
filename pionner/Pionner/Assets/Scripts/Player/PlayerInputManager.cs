@@ -25,6 +25,7 @@ public class PlayerInputManager : Singleton<PlayerInputManager>
 
     public event Action OnTabPressed;
     public event Action OnLeftMouseClick;
+    public event Action OnKeyFPressed;
 
     void Start()
     {
@@ -63,6 +64,12 @@ public class PlayerInputManager : Singleton<PlayerInputManager>
             OnLeftMouseClick?.Invoke();
         }
 
+        if(Input.GetKeyUp(KeyCode.F))
+        {
+            OnKeyFPressed?.Invoke();
+            ClearFKeyEvent();
+        }
+
         
 
     }
@@ -96,6 +103,10 @@ public class PlayerInputManager : Singleton<PlayerInputManager>
         movement = Vector3.zero;
     }
 
+    public void ClearFKeyEvent()
+    {
+        OnKeyFPressed = null;
+    }
 
 
 
