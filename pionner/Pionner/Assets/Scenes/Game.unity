@@ -1063,6 +1063,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slotPrefab: {fileID: 5912252552843713250, guid: 65203062f0f2ab444ad363ca8125ae8f, type: 3}
   slotPannel: {fileID: 595781570}
+  inventoryData: {fileID: 11400000, guid: 2b42a06f2c7398b4ab4648f450bc1a16, type: 2}
 --- !u!1001 &751542122
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1921,6 +1922,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5736b1755bc4fd94595eb301648a33c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inventoryData: {fileID: 11400000, guid: 2b42a06f2c7398b4ab4648f450bc1a16, type: 2}
   debugPrintItems: 1
 --- !u!4 &1502795497
 Transform:

@@ -6,13 +6,17 @@ using UnityEngine.UI;
 
 public class SlotUI : MonoBehaviour
 {
-    [SerializeField] Image itemIcon = null;
+    [SerializeField] Image itemIcon;
     [SerializeField] GameObject text;
     [SerializeField] int quantity = 0;
 
     private void Awake()
     {
         text.SetActive(false);
+    }
+    private void Start()
+    {
+        itemIcon = transform.GetChild(0).GetComponent<Image>();
     }
 
     // 이미지의 알파값 수정

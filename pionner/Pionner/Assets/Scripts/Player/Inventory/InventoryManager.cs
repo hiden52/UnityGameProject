@@ -5,8 +5,11 @@ using UnityEngine;
 
 public class InventoryManager : Singleton<InventoryManager>
 {
-    private List<Item> items = new List<Item>();
-    public List<Item> Items { get { return items; } }
+    [SerializeField] private InventoryData inventoryData;
+    private int DEFAULT_SLOT_COUNT = 20;
+    public int MaxSlotCount => inventoryData.MaxSlotCount;
+    public int CurrentSlotCount => inventoryData.currentSlotCount;
+    public List<Item> Items => inventoryData.items;
 
     public static event Action<List<Item>> OnInventoryChanged;
 
@@ -14,18 +17,19 @@ public class InventoryManager : Singleton<InventoryManager>
     [SerializeField]
     private bool debugPrintItems = false;
 
-    private void Start()
+    protected override void Awake()
     {
-
+        base.Awake();
+        inventoryData.SetCurrentSlotCount(DEFAULT_SLOT_COUNT);
     }
 
     private void Update()
     {
         if(debugPrintItems)
         {
-            if (items.Count > 0)
+            if (Items.Count > 0)
             {
-                foreach (var item in items)
+                foreach (var item in Items)
                 {
                     if (item is CountableItem countableItem)
                     {
@@ -48,19 +52,24 @@ public class InventoryManager : Singleton<InventoryManager>
 
     public void AddItem(ItemData itemData, int amount)
     {
+        if(Items.Count >= CurrentSlotCount)
+        {
+            Debug.LogError("활성화 된 인벤토리 칸 보다 소지한 아이템이 더 많다.");
+            return;
+        }    
 
         if (itemData is EquipmentItemData)
         {
             Item newItem = ItemFactory.CreateItem(itemData, amount);
             if (newItem != null)
             {
-                items.Add(newItem);
+                Items.Add(newItem);
             }
         }
         else
         {
             // 인벤토리의 CountableItem인 itemData가 존재하는지 확인
-            CountableItem existingItem = items.Find(item => FindExistItem(item, itemData)) as CountableItem;
+            CountableItem existingItem = Items.Find(item => FindExistItem(item, itemData)) as CountableItem;
 
 
             // 인벤토리 칸을 확인하고, 칸이 모두 찼다면 메세지를 띄우고 AddItem을 실행하지 않도록
@@ -70,7 +79,7 @@ public class InventoryManager : Singleton<InventoryManager>
                 if (overflow > 0)
                 {
                     CountableItem newItem = ItemFactory.CreateItem(itemData, amount) as CountableItem;
-                    items.Add(newItem);
+                    Items.Add(newItem);
                 }
             }
             else
@@ -78,22 +87,22 @@ public class InventoryManager : Singleton<InventoryManager>
                 Item newItem = ItemFactory.CreateItem(itemData, amount);
                 if (newItem != null)
                 {
-                    items.Add(newItem);
+                    Items.Add(newItem);
                 }
             }
         }
 
-        OnInventoryChanged?.Invoke(items);
+        OnInventoryChanged?.Invoke(Items);
     }
 
     public void RemoveItem(Item item)
     {
-        if (items.Contains(item))
+        if (Items.Contains(item))
         {
-            items.Remove(item);
+            Items.Remove(item);
         }
 
-        OnInventoryChanged?.Invoke(items);
+        OnInventoryChanged?.Invoke(Items);
     }
 
     // CountableItem 이고 최대스택 이하의 아이템일 경우 true
@@ -101,11 +110,9 @@ public class InventoryManager : Singleton<InventoryManager>
     {
         if (item is CountableItem countable && countable.data == itemData)
         {
-            if (countable.currentStack < ((CountableItemData)countable.data).maxStack)
-            {
-                return true;
-            }
-            return false;
+            var countableData = countable.data as CountableItemData;
+
+            return countable.currentStack < countableData.maxStack;
         }
         else
         {
