@@ -1,5 +1,60 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5625887846660494908
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6278275997418099126}
+  - component: {fileID: 4947991755391343600}
+  m_Layer: 0
+  m_Name: RightHandPivot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6278275997418099126
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5625887846660494908}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.75899166, y: -0.00000046845503, z: -0.000000031082877, w: 0.65110034}
+  m_LocalPosition: {x: 0.0048, y: 0.0138, z: -0}
+  m_LocalScale: {x: 0.015, y: 0.015, z: 0.015}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 6917603424568749333}
+  m_LocalEulerAnglesHint: {x: 98.75101, y: 0, z: 0}
+--- !u!136 &4947991755391343600
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5625887846660494908}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.4
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &8931201552112721462
 GameObject:
   m_ObjectHideFlags: 0
@@ -191,6 +246,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 8df1fec5b45565248a503d0956a312ba, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8773489918311025116}
+    - targetCorrespondingSourceObject: {fileID: -4372587343206045713, guid: 8df1fec5b45565248a503d0956a312ba, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6278275997418099126}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 8df1fec5b45565248a503d0956a312ba, type: 3}
       insertIndex: -1
@@ -297,3 +355,8 @@ CapsuleCollider:
   m_Height: 1.9
   m_Direction: 1
   m_Center: {x: 0, y: 0.9, z: 0}
+--- !u!4 &6917603424568749333 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -4372587343206045713, guid: 8df1fec5b45565248a503d0956a312ba, type: 3}
+  m_PrefabInstance: {fileID: 2544869499419986682}
+  m_PrefabAsset: {fileID: 0}

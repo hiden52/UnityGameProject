@@ -16,14 +16,18 @@ public class InventoryUIController : MonoBehaviour
     }
     private void Start()
     {
-        // 슬롯 초기화
-        InitializeSlots();
-        // 초기화 후 인벤토리UI 갱신
-        UpdateInventoryUI(inventoryData.items);
+
     }
 
     private void OnEnable()
     {
+        // 초기화 되지 않았다면 초기화
+        if(slots.Count <= 0)
+        {
+            InitializeSlots();
+           
+        }
+
         UpdateInventoryUI(inventoryData.items);
         InventoryManager.OnInventoryChanged += UpdateInventoryUI;
     }
@@ -52,23 +56,34 @@ public class InventoryUIController : MonoBehaviour
         if(Application.isEditor)
         {
             //Debug.Log("Updata Inventory UI");
+            //Debug.Log("items count: " +  items.Count);
         }
 
         // 현재 활성화된 슬롯 수
         int activeSlotCount = inventoryData.currentSlotCount;
         //Debug.Log("activeSlotCout : " + activeSlotCount);
 
-        for(int i=0; i<items.Count; i++)
+        if (items.Count <= 0)
         {
-            if(i < slots.Count)
+            for(int i = 0; i < activeSlotCount;i++)
             {
-                if (items[i] is CountableItem countableItem)
+                slots[i].SetSlot(null);
+            }
+        }
+        else
+        {
+            for (int i = 0; i < items.Count; i++)
+            {
+                if (i < slots.Count)
                 {
-                    slots[i].SetSlot(countableItem);
-                }
-                else
-                {
-                    slots[i].SetSlot(items[i]);
+                    if (items[i] is CountableItem countableItem)
+                    {
+                        slots[i].SetSlot(countableItem);
+                    }
+                    else
+                    {
+                        slots[i].SetSlot(items[i]);
+                    }
                 }
             }
         }

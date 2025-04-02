@@ -2,32 +2,27 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UIManager : MonoBehaviour
+public class UIManager : Singleton<UIManager>
 {
-    public static UIManager Instance { get; private set; }
-    public GameObject inventoryUI;
-    public GameObject crosshairUI;
-    public GameObject statusUI;
-    public GameObject quickMenuUI;
-    public GameObject interactionUI;
+    [SerializeField] private GameObject inventoryUI;
+    [SerializeField] private GameObject crosshairUI;
+    [SerializeField] private GameObject statusUI;
+    [SerializeField] private GameObject quickMenuUI;
+    [SerializeField] private GameObject interactionUI;
 
 
-    private void Awake()
-    {
-        if(Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
+    // 
+
+
+    
     private void Start()
     {
         InitUI();
         PlayerInputManager.Instance.OnTabPressed += ToggleInventoryUI;
+    }
+    protected override void Awake()
+    {
+        base.Awake();
     }
     private void OnDisable()
     {
@@ -48,6 +43,18 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public bool IsInventoryActivated()
+    {
+        return inventoryUI.activeSelf;
+    }
+    public void  ActivateInteractionUI()
+    {
+        interactionUI.SetActive(true);
+    }
+    public void DeactivateInteractionUI()
+    {
+        interactionUI.SetActive(false);
+    }
     public void SetStateInteractUI(bool active)
     {
         interactionUI.SetActive(active);

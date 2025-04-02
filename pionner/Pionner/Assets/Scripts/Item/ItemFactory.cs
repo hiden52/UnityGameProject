@@ -8,6 +8,7 @@ public static class ItemFactory
 {
     public static Item CreateItem (ItemData itemData, int amount)
     {
+        //Debug.Log(itemData.itemType);
         switch(itemData.itemType)
         {
             case ItemType.Consumable:

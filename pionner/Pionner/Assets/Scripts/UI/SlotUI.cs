@@ -20,10 +20,10 @@ public class SlotUI : MonoBehaviour
     }
 
     // 이미지의 알파값 수정
-    private void SetAlpha()
+    private void SetAlpha(float alpha)
     {
         Color colorIcon = itemIcon.color;
-        colorIcon.a = 1f;
+        colorIcon.a = alpha;
         itemIcon.color = colorIcon;
     }
 
@@ -32,11 +32,11 @@ public class SlotUI : MonoBehaviour
         if (item != null)
         {
             itemIcon.sprite = item.data.icon;
-            SetAlpha();
+            SetAlpha(1f);
         }
         else
         {
-            itemIcon = null;
+            ClearSlot();
         }
     }
     public void SetSlot(CountableItem item)
@@ -44,7 +44,7 @@ public class SlotUI : MonoBehaviour
         if (item != null)
         {
             itemIcon.sprite = item.data.icon;
-            SetAlpha();
+            SetAlpha(1f);
             quantity = item.currentStack;
 
             text.SetActive(true);
@@ -52,14 +52,16 @@ public class SlotUI : MonoBehaviour
         }
         else
         {
-            itemIcon = null;
+            ClearSlot();            
         }
     }
 
     public void ClearSlot()
     {
         itemIcon.sprite = null;
+        SetAlpha(0);
         text.SetActive(false);
+
     }
     
 }

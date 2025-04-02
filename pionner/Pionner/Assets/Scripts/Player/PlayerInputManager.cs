@@ -43,7 +43,7 @@ public class PlayerInputManager : Singleton<PlayerInputManager>
         }
 
         // 인벤토리 UI가 활성화 되어 있을 때, 이동, 카메라회전, 캐릭터 상호작용 방지.
-        if (UIManager.Instance.inventoryUI.activeSelf)
+        if (UIManager.Instance.IsInventoryActivated())
         {
             return;
         }
@@ -67,7 +67,6 @@ public class PlayerInputManager : Singleton<PlayerInputManager>
         if(Input.GetKeyUp(KeyCode.F))
         {
             OnKeyFPressed?.Invoke();
-            ClearFKeyEvent();
         }
 
         

@@ -5,7 +5,7 @@ using UnityEngine;
 public abstract class EquipmentItem : Item
 {
     public EquipmentItemData EquipData => data as EquipmentItemData;
-    public EuipmentType EuipType => EquipData.euipmentType;
+    public EquipmentWhere EuipType => EquipData.euipmentType;
 
     public EquipmentItem(EquipmentItemData data) : base(data) { }
 

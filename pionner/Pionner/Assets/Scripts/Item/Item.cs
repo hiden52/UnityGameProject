@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [System.Serializable]
-public abstract class Item 
+public abstract class Item
 {
     public ItemData data;
 

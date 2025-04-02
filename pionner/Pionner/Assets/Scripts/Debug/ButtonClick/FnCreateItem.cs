@@ -3,22 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class FnCreateItem : MonoBehaviour
+public class FnCreateItem : Fn
 {
-    public Button btn;
     public ResourceItemData target;
 
-    private void Awake()
+    protected override void Awake()
     {
-        btn = GetComponent<Button>();
+        base.Awake();
+        str = "Create\nItem";
     }
 
-    private void Start()
-    {
-        btn.onClick.AddListener(OnClick);
-    }
-
-    private void OnClick()
+    protected override void OnClick()
     {
         if(target == null)
         {

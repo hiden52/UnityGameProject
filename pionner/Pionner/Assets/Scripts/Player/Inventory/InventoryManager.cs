@@ -50,7 +50,7 @@ public class InventoryManager : Singleton<InventoryManager>
         }
     }
 
-    public void AddItem(ItemData itemData, int amount)
+    public void AddItem(ItemData itemData, int amount = 1)
     {
         if(Items.Count > CurrentSlotCount)
         {
@@ -100,10 +100,17 @@ public class InventoryManager : Singleton<InventoryManager>
         if (Items.Contains(item))
         {
             Items.Remove(item);
+            OnInventoryChanged?.Invoke(Items);
         }
+        
+    }
 
+    public void ClearInventory()
+    {
+        Items.Clear();
         OnInventoryChanged?.Invoke(Items);
     }
+
 
     // CountableItem 이고 최대스택 이하의 아이템일 경우 true
     bool FindExistItem(Item item, ItemData itemData)
