@@ -18,5 +18,6 @@ public abstract class ItemData : ScriptableObject
     [TextArea] public string Description;
     public Sprite icon;
     public ItemType itemType;
+    public GameObject prefab;
 
 }

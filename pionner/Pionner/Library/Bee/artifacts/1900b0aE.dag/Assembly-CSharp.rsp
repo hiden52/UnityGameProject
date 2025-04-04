@@ -382,6 +382,7 @@
 "Assets/Scripts/Object/EquipmentItemObject.cs"
 "Assets/Scripts/Object/ItemObject.cs"
 "Assets/Scripts/Object/ResourceObject.cs"
+"Assets/Scripts/ObjectPool.cs"
 "Assets/Scripts/OutlineManager.cs"
 "Assets/Scripts/Player/Inventory/EquipmentManager.cs"
 "Assets/Scripts/Player/Inventory/InventoryData.cs"

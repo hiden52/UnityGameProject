@@ -2039,8 +2039,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 266b9ddc9a175e84cb43fa262dbb1129, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerRightHand: {fileID: 8397624277230899863}
-  playerRightHandCollider: {fileID: 0}
+  playerRightHandTransform: {fileID: 8397624277230899865}
 --- !u!4 &1496919385
 Transform:
   m_ObjectHideFlags: 0
@@ -2788,6 +2787,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 6278275997418099126, guid: 8bc65629e4b0c2c4b96631fae6ea6c56, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.003
+      objectReference: {fileID: 0}
+    - target: {fileID: 6278275997418099126, guid: 8bc65629e4b0c2c4b96631fae6ea6c56, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8773489918311025116, guid: 8bc65629e4b0c2c4b96631fae6ea6c56, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.006
@@ -2804,9 +2811,9 @@ PrefabInstance:
       insertIndex: 1
       addedObject: {fileID: 663080795}
   m_SourcePrefab: {fileID: 100100000, guid: 8bc65629e4b0c2c4b96631fae6ea6c56, type: 3}
---- !u!1 &8397624277230899863 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5625887846660494908, guid: 8bc65629e4b0c2c4b96631fae6ea6c56, type: 3}
+--- !u!4 &8397624277230899865 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6278275997418099126, guid: 8bc65629e4b0c2c4b96631fae6ea6c56, type: 3}
   m_PrefabInstance: {fileID: 8397624277230899862}
   m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807

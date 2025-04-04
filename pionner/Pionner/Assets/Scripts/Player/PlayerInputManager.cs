@@ -26,6 +26,7 @@ public class PlayerInputManager : Singleton<PlayerInputManager>
     public event Action OnTabPressed;
     public event Action OnLeftMouseClick;
     public event Action OnKeyFPressed;
+    public event Action OnAttackPressed;
 
     void Start()
     {
@@ -62,6 +63,7 @@ public class PlayerInputManager : Singleton<PlayerInputManager>
         if (Input.GetMouseButtonDown(0))
         {
             OnLeftMouseClick?.Invoke();
+            OnAttackPressed?.Invoke();
         }
 
         if(Input.GetKeyUp(KeyCode.F))

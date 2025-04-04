@@ -14,6 +14,9 @@ public enum WeaponType
 public class WeaponItemData : EquipmentItemData
 {
     public WeaponType WeaponType;
+    [SerializeField] private float damage;
+
+    public float Damage => damage;
     private void OnEnable()
     {
         itemType = ItemType.Weapon;
