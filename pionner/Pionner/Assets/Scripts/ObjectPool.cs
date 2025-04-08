@@ -27,7 +27,7 @@ public class ObjectPool
     }
     public GameObject GetObject(GameObject prefab)
     {
-        EnsureExistKey(prefab.name);
+        GetCreatePool(prefab.name);
 
         GameObject obj;
         if (objectPool.ContainsKey(prefab.name) && objectPool[prefab.name].Count > 0)
@@ -46,19 +46,19 @@ public class ObjectPool
 
     public void ReturnObject(GameObject obj)
     {
-        EnsureExistKey(obj.name);
+        GetCreatePool(obj.name);
 
         obj.SetActive(false);
         objectPool[obj.name].Enqueue(obj);
     }
 
-    public void EnsureExistKey(string key)
+    public void GetCreatePool(string key)
     {
-        if(objectPool.TryGetValue(key, out Queue<GameObject> queue))
+        if(!objectPool.TryGetValue(key, out Queue<GameObject> pool))
         {
-            Debug.Log("Pool for key: " + key + " doesn't exist!");
-            queue = new Queue<GameObject>();
-            objectPool[key] = queue;
+            Debug.Log($"[ObjectPool] 货肺款 钱 积己: {key}");
+            pool = new Queue<GameObject>();
+            objectPool[key] = pool;
         }
     }
 }

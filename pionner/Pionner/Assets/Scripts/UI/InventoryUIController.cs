@@ -9,16 +9,6 @@ public class InventoryUIController : MonoBehaviour
     [SerializeField] private InventoryData inventoryData;
 
     private List<SlotUI> slots = new List<SlotUI>();
-
-    private void Awake()
-    {
-        
-    }
-    private void Start()
-    {
-
-    }
-
     private void OnEnable()
     {
         // 초기화 되지 않았다면 초기화
