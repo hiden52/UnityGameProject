@@ -39,7 +39,6 @@ public class InventoryUIController : MonoBehaviour
         }
     }
 
-
     public void UpdateInventoryUI(List<Item> items)
     {
         // Debug

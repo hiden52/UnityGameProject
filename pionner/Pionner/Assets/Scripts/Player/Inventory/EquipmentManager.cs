@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -8,7 +9,7 @@ using UnityEngine;
 public class EquipmentManager : Singleton<EquipmentManager>
 {
     [SerializeField] private Transform playerRightHandTransform;
-    private Dictionary<EquipmentWhere, EquipmentItem> equipDictionary = new Dictionary<EquipmentWhere, EquipmentItem>();
+    [SerializeField] private Dictionary<EquipmentWhere, EquipmentItem> equipDictionary = new Dictionary<EquipmentWhere, EquipmentItem>();
 
     protected override void Awake()
     {
@@ -23,10 +24,11 @@ public class EquipmentManager : Singleton<EquipmentManager>
             InventoryManager.Instance.AddItem(previousItem.data);
             equipDictionary.Remove(equipItem.EuipType);
 
-            if(equipItem.EuipType == EquipmentWhere.Hand)
+            if (equipItem.EuipType == EquipmentWhere.Hand)
             {
-                ObjectPool.Instance.ReturnObject(transform.Find(previousItem.data.prefab.name).gameObject);
+                ObjectPool.Instance.ReturnObject(playerRightHandTransform.Find(previousItem.data.prefab.name).gameObject);
             }
+            
         }
         equipDictionary.Add(equipItem.EuipType, equipItem);
 
@@ -37,7 +39,6 @@ public class EquipmentManager : Singleton<EquipmentManager>
 
 
 
-            // 플레이어 손에 아이템 생성해서 장착된 것 처럼 보이게 하기
         }
 
         public void EquipWeapon(WeaponItem weaponItem)

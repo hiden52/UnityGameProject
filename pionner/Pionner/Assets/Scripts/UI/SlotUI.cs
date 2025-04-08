@@ -80,6 +80,11 @@ public class SlotUI : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IDr
     {
         if (CurrentItem == null) return;
         Debug.Log($"{CurrentItem.data.itemName} 클릭됨!");
+
+        if (eventData.button == PointerEventData.InputButton.Right)
+        {
+            CurrentItem.Use();
+        }
     }
 
     // 드래그 이벤트

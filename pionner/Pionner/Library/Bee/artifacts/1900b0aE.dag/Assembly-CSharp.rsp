@@ -376,6 +376,7 @@
 "Assets/Scripts/Item/EquipmentItem.cs"
 "Assets/Scripts/Item/Item.cs"
 "Assets/Scripts/Item/ItemFactory.cs"
+"Assets/Scripts/Item/WeaponAttackHandler.cs"
 "Assets/Scripts/Item/WeaponItem.cs"
 "Assets/Scripts/MainCameraControll.cs"
 "Assets/Scripts/Object/DefaultObject.cs"

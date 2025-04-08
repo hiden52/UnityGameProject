@@ -104,6 +104,10 @@ public class InventoryManager : Singleton<InventoryManager>
         }
         
     }
+    public void ReduceAmount(CountableItem item, int amount)
+    {
+        if (item == null) return;
+    }
 
     public void ClearInventory()
     {
