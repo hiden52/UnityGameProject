@@ -366,6 +366,7 @@
 "Assets/Scripts/GameManager.cs"
 "Assets/Scripts/Interfaces/ItemInterface.cs"
 "Assets/Scripts/Interfaces/ObjectInterface.cs"
+"Assets/Scripts/Interfaces/UI/IItemSlot.cs"
 "Assets/Scripts/Item/CountableItem.cs"
 "Assets/Scripts/Item/Data/ConsumableItemData.cs"
 "Assets/Scripts/Item/Data/CountableItemData.cs"
@@ -396,6 +397,8 @@
 "Assets/Scripts/Terrain/GenerateTerrain.cs"
 "Assets/Scripts/UI/InventoryUIController.cs"
 "Assets/Scripts/UI/SlotUI.cs"
+"Assets/Scripts/UI/SlotUIDragHandler.cs"
+"Assets/Scripts/UI/SlotUIHoverHandler.cs"
 "Assets/Scripts/UI/UIManager.cs"
 "Assets/Scripts/Utility/SpriteCapture.cs"
 -langversion:9.0

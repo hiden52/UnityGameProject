@@ -4,19 +4,33 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using static UnityEditor.Progress;
 
-public class SlotUI : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
+public class SlotUI : MonoBehaviour, IPointerDownHandler, IItemSlot
 {
     [SerializeField] Image itemIcon;
     [SerializeField] GameObject text;
     [SerializeField] int quantity = 0;
-    public Item CurrentItem { get; private set; }
+    private Item currentItem;
+    [SerializeField] private Image backroundImage;
     [SerializeField] private Canvas canvas;
+    [SerializeField] private SlotUIHoverHandler hoverHandler;
+    [SerializeField] private SlotUIDragHandler dragHandler;
 
     private void Awake()
     {
         text.SetActive(false);
         canvas = GetComponentInParent<Canvas>();
+        backroundImage = GetComponent<Image>();
+
+        hoverHandler = GetComponent<SlotUIHoverHandler>();
+        dragHandler = GetComponent<SlotUIDragHandler>();
+
+        if (hoverHandler != null)
+        {
+            hoverHandler.Initialize(backroundImage);
+        }
+        
     }
     private void Start()
     {
@@ -33,42 +47,34 @@ public class SlotUI : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IDr
 
     public void SetSlot(Item item)
     {
-        CurrentItem = item;
+        currentItem = item;
 
-        if (CurrentItem != null)
-        {
-            Debug.Log($"{CurrentItem.data.itemName} ½½·Ô¿¡ Ãß°¡µÊ");
+        if (currentItem != null)
+        {           
             itemIcon.sprite = item.data.icon;
             SetAlpha(1f);
+
+            if(item is CountableItem countable)
+            {
+                SetQuantity(countable.currentStack);
+            }
         }
         else
         {
             ClearSlot();
         }
     }
-    public void SetSlot(CountableItem item)
+
+    private void SetQuantity(int n)
     {
-        CurrentItem = item;
+        quantity = n;
 
-        if (CurrentItem != null)
-        {
-            Debug.Log($"{CurrentItem.data.itemName} ½½·Ô¿¡ Ãß°¡µÊ");
-            itemIcon.sprite = item.data.icon;
-            SetAlpha(1f);
-            quantity = item.currentStack;
-
-            text.SetActive(true);
-            text.GetComponent<TextMeshProUGUI>().SetText(quantity.ToString());
-        }
-        else
-        {
-            ClearSlot();            
-        }
+        text.SetActive(true);
+        text.GetComponent<TextMeshProUGUI>().SetText(quantity.ToString());
     }
-
     public void ClearSlot()
     {
-        CurrentItem = null;
+        currentItem = null;
         itemIcon.sprite = null;
         SetAlpha(0);
         text.SetActive(false);
@@ -78,30 +84,19 @@ public class SlotUI : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IDr
     // Å¬¸¯ ÀÌº¥Æ®
     public void OnPointerDown(PointerEventData eventData)
     {
-        if (CurrentItem == null) return;
-        Debug.Log($"{CurrentItem.data.itemName} Å¬¸¯µÊ!");
+        if (currentItem == null) return;
+        Debug.Log($"{currentItem.data.itemName} Å¬¸¯µÊ!");
 
         if (eventData.button == PointerEventData.InputButton.Right)
         {
-            CurrentItem.Use();
+            currentItem.Use();
         }
     }
 
-    // µå·¡±× ÀÌº¥Æ®
-    public void OnBeginDrag(PointerEventData eventData)
-    {
-        if (CurrentItem == null) return;
-        
-    }
-    public void OnDrag(PointerEventData eventData)
-    {
-        if(CurrentItem == null) return;
-        transform.position = eventData.position;
-    }
+    public bool HasItem() => currentItem != null;
+    public Item GetItem() => currentItem;
 
-    public void OnEndDrag(PointerEventData eventData)
-    {
-        if(CurrentItem == null) return;
-    }
+ 
+
     
 }
