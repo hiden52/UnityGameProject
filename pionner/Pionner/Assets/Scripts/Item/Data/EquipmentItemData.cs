@@ -6,7 +6,8 @@ public enum EquipmentWhere
 {
     Head,
     Body,
-    Hand,
+    LeftHand,
+    RightHand,
     Foot,
 }
 

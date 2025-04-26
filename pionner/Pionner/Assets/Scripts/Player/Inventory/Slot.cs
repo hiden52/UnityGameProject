@@ -22,7 +22,7 @@ public class Slot : MonoBehaviour
     public void SetItem(Item item)
     {
         currentItem = item;
-        icon.sprite = item.data.icon;
+        icon.sprite = item.Data.icon;
      
         if (item is CountableItem countableItem)
         {

@@ -51,7 +51,7 @@ public class SlotUI : MonoBehaviour, IPointerDownHandler, IItemSlot
 
         if (currentItem != null)
         {           
-            itemIcon.sprite = item.data.icon;
+            itemIcon.sprite = item.Data.icon;
             SetAlpha(1f);
 
             if(item is CountableItem countable)
@@ -85,12 +85,17 @@ public class SlotUI : MonoBehaviour, IPointerDownHandler, IItemSlot
     public void OnPointerDown(PointerEventData eventData)
     {
         if (currentItem == null) return;
-        Debug.Log($"{currentItem.data.itemName} Å¬¸¯µÊ!");
 
         if (eventData.button == PointerEventData.InputButton.Right)
         {
+            Debug.Log($"{currentItem.Data.itemName} Right Button Click!");
             currentItem.Use();
         }
+        else if(eventData.button == PointerEventData.InputButton.Left)
+        {
+            Debug.Log($"{currentItem.Data.itemName} Left Button Click!");
+        }
+
     }
 
     public bool HasItem() => currentItem != null;

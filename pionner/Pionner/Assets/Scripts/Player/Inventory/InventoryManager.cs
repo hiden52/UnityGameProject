@@ -68,7 +68,7 @@ public class InventoryManager : Singleton<InventoryManager>
         }
         else
         {
-            // 인벤토리의 CountableItem인 itemData가 존재하는지 확인
+            // 인벤토리에 CountableItem인 itemData가 존재하는지 확인
             CountableItem existingItem = Items.Find(item => FindExistItem(item, itemData)) as CountableItem;
 
 
@@ -115,13 +115,12 @@ public class InventoryManager : Singleton<InventoryManager>
         OnInventoryChanged?.Invoke(Items);
     }
 
-
     // CountableItem 이고 최대스택 이하의 아이템일 경우 true
     bool FindExistItem(Item item, ItemData itemData)
     {
-        if (item is CountableItem countable && countable.data == itemData)
+        if (item is CountableItem countable && countable.Data == itemData)
         {
-            var countableData = countable.data as CountableItemData;
+            var countableData = countable.Data as CountableItemData;
 
             return countable.currentStack < countableData.maxStack;
         }

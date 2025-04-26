@@ -6,7 +6,8 @@ using UnityEngine.UI;
 [System.Serializable]
 public abstract class Item
 {
-    public ItemData data;
+    protected ItemData data;
+    public ItemData Data => data;
 
     public Item(ItemData data)
     {

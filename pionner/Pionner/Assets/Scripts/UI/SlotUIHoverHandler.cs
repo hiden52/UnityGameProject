@@ -9,9 +9,19 @@ public class SlotUIHoverHandler : MonoBehaviour, IPointerEnterHandler, IPointerE
     [SerializeField] Image image;
     private static readonly Color DefaultColor = new Color(0.8490566f, 0.8490566f, 0.8490566f);
 
+
     public void Initialize(Image img)
     {
         image = img;
+        
+    }
+
+    private void OnEnable()
+    {
+        if(image != null)
+        {
+            ResetImage();
+        }
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -20,6 +30,11 @@ public class SlotUIHoverHandler : MonoBehaviour, IPointerEnterHandler, IPointerE
     }
 
     public void OnPointerExit(PointerEventData eventData)
+    {
+        ResetImage();
+    }
+
+    public void ResetImage()
     {
         image.color = DefaultColor;
     }

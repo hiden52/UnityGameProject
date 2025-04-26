@@ -20,6 +20,6 @@ public class WeaponItemData : EquipmentItemData
     private void OnEnable()
     {
         itemType = ItemType.Weapon;
-        euipmentType = EquipmentWhere.Hand;
+        euipmentType = EquipmentWhere.RightHand;
     }
 }

@@ -27,7 +27,12 @@ public class ObjectPool
     }
     public GameObject GetObject(GameObject prefab)
     {
-        GetCreatePool(prefab.name);
+        if (prefab == null)
+        {
+            Debug.LogError("[ObjectPool] Prefab is null. Check if *.Data.Prefab is assigned.");
+            return null;
+        }
+        CreatePool(prefab.name);
 
         GameObject obj;
         if (objectPool.ContainsKey(prefab.name) && objectPool[prefab.name].Count > 0)
@@ -46,13 +51,18 @@ public class ObjectPool
 
     public void ReturnObject(GameObject obj)
     {
-        GetCreatePool(obj.name);
+        if(obj == null)
+        {
+            Debug.LogError("[ObjectPool] Object is null.");
+            return;
+        }
+        CreatePool(obj.name);
 
         obj.SetActive(false);
         objectPool[obj.name].Enqueue(obj);
     }
 
-    public void GetCreatePool(string key)
+    public void CreatePool(string key)
     {
         if(!objectPool.TryGetValue(key, out Queue<GameObject> pool))
         {
