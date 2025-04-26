@@ -58,6 +58,10 @@ public class SlotUI : MonoBehaviour, IPointerDownHandler, IItemSlot
             {
                 SetQuantity(countable.currentStack);
             }
+            else
+            {
+                text.SetActive(false);
+            }
         }
         else
         {

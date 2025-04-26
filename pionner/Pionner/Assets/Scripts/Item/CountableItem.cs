@@ -20,7 +20,7 @@ public class CountableItem : Item
         }
         else
         {
-            // Invetory 에서 제거
+            InventoryManager.Instance.RemoveItem(this);
         }
     }
 

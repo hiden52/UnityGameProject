@@ -8,7 +8,7 @@ public class InventoryManager : Singleton<InventoryManager>
     [SerializeField] private InventoryData inventoryData;
     private int DEFAULT_SLOT_COUNT = 20;
     public int MaxSlotCount => inventoryData.MaxSlotCount;
-    public int CurrentSlotCount => inventoryData.currentSlotCount;
+    public int AvailableSlotCount => inventoryData.AvailableSlotCount;
     public List<Item> Items => inventoryData.items;
 
     public static event Action<List<Item>> OnInventoryChanged;
@@ -49,60 +49,96 @@ public class InventoryManager : Singleton<InventoryManager>
             debugPrintItems = false;
         }
     }
-
-    public void AddItem(ItemData itemData, int amount = 1)
+    private void AddSingleItem(ItemData itemData)
     {
-        if(Items.Count > CurrentSlotCount)
+        if (Items.Count >= AvailableSlotCount)
         {
             Debug.LogError("활성화 된 인벤토리 칸 보다 소지한 아이템이 더 많다.");
             return;
-        }    
+        }
 
-        if (itemData is EquipmentItemData)
+        Item newItem = ItemFactory.CreateItem(itemData, 1);
+        if (newItem != null)
         {
-            Item newItem = ItemFactory.CreateItem(itemData, amount);
-            if (newItem != null)
+            AddToSlot(newItem);
+        }
+    }
+
+    private void AddCoutableItem(CountableItemData itemData, int amount)
+    {
+        // 인벤토리에 같은 아이템이 있는지 찾는다
+        CountableItem existingItem = Items.Find(item => FindExistItem(item, itemData)) as CountableItem;
+
+        if (existingItem != null)
+        {
+            int overflow = existingItem.Add(amount);
+            if (overflow > 0)
             {
-                Items.Add(newItem);
+                if(Items.Count >= AvailableSlotCount) 
+                {
+                    Debug.LogError($"인벤토리 부족으로 {itemData.itemName} 아이템 {overflow} 개 추가 실패");
+                    // 오버플로우 수 만큼 되돌리는 로직?
+                    // 아니면 필드에 드랍하는 로직?
+                    return;
+                }
+                CreateItem(itemData, overflow);
             }
         }
         else
         {
-            // 인벤토리에 CountableItem인 itemData가 존재하는지 확인
-            CountableItem existingItem = Items.Find(item => FindExistItem(item, itemData)) as CountableItem;
-
-
-            // 인벤토리 칸을 확인하고, 칸이 모두 찼다면 메세지를 띄우고 AddItem을 실행하지 않도록
-            if (existingItem != null)
+            if (Items.Count >= AvailableSlotCount)
             {
-                int overflow = existingItem.Add(amount);
-                if (overflow > 0)
-                {
-                    CountableItem newItem = ItemFactory.CreateItem(itemData, amount) as CountableItem;
-                    Items.Add(newItem);
-                }
+                Debug.LogError("활성화 된 인벤토리 칸 보다 소지한 아이템이 더 많다.");
+                return;
             }
-            else
-            {
-                Item newItem = ItemFactory.CreateItem(itemData, amount);
-                if (newItem != null)
-                {
-                    Items.Add(newItem);
-                }
-            }
+            CreateItem(itemData, amount);
+        }
+        
+    }
+    public void AddItem(ItemData itemData, int amount = 1)
+    {
+        if(itemData is CountableItemData)
+        {
+            AddCoutableItem(itemData as CountableItemData, amount);
+        }
+        else
+        {
+            AddSingleItem(itemData);
         }
 
         OnInventoryChanged?.Invoke(Items);
+    }
+
+    private void CreateItem(ItemData itemData, int amount)
+    {
+        Item newItem = ItemFactory.CreateItem(itemData, amount);
+        if (newItem != null)
+        {
+            AddToSlot(newItem);
+        }
+    }
+    private void AddToSlot(Item item)
+    {
+        int emptySlotIndex = Items.FindIndex(i => i == null);
+
+        if(emptySlotIndex != -1)
+        {
+            Items[emptySlotIndex] = item;
+        }
+        else
+        {
+            Items.Add(item);
+
+        }
     }
 
     public void RemoveItem(Item item)
     {
         if (Items.Contains(item))
         {
-            Items.Remove(item);
+            Items[Items.IndexOf(item)] = null;
             OnInventoryChanged?.Invoke(Items);
         }
-        
     }
     public void ReduceAmount(CountableItem item, int amount)
     {

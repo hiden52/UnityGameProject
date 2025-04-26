@@ -8,15 +8,6 @@ public class WeaponItem : EquipmentItem, IWeaponItem
     {
 
     }
-    public override void Use()
-    {
-        Equip();
-    }
-
-    public override void Equip()
-    {
-        EquipmentManager.Instance.Equip(this);
-    }
 
     public void Attack()
     {

@@ -9,5 +9,13 @@ public abstract class EquipmentItem : Item
 
     public EquipmentItem(EquipmentItemData data) : base(data) { }
 
-    public abstract void Equip();
+    protected void Equip()
+    {
+        EquipmentManager.Instance.Equip(this);
+    }
+    public override void Use()
+    {
+        InventoryManager.Instance.RemoveItem(this);
+        Equip();
+    }
 }

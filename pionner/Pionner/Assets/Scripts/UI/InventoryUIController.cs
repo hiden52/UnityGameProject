@@ -49,7 +49,7 @@ public class InventoryUIController : MonoBehaviour
         }
 
         // 현재 활성화된 슬롯 수
-        int activeSlotCount = inventoryData.currentSlotCount;
+        int activeSlotCount = inventoryData.AvailableSlotCount;
         //Debug.Log("activeSlotCout : " + activeSlotCount);
 
         if (items.Count <= 0)
