@@ -21,11 +21,42 @@ public class InventoryManager : Singleton<InventoryManager>
     {
         base.Awake();
         inventoryData.SetCurrentSlotCount(DEFAULT_SLOT_COUNT);
+        InitializeInvetoryList();
+    }
+
+    private void InitializeInvetoryList()
+    {
+        List<Item> currentItems = inventoryData.items;
+        inventoryData.items = new List<Item>(AvailableSlotCount);
+        for (int i = 0; i < AvailableSlotCount; i++)
+        {
+            if (i < currentItems.Count && currentItems[i] != null)
+            {
+                inventoryData.items.Add(currentItems[i]);
+            }
+            else
+            {
+                inventoryData.items.Add(null); // 빈 슬롯
+            }
+        }
+    }
+
+    private int GetCurrentItemCount()
+    {
+        int count = 0;
+        foreach (Item item in inventoryData.items)
+        {
+            if(item != null)
+            {
+                count++;
+            }
+        }
+        return count;
     }
 
     private void Update()
     {
-        if(debugPrintItems)
+        if (debugPrintItems)
         {
             if (Items.Count > 0)
             {
@@ -51,55 +82,140 @@ public class InventoryManager : Singleton<InventoryManager>
     }
     private void AddSingleItem(ItemData itemData)
     {
-        if (Items.Count >= AvailableSlotCount)
+        if (GetCurrentItemCount() >= AvailableSlotCount)
         {
-            Debug.LogError("활성화 된 인벤토리 칸 보다 소지한 아이템이 더 많다.");
+            Debug.LogError($"인벤토리 공간 부족으로 {itemData.itemName} 아이템 추가 실패");
+            
+            // 추가되지 못한 아이템 처리 로직
+            // 드랍?
+
             return;
         }
 
-        Item newItem = ItemFactory.CreateItem(itemData, 1);
-        if (newItem != null)
+        // 빈 슬롯 찾기
+        int emptySlotIndex = inventoryData.items.FindIndex(i => i == null);
+        if (emptySlotIndex != -1)
         {
-            AddToSlot(newItem);
-        }
-    }
-
-    private void AddCoutableItem(CountableItemData itemData, int amount)
-    {
-        // 인벤토리에 같은 아이템이 있는지 찾는다
-        CountableItem existingItem = Items.Find(item => FindExistItem(item, itemData)) as CountableItem;
-
-        if (existingItem != null)
-        {
-            int overflow = existingItem.Add(amount);
-            if (overflow > 0)
+            Item newItem = ItemFactory.CreateItem(itemData, 1);
+            if (newItem != null)
             {
-                if(Items.Count >= AvailableSlotCount) 
-                {
-                    Debug.LogError($"인벤토리 부족으로 {itemData.itemName} 아이템 {overflow} 개 추가 실패");
-                    // 오버플로우 수 만큼 되돌리는 로직?
-                    // 아니면 필드에 드랍하는 로직?
-                    return;
-                }
-                CreateItem(itemData, overflow);
+                inventoryData.items[emptySlotIndex] = newItem;
+                OnInventoryChanged?.Invoke(Items); 
+                Debug.Log($"{itemData.itemName} 1개를 Slot_{emptySlotIndex}에 추가.");
+            }
+            else
+            {
+                Debug.LogError($"{itemData.itemName} 아이템 생성 실패!");
             }
         }
         else
         {
-            if (Items.Count >= AvailableSlotCount)
+            Debug.LogError($"인벤토리에 공간({AvailableSlotCount - GetCurrentItemCount()}개)이 있지만 빈 슬롯(null)을 찾지 못했습니다!");
+        }
+    }
+    private List<CountableItem> FindAllStackableItems(CountableItemData itemData)
+    {
+        List<CountableItem> result = new List<CountableItem>();
+        foreach (Item item in inventoryData.items)
+        {
+            if (item is CountableItem countable && countable.Data == itemData && countable.currentStack < itemData.maxStack)
             {
-                Debug.LogError("활성화 된 인벤토리 칸 보다 소지한 아이템이 더 많다.");
+                result.Add(countable);
+            }
+        }
+        return result;
+    }
+    private void AddCoutableItem(CountableItemData itemData, int amount)
+    {
+        int amountToAdd = amount;
+
+        List<CountableItem> existingStacks = FindAllStackableItems(itemData);
+
+        foreach (CountableItem item in existingStacks)
+        {
+            int canAdd = itemData.maxStack - item.currentStack;
+            int added = Mathf.Min(amountToAdd, canAdd);
+            item.Add(added);
+            amountToAdd -= added;
+
+            if (amountToAdd <= 0)
+            {
+                OnInventoryChanged?.Invoke(Items);
                 return;
             }
-            CreateItem(itemData, amount);
         }
-        
+
+        // new CountableItem stack
+        while (amountToAdd > 0)
+        {
+            if(GetCurrentItemCount() >= AvailableSlotCount)
+            {
+                Debug.LogError($"[InventoryManager] Fail to Add \"{itemData.itemName}\" - ({amountToAdd}) Inventory is Full. ( {GetCurrentItemCount()} / {AvailableSlotCount} )");
+                
+                // 남은 아이템 처리 로직
+                //
+
+                OnInventoryChanged?.Invoke(Items); // 부분적으로 추가되었을 수 있으므로 알림
+                return;
+            }
+
+            // 빈 슬롯 찾기
+            int emptySlotIndex = inventoryData.items.FindIndex(item => item == null);
+            if (emptySlotIndex != -1)
+            {
+                int amountForNewStack = Mathf.Min(amountToAdd, itemData.maxStack);
+                Item newItem = ItemFactory.CreateItem(itemData, amountForNewStack);
+                if (newItem != null)
+                {
+                    inventoryData.items[emptySlotIndex] = newItem;
+                    amountToAdd -= amountForNewStack;
+                    Debug.Log($"[InventoryManager] Add {itemData.itemName} ({amountForNewStack}) to Slot_{emptySlotIndex}");
+                }
+                else
+                {
+                    Debug.LogError($"[InventoryManager] Fail to create item {itemData.itemName} ");
+                    break;
+                }
+            }
+            else
+            {
+                Debug.LogError($"[InventoryManager] 인벤토리에 공간({AvailableSlotCount - GetCurrentItemCount()}개)이 있지만 빈 슬롯(null)을 찾지 못했습니다! 리스트 관리 확인 필요.");
+                break; 
+            }
+
+            OnInventoryChanged?.Invoke(Items);
+        }
+    }
+
+    public void MoveOrSwapItem(int sourceIndex, int targetIndex)
+    {
+        int maxIndex = AvailableSlotCount;
+        if (sourceIndex < 0 || sourceIndex >= maxIndex || targetIndex < 0 || targetIndex >= maxIndex)
+        {
+            Debug.LogError($"[InventoryManager] Item move/swap, Index error : Source = {sourceIndex}, Target = {targetIndex}");
+            return;
+        }
+
+        while (Items.Count < AvailableSlotCount)
+        {
+            Items.Add(null);
+        }
+
+        Debug.Log($"Try Item Move/Swap : {sourceIndex} <-> {targetIndex}");
+
+        Item sourceItem = Items[sourceIndex];
+        Item targetItem = Items[targetIndex];
+
+        Items[targetIndex] = sourceItem;
+        Items[sourceIndex] = targetItem;
+
+        OnInventoryChanged?.Invoke(Items);
     }
     public void AddItem(ItemData itemData, int amount = 1)
     {
-        if(itemData is CountableItemData)
+        if(itemData is CountableItemData countableItemData)
         {
-            AddCoutableItem(itemData as CountableItemData, amount);
+            AddCoutableItem(countableItemData, amount);
         }
         else
         {
@@ -109,28 +225,6 @@ public class InventoryManager : Singleton<InventoryManager>
         OnInventoryChanged?.Invoke(Items);
     }
 
-    private void CreateItem(ItemData itemData, int amount)
-    {
-        Item newItem = ItemFactory.CreateItem(itemData, amount);
-        if (newItem != null)
-        {
-            AddToSlot(newItem);
-        }
-    }
-    private void AddToSlot(Item item)
-    {
-        int emptySlotIndex = Items.FindIndex(i => i == null);
-
-        if(emptySlotIndex != -1)
-        {
-            Items[emptySlotIndex] = item;
-        }
-        else
-        {
-            Items.Add(item);
-
-        }
-    }
 
     public void RemoveItem(Item item)
     {
@@ -148,23 +242,10 @@ public class InventoryManager : Singleton<InventoryManager>
     public void ClearInventory()
     {
         Items.Clear();
+        while(Items.Count < AvailableSlotCount)
+        {
+            Items.Add(null);
+        }
         OnInventoryChanged?.Invoke(Items);
     }
-
-    // CountableItem 이고 최대스택 이하의 아이템일 경우 true
-    bool FindExistItem(Item item, ItemData itemData)
-    {
-        if (item is CountableItem countable && countable.Data == itemData)
-        {
-            var countableData = countable.Data as CountableItemData;
-
-            return countable.currentStack < countableData.maxStack;
-        }
-        else
-        {
-            return false;
-        }
-        
-    }
-
 }

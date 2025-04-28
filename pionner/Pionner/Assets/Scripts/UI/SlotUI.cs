@@ -16,6 +16,7 @@ public class SlotUI : MonoBehaviour, IPointerDownHandler, IItemSlot
     [SerializeField] private Canvas canvas;
     [SerializeField] private SlotUIHoverHandler hoverHandler;
     [SerializeField] private SlotUIDragHandler dragHandler;
+    private int slotIndex = -1;
 
     private void Awake()
     {
@@ -104,8 +105,8 @@ public class SlotUI : MonoBehaviour, IPointerDownHandler, IItemSlot
 
     public bool HasItem() => currentItem != null;
     public Item GetItem() => currentItem;
+    public int GetSlotIndex() => slotIndex;
 
- 
+    public void SetSlotIndex(int index) => slotIndex = index;
 
-    
 }

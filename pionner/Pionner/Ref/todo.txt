@@ -1,9 +1,0 @@
-TODO
-- 아이템 장착시, 인벤토리에서 장착한 아이템 삭제하기
-- 장비 해제시, 인벤토리에 해당 아이템 추가하기
-
-
-did
-- [ObjectPool] GetObject 메소드에서 prefab의 null 방어
-- [EquipmentManager] 장비 아이템 오브젝트 캐싱을 위한 딕셔너리 선언
-- [EquipmentManager] EquipWeapon(WeaponItem) -> InstantiateEquipment(EquipmentItem) 으로 무기 장비 뿐만 아니라 부모 클래스인 EquipmentItem의 인스턴스화를 처리

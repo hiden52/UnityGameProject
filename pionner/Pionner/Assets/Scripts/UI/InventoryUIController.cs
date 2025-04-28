@@ -29,10 +29,13 @@ public class InventoryUIController : MonoBehaviour
 
     private void InitializeSlots()
     {
+        slots.Clear();
         for (int i = 0; i < inventoryData.MaxSlotCount; i++)
         {
             GameObject slotObj = Instantiate(slotPrefab, slotPannel);
+            slotObj.name = $"Slot_{i}";
             SlotUI slotUI = slotObj.GetComponent<SlotUI>();
+            slotUI.SetSlotIndex(i);
             slotUI.SetSlot(null);
             slots.Add(slotUI);
             slotObj.SetActive(false);

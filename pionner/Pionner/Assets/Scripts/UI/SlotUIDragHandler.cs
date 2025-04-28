@@ -8,30 +8,36 @@ public class SlotUIDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler,
 {
     [SerializeField] private CanvasGroup group;
     [SerializeField] private RectTransform rectTransform;
-    [SerializeField] private IItemSlot slot;
+    [SerializeField] private SlotUI slot;
+    [SerializeField] private InventoryDragDropService inventoryDragDropService;
 
     private void Awake()
     {
         group = GetComponent<CanvasGroup>();
-        slot = GetComponent<IItemSlot>();
+        slot = GetComponent<SlotUI>();
+
+        if(inventoryDragDropService == null)
+        {
+            inventoryDragDropService = GetComponentInParent<InventoryDragDropService>();
+        }
     }
 
     // 드래그 이벤트
     public void OnBeginDrag(PointerEventData eventData)
     {
-        if (!slot.HasItem()) return;
-        group.blocksRaycasts = false;
+        inventoryDragDropService.StartDrag(slot, eventData);
+
+
 
     }
     public void OnDrag(PointerEventData eventData)
     {
-        if (!slot.HasItem()) return;
-        transform.position = eventData.position;
+        inventoryDragDropService.UpdateDrag(eventData);
+       
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        if (!slot.HasItem()) return;
-        group.blocksRaycasts = true;
+        inventoryDragDropService.EndDrag(eventData);
     }
 }

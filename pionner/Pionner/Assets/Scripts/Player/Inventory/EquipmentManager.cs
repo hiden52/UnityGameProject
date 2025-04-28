@@ -1,12 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Net.Sockets;
+using UnityEngine.Events;
 using Unity.VisualScripting;
 using UnityEngine;
-
-
+using System;
 
 public class EquipmentManager : Singleton<EquipmentManager>
 {
@@ -23,6 +20,9 @@ public class EquipmentManager : Singleton<EquipmentManager>
     private Dictionary<EquipmentWhere, Transform> equipSockets;
     private Dictionary<EquipmentWhere, GameObject> currentEquipObjects;
 
+    public Item ItemOnHand => equipDictionary.TryGetValue(EquipmentWhere.RightHand, out EquipmentItem item) ? item : null;
+
+    public static event Action OnEquimentChagned;
     protected override void Awake()
     {
         base.Awake();
@@ -50,6 +50,7 @@ public class EquipmentManager : Singleton<EquipmentManager>
         equipDictionary.Add(equipItem.EuipType, equipItem);
 
         InstantiateEquipment(equipItem);
+        OnEquimentChagned?.Invoke();
     }
 
     public void Unequip(EquipmentWhere equipWhere )
@@ -69,6 +70,7 @@ public class EquipmentManager : Singleton<EquipmentManager>
                 Debug.LogError($"[EquipmentManager] {currentItem.Data.itemName} instance not found in currentEquipObjects.");
             }
         }
+        OnEquimentChagned?.Invoke();
     }
     
 

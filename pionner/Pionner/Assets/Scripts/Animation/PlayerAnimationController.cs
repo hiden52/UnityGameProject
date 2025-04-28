@@ -8,16 +8,54 @@ public class PlayerAnimationController : MonoBehaviour
     [SerializeField] PlayerMovementController playerMovementController;
     [SerializeField] Vector3 playerDir;
 
+    [SerializeField] AnimatorOverrideController armedController;
+    [SerializeField] AnimatorOverrideController unarmedController;
+
+
+
     private void Awake()
     {
         playerAnimator = GetComponent<Animator>();
         playerMovementController = GetComponent<PlayerMovementController>();
         
     }
-    // Start is called before the first frame update
+
     void Start()
     {
         PlayerInputManager.Instance.OnLeftMouseClick += HandleAttack;
+
+        // 플레이어 상태 변경 이벤트 구독
+        PlayerStateManager.Instance.OnStateChanged += HandleStateChanged;
+
+        // init
+        HandleStateChanged(PlayerStateManager.Instance.CurrentState);
+    }
+
+    private void OnDestroy()
+    {
+        PlayerStateManager.Instance.OnStateChanged -= HandleStateChanged;
+    }
+
+    private void HandleStateChanged(PlayerState newState)
+    {
+        switch (newState)
+        {
+            case PlayerState.Armed:
+                if (armedController != null)
+                {
+                    playerAnimator.runtimeAnimatorController = armedController;
+                }
+                playerAnimator.SetBool("Armed", true);
+                break;
+
+            case PlayerState.Unarmed:
+                if (unarmedController != null)
+                {
+                    playerAnimator.runtimeAnimatorController = unarmedController;
+                }
+                playerAnimator.SetBool("Armed", false);
+                break;
+        }
     }
 
     void SetForward()
@@ -81,6 +119,37 @@ public class PlayerAnimationController : MonoBehaviour
 
     private void HandleAttack()
     {
-        playerAnimator.SetTrigger("Attack");
+        var weapon = EquipmentManager.Instance.ItemOnHand as WeaponItem;
+        if (weapon != null)
+        {
+            if (weapon.EquipData is WeaponItemData weaponData)
+            {
+                Debug.Log(weaponData.WeaponType);
+                switch (weaponData.WeaponType)
+                {
+                    case WeaponType.Tool:
+                        playerAnimator.SetTrigger("Tool Attack");
+                        break;
+                    case WeaponType.Sword:
+                        playerAnimator.SetTrigger("Sword Attack");
+                        break;
+                    case WeaponType.Gun:
+                        playerAnimator.SetTrigger("Gun Attack");
+                        break;
+                    default:
+                        playerAnimator.SetTrigger("Attack");
+                        break;
+                }
+            }
+            else
+            {
+                playerAnimator.SetTrigger("Attack");
+            }
+        }
+        else
+        {
+            // 기본 공격 - 현재 없음
+            // playerAnimator.SetTrigger("Attack");
+        }
     }
 }
