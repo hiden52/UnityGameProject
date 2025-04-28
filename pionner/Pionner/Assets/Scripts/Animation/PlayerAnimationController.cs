@@ -112,10 +112,6 @@ public class PlayerAnimationController : MonoBehaviour
         
     }
 
-    private void FixedUpdate() 
-    {
-        
-    }
 
     private void HandleAttack()
     {
@@ -148,7 +144,7 @@ public class PlayerAnimationController : MonoBehaviour
         }
         else
         {
-            // 기본 공격 - 현재 없음
+            // 기본(맨손) 공격 - 현재 없음
             // playerAnimator.SetTrigger("Attack");
         }
     }

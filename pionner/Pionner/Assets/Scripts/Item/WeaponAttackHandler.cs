@@ -6,7 +6,7 @@ public class WeaponAttackHandler : MonoBehaviour
 {
     [SerializeField] public WeaponItem CurrentWeapon => currentWeapon;
 
-    [SerializeField] private float attackRange = 2f;
+    [SerializeField] private float attackRange = 1f;
     [SerializeField] private LayerMask attackableLayers;
     [SerializeField] private Transform attackOrigin; // 주로 카메라 또는 무기 위치
 

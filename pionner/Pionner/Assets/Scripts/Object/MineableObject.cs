@@ -12,9 +12,9 @@ public class MineableObject : DefaultObject, IDamageable, IInteratable
     [SerializeField] private GameObject debris;
 
     [SerializeField] private WeaponType requiredWeaponType = WeaponType.Tool;
-    [SerializeField] private float damageMultiplierForCorrectTool = 1.5f;
+    [SerializeField] private float damageMultiplierForCorrectTool = 1.25f;
 
-    // 파티클 효과 및 소리
+    // 파티클 및 소리
     [SerializeField] private GameObject hitEffectPrefab;
     [SerializeField] private AudioClip hitSound;
     [SerializeField] private AudioClip breakSound;
@@ -70,8 +70,7 @@ public class MineableObject : DefaultObject, IDamageable, IInteratable
 
     public void Interact()
     {
-        // F키 상호작용으로 채굴할 경우 기본 데미지 적용
-        // 현재 장착된 무기가 있다면 해당 무기의 데미지로 계산
+        
         float damage = 1f; // 기본 데미지
 
         WeaponItem equippedWeapon = EquipmentManager.Instance.ItemOnHand as WeaponItem;
@@ -82,16 +81,17 @@ public class MineableObject : DefaultObject, IDamageable, IInteratable
         DamageInfo damageInfo = new DamageInfo { DamageAmount = 1f, Type = WeaponType.None };
         TakeDamage(damageInfo);
     }
+
     private void PlayHitEffect()
     {
-        // 히트 효과 재생 (파티클)
+        // Hit effect
         if (hitEffectPrefab != null)
         {
-            GameObject effect = Instantiate(hitEffectPrefab, transform.position, Quaternion.identity);
+            GameObject effect = Instantiate(hitEffectPrefab, transform.position, Quaternion.identity, transform);
             Destroy(effect, 2f);
         }
 
-        // 히트 소리 재생
+        // HIt sound
         if (audioSource != null && hitSound != null)
         {
             audioSource.PlayOneShot(hitSound);
