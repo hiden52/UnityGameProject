@@ -26,17 +26,17 @@ public class InventoryManager : Singleton<InventoryManager>
 
     private void InitializeInvetoryList()
     {
-        List<Item> currentItems = inventoryData.items;
+        List<Item> currentItems = Items;
         inventoryData.items = new List<Item>(AvailableSlotCount);
         for (int i = 0; i < AvailableSlotCount; i++)
         {
             if (i < currentItems.Count && currentItems[i] != null)
             {
-                inventoryData.items.Add(currentItems[i]);
+                Items.Add(currentItems[i]);
             }
             else
             {
-                inventoryData.items.Add(null); // ºó ½½·Ô
+                Items.Add(null); // ºó ½½·Ô
             }
         }
     }
@@ -44,7 +44,7 @@ public class InventoryManager : Singleton<InventoryManager>
     private int GetCurrentItemCount()
     {
         int count = 0;
-        foreach (Item item in inventoryData.items)
+        foreach (Item item in Items)
         {
             if(item != null)
             {
@@ -56,6 +56,8 @@ public class InventoryManager : Singleton<InventoryManager>
 
     private void Update()
     {
+        // Debug
+        /*
         if (debugPrintItems)
         {
             if (Items.Count > 0)
@@ -79,6 +81,7 @@ public class InventoryManager : Singleton<InventoryManager>
 
             debugPrintItems = false;
         }
+        */
     }
     private void AddSingleItem(ItemData itemData)
     {
@@ -93,13 +96,13 @@ public class InventoryManager : Singleton<InventoryManager>
         }
 
         // ºó ½½·Ô Ã£±â
-        int emptySlotIndex = inventoryData.items.FindIndex(i => i == null);
+        int emptySlotIndex = Items.FindIndex(i => i == null);
         if (emptySlotIndex != -1)
         {
             Item newItem = ItemFactory.CreateItem(itemData, 1);
             if (newItem != null)
             {
-                inventoryData.items[emptySlotIndex] = newItem;
+                Items[emptySlotIndex] = newItem;
                 OnInventoryChanged?.Invoke(Items); 
                 Debug.Log($"{itemData.itemName} 1°³¸¦ Slot_{emptySlotIndex}¿¡ Ãß°¡.");
             }
@@ -116,7 +119,7 @@ public class InventoryManager : Singleton<InventoryManager>
     private List<CountableItem> FindAllStackableItems(CountableItemData itemData)
     {
         List<CountableItem> result = new List<CountableItem>();
-        foreach (Item item in inventoryData.items)
+        foreach (Item item in Items)
         {
             if (item is CountableItem countable && countable.Data == itemData && countable.currentStack < itemData.maxStack)
             {
@@ -160,16 +163,16 @@ public class InventoryManager : Singleton<InventoryManager>
             }
 
             // ºó ½½·Ô Ã£±â
-            int emptySlotIndex = inventoryData.items.FindIndex(item => item == null);
+            int emptySlotIndex = Items.FindIndex(item => item == null);
             if (emptySlotIndex != -1)
             {
                 int amountForNewStack = Mathf.Min(amountToAdd, itemData.maxStack);
                 Item newItem = ItemFactory.CreateItem(itemData, amountForNewStack);
                 if (newItem != null)
                 {
-                    inventoryData.items[emptySlotIndex] = newItem;
+                    Items[emptySlotIndex] = newItem;
                     amountToAdd -= amountForNewStack;
-                    Debug.Log($"[InventoryManager] Add {itemData.itemName} ({amountForNewStack}) to Slot_{emptySlotIndex}");
+                    //Debug.Log($"[InventoryManager] Add {itemData.itemName} ({amountForNewStack}) to Slot_{emptySlotIndex}");
                 }
                 else
                 {
@@ -201,7 +204,7 @@ public class InventoryManager : Singleton<InventoryManager>
             Items.Add(null);
         }
 
-        Debug.Log($"Try Item Move/Swap : {sourceIndex} <-> {targetIndex}");
+        //Debug.Log($"Try Item Move/Swap : {sourceIndex} <-> {targetIndex}");
 
         Item sourceItem = Items[sourceIndex];
         Item targetItem = Items[targetIndex];

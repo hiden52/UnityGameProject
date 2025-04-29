@@ -29,7 +29,14 @@
 
 
 # Doing
-- [x] 아이템 장착시, 인벤토리에서 장착한 아이템이 사라진다. 그러나 장착 아이템 앞 칸에 있는 countable아이템이 그 자리에 복사되어 생김  도대체 왜???
+- [ ] SlotUI 퀵슬롯과의 연계
+- [ ] SlotUI 드래그 시, 퀵슬롯 or 인벤토리 판별
+- [ ] SlotUI 인벤토리 - 퀵슬롯 간의 아이템 이동 시스템
+- [ ] InventoryManager - 싱글톤 해제 ?
+- [ ] InventoryManager - 상위 클래스? 또는 Interface로 분할?
+
+
+
 
 # Done
 - [ObjectPool] GetObject 메소드에서 prefab의 null 방어
@@ -41,3 +48,5 @@
 - [InventoryManager] AddItem 메소드 개선
 
 - 아이템 장착시, 인벤토리에서 장착한 아이템 삭제하기
+
+- [x] 아이템 장착시, 인벤토리에서 장착한 아이템이 사라진다. 그러나 장착 아이템 앞 칸에 있는 countable아이템이 그 자리에 복사되어 생김  도대체 왜???

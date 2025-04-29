@@ -36,7 +36,6 @@ public class InventoryDragDropService : MonoBehaviour
         draggedItemImage.sprite = draggedItem.Data.icon;
         draggedItemImage.color = new Color(1, 1, 1, 0.7f);
         draggedItemImage.gameObject.SetActive(true);
-        //draggedItemImage.SetNativeSize();
 
         if(draggedItem is CountableItem countableItem)
         {
@@ -65,7 +64,7 @@ public class InventoryDragDropService : MonoBehaviour
     {
         if (!isDragging) return;
 
-        HandleDrop(eventData);
+        HandleDrop(eventData); // 주의
 
         if (sourceSlot != null)
         {
@@ -85,7 +84,6 @@ public class InventoryDragDropService : MonoBehaviour
         sourceSlot = null;
         isDragging = false;
     }
-
 
     private void UpdateDraggedItemPosition(PointerEventData eventData)
     {
@@ -107,14 +105,14 @@ public class InventoryDragDropService : MonoBehaviour
 
         if (targetSlot != null && targetSlot != sourceSlot)
         {
-            Debug.Log($"[InventoryDragDropService] 아이템 {draggedItem.Data.itemName} 을(를) 슬롯 {sourceSlot.GetSlotIndex()} 에서 슬롯 {targetSlot.GetSlotIndex()} 위로 드롭함");
+            //Debug.Log($"[InventoryDragDropService] 아이템 {draggedItem.Data.itemName} 을(를) 슬롯 {sourceSlot.GetSlotIndex()} 에서 슬롯 {targetSlot.GetSlotIndex()} 위로 드롭함");
 
             int sourceIndex = sourceSlot.GetSlotIndex();
             int targetIndex = targetSlot.GetSlotIndex();
 
             if (sourceIndex != -1 && targetIndex != -1)
             {
-                InventoryManager.Instance.MoveOrSwapItem(sourceIndex, targetIndex); // InventoryManager에 구현 필요
+                InventoryManager.Instance.MoveOrSwapItem(sourceIndex, targetIndex);
             }
             else
             {
@@ -123,7 +121,7 @@ public class InventoryDragDropService : MonoBehaviour
         }
         else
         {
-            Debug.Log("[InventoryDragDropService] 유효한 슬롯 외부 또는 원래 슬롯 위에 드롭함.");
+            //Debug.Log("[InventoryDragDropService] 유효한 슬롯 외부 또는 원래 슬롯 위에 드롭함.");
         }
     }
 
