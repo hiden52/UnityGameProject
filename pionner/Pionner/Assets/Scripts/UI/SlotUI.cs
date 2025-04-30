@@ -6,8 +6,16 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using static UnityEditor.Progress;
 
+public enum SlotContainerType
+{
+    None,
+    Inventory,
+    QuickSlot,
+    EquipmentSlot,
+}
 public class SlotUI : MonoBehaviour, IPointerDownHandler, IItemSlot
 {
+    [SerializeField] private SlotContainerType slotContainerType = SlotContainerType.None;
     [SerializeField] Image itemIcon;
     [SerializeField] GameObject text;
     [SerializeField] int quantity = 0;
@@ -17,6 +25,8 @@ public class SlotUI : MonoBehaviour, IPointerDownHandler, IItemSlot
     [SerializeField] private SlotUIHoverHandler hoverHandler;
     [SerializeField] private SlotUIDragHandler dragHandler;
     private int slotIndex = -1;
+
+    public SlotContainerType ContainerType => slotContainerType;
 
     private void Awake()
     {
@@ -46,8 +56,17 @@ public class SlotUI : MonoBehaviour, IPointerDownHandler, IItemSlot
         itemIcon.color = colorIcon;
     }
 
+    public void SetContainerType(SlotContainerType container)
+    {
+        slotContainerType = container;
+    }
     public void SetSlot(Item item)
     {
+        if (slotContainerType == SlotContainerType.None)
+        {
+            Debug.LogError("[SlotUI] SlotContainerType is None. Set SlotContainerType!");
+            return;
+        }
         currentItem = item;
 
         if (currentItem != null)

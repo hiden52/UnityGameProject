@@ -25,7 +25,10 @@
 
     
 
-
+# Atantion
+- InvetoryUI, QuickSlotUI 의 UpdateUI 함수들 최적화 
+    - 현재 해당 참조 데이터 변경시 전체 List, Array를 업데이트 하는 방식
+    - 변경 사항만 업데이트 할 필요 있음.
 
 
 # Doing

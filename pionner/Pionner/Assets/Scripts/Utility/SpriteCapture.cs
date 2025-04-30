@@ -13,6 +13,13 @@ public class SpriteCapture : MonoBehaviour
     [Header("Set True to Capture")]
     public bool Capture;
 
+    private void Awake()
+    {
+        if (target == null)
+        {
+            target = transform.GetChild(0).gameObject;
+        }
+    }
     void Start()
     {
         Capture = false;

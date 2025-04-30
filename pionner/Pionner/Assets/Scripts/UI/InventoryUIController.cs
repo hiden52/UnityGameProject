@@ -35,6 +35,7 @@ public class InventoryUIController : MonoBehaviour
             GameObject slotObj = Instantiate(slotPrefab, slotPannel);
             slotObj.name = $"Slot_{i}";
             SlotUI slotUI = slotObj.GetComponent<SlotUI>();
+            slotUI.SetContainerType(SlotContainerType.Inventory);
             slotUI.SetSlotIndex(i);
             slotUI.SetSlot(null);
             slots.Add(slotUI);

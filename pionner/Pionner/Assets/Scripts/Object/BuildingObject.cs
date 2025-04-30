@@ -12,7 +12,12 @@ public class BuildingObject : DefaultObject, IInteratable
     private void Awake()
     {
         debug = false;
-        building = new Building();
+
+        if (building == null)
+        {
+            building = new Building();
+        }
+
         if (animator != null)
         {
             building.SetAnimator(animator);

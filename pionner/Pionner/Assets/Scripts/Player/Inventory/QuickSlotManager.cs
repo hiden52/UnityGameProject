@@ -1,12 +1,17 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
-public class QuickSlotManager : MonoBehaviour
+public class QuickSlotManager : MonoBehaviour, ISlotUIController
 {
-    private List<Item> items = new List<Item>();
+    // 2025-04-30 리팩터, 드래그인 드랍 해결해야함, 상속한 인터페이스도 재고하라. (네이밍, 역할)
+    private Item[] items;
+    public Item[] Items => items;
     public readonly int MAX_SLOT_COUNT = 10;
-    public List<Item> Items => items;
+
+    public event Action OnQuickSlotChanged;
 
     private void Awake()
     {
@@ -16,26 +21,26 @@ public class QuickSlotManager : MonoBehaviour
 
     private void InitializeQuickSlotList()
     {
-        if(items.Count <= 0)
+        items = new Item[MAX_SLOT_COUNT];
+        for (int i = 0; i < MAX_SLOT_COUNT; i++)
         {
-            for (int i = 0; i < MAX_SLOT_COUNT; i++)
-            {
-                items.Add(null);
-            }
+            items[i] = null;
         }
     }
 
-    private int GetCurrentItemCount()
+    public void AssignItem(Item item, int index)
     {
-        int count = 0;
-        foreach (Item item in items)
-        {
-            if (item != null)
-            {
-                count++;
-            }
-        }
-        return count;
+        items[index] = item;
+    }
+
+    public void UnassignItem(int index)
+    {
+        items[index] = null;
+    }
+
+    public void MoveOrSwapItem(int sourceIndex, int targetIndex)
+    {
+
     }
 
 }

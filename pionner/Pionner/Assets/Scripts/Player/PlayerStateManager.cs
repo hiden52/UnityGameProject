@@ -6,14 +6,17 @@ using System;
 public enum PlayerState
 {
     Unarmed,
-    Armed
+    Armed,
+    Builder,
 }
 
 public class PlayerStateManager : Singleton<PlayerStateManager>
 {
     [SerializeField] private PlayerState currentState = PlayerState.Unarmed;
+    [SerializeField] private PlayerState previousState = PlayerState.Unarmed;
 
     public PlayerState CurrentState => currentState;
+    public PlayerState PreviousState => previousState;
     public bool IsArmed => currentState == PlayerState.Armed;
 
     public event Action<PlayerState> OnStateChanged;
@@ -49,11 +52,18 @@ public class PlayerStateManager : Singleton<PlayerStateManager>
             SetState(PlayerState.Unarmed);
         }
     }
-
+    public void ReturnToPreviousState()
+    {
+        if(currentState != previousState)
+        {
+            currentState = previousState;
+        }
+    }
     public void SetState(PlayerState newState)
     {
         if (currentState != newState)
         {
+            previousState = currentState;
             currentState = newState;
             OnStateChanged?.Invoke(currentState);
         }

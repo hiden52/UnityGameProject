@@ -3,7 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InventoryManager : Singleton<InventoryManager>
+// 싱글톤 필요 한가??
+public class InventoryManager : Singleton<InventoryManager>, ISlotUIController
 {
     [SerializeField] private InventoryData inventoryData;
     private int DEFAULT_SLOT_COUNT = 20;
@@ -11,6 +12,7 @@ public class InventoryManager : Singleton<InventoryManager>
     public int AvailableSlotCount => inventoryData.AvailableSlotCount;
     public List<Item> Items => inventoryData.items;
 
+    // 2025-04-30 높은 결합도 해결해야함.
     public static event Action<List<Item>> OnInventoryChanged;
 
     [Header("Debug")]
