@@ -103,10 +103,18 @@ public class InventoryDragDropService : MonoBehaviour
             targetSlot = hitObject.GetComponentInParent<SlotUI>();
         }
 
-        if (targetSlot != null && targetSlot != sourceSlot)
+        if (targetSlot != null && sourceSlot != null)
         {
+            if(targetSlot == sourceSlot)
+            {
+                Debug.Log("같은 슬롯에 드랍");
+                return;
+            }
+
             //Debug.Log($"[InventoryDragDropService] 아이템 {draggedItem.Data.itemName} 을(를) 슬롯 {sourceSlot.GetSlotIndex()} 에서 슬롯 {targetSlot.GetSlotIndex()} 위로 드롭함");
 
+            SlotContainerType sourceType = sourceSlot.ContainerType;
+            SlotContainerType targetType = targetSlot.ContainerType;
             int sourceIndex = sourceSlot.GetSlotIndex();
             int targetIndex = targetSlot.GetSlotIndex();
 

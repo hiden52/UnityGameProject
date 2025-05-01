@@ -33,13 +33,17 @@ public class UIManager : Singleton<UIManager>
     {
         inventoryUI.SetActive(!inventoryUI.activeSelf);
         crosshairUI.SetActive(!crosshairUI.activeSelf);
-        ToggleMouseState();
 
-        if (inventoryUI.activeSelf )
+        if(inventoryUI.activeSelf)
         {
+            SetMouseState(0);
             // InventoryUI 활성화시 회전값, 이동값 초기화
             PlayerInputManager.Instance.ResetMouseDelta();
             PlayerInputManager.Instance.ResetMovementDelta();
+        }
+        else
+        {
+            SetMouseState(1);
         }
     }
 
@@ -60,7 +64,11 @@ public class UIManager : Singleton<UIManager>
         interactionUI.SetActive(active);
     }
 
-    // int state => 0: Free, 1: Lock
+    /// <summary>
+    /// Set Cursor Visiblity.
+    /// 0: visible, 1: Invisible
+    /// </summary>
+    /// <param name="state">0: visible, 1: Invisible</param>
     public void SetMouseState(int state)
     {
         switch (state)

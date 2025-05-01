@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// 싱글톤 필요 한가??
+// 05-01 :: IInventoryActions 인터페이스 확인 및 수정, HandleInventorySlotUpdate 메서드 수정
 public class InventoryManager : Singleton<InventoryManager>, ISlotUIController
 {
     [SerializeField] private InventoryData inventoryData;
