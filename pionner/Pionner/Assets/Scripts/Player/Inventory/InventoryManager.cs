@@ -2,9 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Progress;
 
-// 05-01 :: IInventoryActions 인터페이스 확인 및 수정, HandleInventorySlotUpdate 메서드 수정
-public class InventoryManager : Singleton<InventoryManager>, ISlotUIController
+// 05-02 :: ToDo - HandleInventorySlotUpdate 메서드 수정, 싱글턴 해제
+public class InventoryManager : Singleton<InventoryManager>, IInventoryActions //,ISlotUIController
 {
     [SerializeField] private InventoryData inventoryData;
     private int DEFAULT_SLOT_COUNT = 20;
@@ -12,8 +13,11 @@ public class InventoryManager : Singleton<InventoryManager>, ISlotUIController
     public int AvailableSlotCount => inventoryData.AvailableSlotCount;
     public List<Item> Items => inventoryData.items;
 
-    // 2025-04-30 높은 결합도 해결해야함.
-    public static event Action<List<Item>> OnInventoryChanged;
+    // 2025-04-30   높은 결합도 해결해야함
+    //  --> 싱글턴 해제, (서비스로케이터 도입 검토 - (05.02)안써도 될 듯?)
+    public static event Action<List<Item>> OnInventoryChanged;  // Items 전체순회 - 성능하락
+    public event Action<int, Item> OnSlotUpdated;               // 변경사항 있는 아이템만 업데이트 
+    public event Action<Item> OnItemRemoved;
 
     [Header("Debug")]
     [SerializeField]
@@ -106,6 +110,7 @@ public class InventoryManager : Singleton<InventoryManager>, ISlotUIController
             {
                 Items[emptySlotIndex] = newItem;
                 OnInventoryChanged?.Invoke(Items); 
+                //OnSlotUpdated?.Invoke(emptySlotIndex, newItem);
                 Debug.Log($"{itemData.itemName} 1개를 Slot_{emptySlotIndex}에 추가.");
             }
             else
@@ -130,6 +135,20 @@ public class InventoryManager : Singleton<InventoryManager>, ISlotUIController
         }
         return result;
     }
+    // 위 코드를 아래 코드로 바꿀 예정.
+    private List<int> FindAllStackableItemIndexes(CountableItemData itemData)
+    {
+        List<int> result = new List<int>();
+        for (int i = 0; i < Items.Count; i++)
+        {
+            if (Items[i] is CountableItem countable && countable.Data == itemData && countable.currentStack < itemData.maxStack)
+            {
+                result.Add(i);
+            }
+        }
+        return result;
+    }
+    
     private void AddCoutableItem(CountableItemData itemData, int amount)
     {
         int amountToAdd = amount;
@@ -146,6 +165,9 @@ public class InventoryManager : Singleton<InventoryManager>, ISlotUIController
             if (amountToAdd <= 0)
             {
                 OnInventoryChanged?.Invoke(Items);
+                // 05.02 :: FindAllStackableItemIndexes 사용해서 아래 이벤트 사용할 것임
+                //OnSlotUpdated?.Invoke()
+
                 return;
             }
         }
@@ -230,7 +252,36 @@ public class InventoryManager : Singleton<InventoryManager>, ISlotUIController
         OnInventoryChanged?.Invoke(Items);
     }
 
+    public void RemoveItemByItem(Item removeItem)
+    {
+        int idx = Items.IndexOf(removeItem);
+        if (removeItem == null || idx == -1)
+        {
+            return;
+        }
+        Items[idx] = null;
+        OnSlotUpdated?.Invoke(idx, null);
+        OnItemRemoved?.Invoke(removeItem);
+    }
 
+
+    public void RemoveItemAtIndex(int index)
+    {
+        if(!IsIndexValid(index))
+        {
+            return;
+        }
+
+        if (Items[index] != null)
+        {
+            Item removeItem = Items[index];
+            inventoryData.items[index] = null;
+            OnSlotUpdated?.Invoke(index, null);
+            OnItemRemoved?.Invoke(removeItem);
+        }
+    }
+
+    // 위의 메서드로 교체예정.
     public void RemoveItem(Item item)
     {
         if (Items.Contains(item))
@@ -251,6 +302,37 @@ public class InventoryManager : Singleton<InventoryManager>, ISlotUIController
         {
             Items.Add(null);
         }
+
         OnInventoryChanged?.Invoke(Items);
+    }
+
+    public Item GetItem(int index)
+    {
+        if(IsIndexValid(index))
+        {
+            return Items[index];
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    public bool ContainsItem(Item item)
+    {
+        if (item == null)
+        {
+            return false;
+        }
+
+        return Items.Contains(item);
+    }
+    public List<Item> GetAllItems()
+    {
+        return Items;
+    }
+    private bool IsIndexValid(int index)
+    {
+        return index >= 0 && index < Items.Count;
     }
 }

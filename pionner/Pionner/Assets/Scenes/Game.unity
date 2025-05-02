@@ -2678,6 +2678,7 @@ MonoBehaviour:
   draggedItemImage: {fileID: 2084210097}
   draggedItemQuantityText: {fileID: 0}
   parentCanvas: {fileID: 84637432}
+  goInventoryActions: {fileID: 1502795495}
 --- !u!1 &740400437
 GameObject:
   m_ObjectHideFlags: 0
@@ -3640,6 +3641,7 @@ MonoBehaviour:
   draggedItemImage: {fileID: 2084210097}
   draggedItemQuantityText: {fileID: 0}
   parentCanvas: {fileID: 84637432}
+  goInventoryActions: {fileID: 0}
 --- !u!222 &1033794379
 CanvasRenderer:
   m_ObjectHideFlags: 0

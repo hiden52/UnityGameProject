@@ -7,7 +7,9 @@ public class InventoryDragDropService : MonoBehaviour
     [SerializeField] private Image draggedItemImage;
     [SerializeField] private Text draggedItemQuantityText; 
     [SerializeField] private Canvas parentCanvas;
-
+    [SerializeField] private GameObject goInventoryActions;
+    
+    private IInventoryActions inventoryActions;
     private Item draggedItem = null;
     private SlotUI sourceSlot = null;
     private bool isDragging = false;
@@ -15,6 +17,16 @@ public class InventoryDragDropService : MonoBehaviour
 
     void Awake()
     {
+        if (goInventoryActions != null)
+        {
+            inventoryActions = goInventoryActions.GetComponent<IInventoryActions>();
+            if (inventoryActions == null)
+            {
+                string assignedObjectName = goInventoryActions.name;
+
+                Debug.LogError($"[{GetType().Name}] Assigned GameObject '{assignedObjectName}' is missing the IInventoryActions component.", this);
+            }
+        }
         if (parentCanvas == null) parentCanvas = GetComponentInParent<Canvas>();
         if (draggedItemQuantityText == null) draggedItemQuantityText = draggedItemImage.GetComponentInChildren<Text>();
         if (draggedItemImage != null) draggedItemRectTransform = draggedItemImage.GetComponent<RectTransform>();
@@ -120,7 +132,8 @@ public class InventoryDragDropService : MonoBehaviour
 
             if (sourceIndex != -1 && targetIndex != -1)
             {
-                InventoryManager.Instance.MoveOrSwapItem(sourceIndex, targetIndex);
+                inventoryActions.MoveOrSwapItem(sourceIndex, targetIndex);
+                //InventoryManager.Instance.MoveOrSwapItem(sourceIndex, targetIndex);
             }
             else
             {

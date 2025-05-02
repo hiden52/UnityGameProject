@@ -26,11 +26,11 @@ public class QuickSlotManager : MonoBehaviour, IQuickSlotActions
 
     private void OnEnable()
     {
-        inventoryManager.SlotUpdated += HandleInventorySLotUpdate;
+        inventoryManager.OnSlotUpdated += HandleInventorySLotUpdate;
     }
     private void OnDisable()
     {
-        inventoryManager.SlotUpdated -= HandleInventorySLotUpdate;
+        inventoryManager.OnSlotUpdated -= HandleInventorySLotUpdate;
     }
 
 
