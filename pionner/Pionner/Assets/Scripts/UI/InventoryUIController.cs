@@ -20,11 +20,13 @@ public class InventoryUIController : MonoBehaviour
 
         UpdateInventoryUI(inventoryData.items);
         InventoryManager.OnInventoryChanged += UpdateInventoryUI;
+        InventoryManager.Instance.OnSlotUpdated += UpdateInventorySlot;
     }
 
     public void OnDisable()
     {
         InventoryManager.OnInventoryChanged -= UpdateInventoryUI;
+        InventoryManager.Instance.OnSlotUpdated -= UpdateInventorySlot;
     }
 
     private void InitializeSlots()
@@ -43,6 +45,13 @@ public class InventoryUIController : MonoBehaviour
         }
     }
 
+    private void UpdateInventorySlot(int index, Item item)
+    {
+        if (index >= 0 && index < slots.Count)
+        {
+            slots[index].SetSlot(item);
+        }
+    }
     public void UpdateInventoryUI(List<Item> items)
     {
         // Debug

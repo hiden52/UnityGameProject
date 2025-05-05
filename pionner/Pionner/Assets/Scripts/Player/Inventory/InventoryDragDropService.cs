@@ -5,11 +5,15 @@ using UnityEngine.EventSystems;
 public class InventoryDragDropService : MonoBehaviour
 {
     [SerializeField] private Image draggedItemImage;
-    [SerializeField] private Text draggedItemQuantityText; 
+    [SerializeField] private Text draggedItemQuantityText;
     [SerializeField] private Canvas parentCanvas;
+    [Header("Manager references")]
     [SerializeField] private GameObject goInventoryActions;
-    
+    [SerializeField] private GameObject goQuickSlotActions;
+
     private IInventoryActions inventoryActions;
+    private IQuickSlotActions quickSlotActions;
+
     private Item draggedItem = null;
     private SlotUI sourceSlot = null;
     private bool isDragging = false;
@@ -27,19 +31,34 @@ public class InventoryDragDropService : MonoBehaviour
                 Debug.LogError($"[{GetType().Name}] Assigned GameObject '{assignedObjectName}' is missing the IInventoryActions component.", this);
             }
         }
+        if (goQuickSlotActions != null)
+        {
+            quickSlotActions = goQuickSlotActions.GetComponent<IQuickSlotActions>();
+            if (quickSlotActions == null)
+            {
+                string assignedObjectName = goQuickSlotActions.name;
+
+                Debug.LogError($"[{GetType().Name}] Assigned GameObject '{assignedObjectName}' is missing the IInventoryActions component.", this);
+            }
+        }
         if (parentCanvas == null) parentCanvas = GetComponentInParent<Canvas>();
         if (draggedItemQuantityText == null) draggedItemQuantityText = draggedItemImage.GetComponentInChildren<Text>();
         if (draggedItemImage != null) draggedItemRectTransform = draggedItemImage.GetComponent<RectTransform>();
 
         // init draggedIcon
         if (draggedItemImage != null) draggedItemImage.gameObject.SetActive(false);
-        if(draggedItemQuantityText != null) draggedItemQuantityText.enabled = false;
+        if (draggedItemQuantityText != null) draggedItemQuantityText.enabled = false;
     }
 
 
     public void StartDrag(SlotUI slot, PointerEventData eventData)
     {
-        if (!slot.HasItem() || isDragging) return; 
+        if (inventoryActions == null || quickSlotActions == null)
+        {
+            Debug.LogError("[InventoryDragDropService] Cannot start drag: Manager references are not set!");
+            return;
+        }
+        if (!slot.HasItem() || isDragging) return;
 
         sourceSlot = slot;
         draggedItem = slot.GetItem();
@@ -49,7 +68,7 @@ public class InventoryDragDropService : MonoBehaviour
         draggedItemImage.color = new Color(1, 1, 1, 0.7f);
         draggedItemImage.gameObject.SetActive(true);
 
-        if(draggedItem is CountableItem countableItem)
+        if (draggedItem is CountableItem countableItem && countableItem.currentStack > 1)
         {
             draggedItemQuantityText.text = countableItem.currentStack.ToString();
             draggedItemQuantityText.enabled = true;
@@ -78,6 +97,11 @@ public class InventoryDragDropService : MonoBehaviour
 
         HandleDrop(eventData); // 주의
 
+        CleanUpDragState();
+    }
+
+    private void CleanUpDragState()
+    {
         if (sourceSlot != null)
         {
             // 원본 슬롯 모습 복원
@@ -92,11 +116,15 @@ public class InventoryDragDropService : MonoBehaviour
         {
             draggedItemImage.gameObject.SetActive(false);
         }
+        if (draggedItemQuantityText != null)
+        {
+            draggedItemQuantityText.enabled = false;
+        }
+
         draggedItem = null;
         sourceSlot = null;
         isDragging = false;
     }
-
     private void UpdateDraggedItemPosition(PointerEventData eventData)
     {
         if (draggedItemRectTransform != null)
@@ -130,19 +158,54 @@ public class InventoryDragDropService : MonoBehaviour
             int sourceIndex = sourceSlot.GetSlotIndex();
             int targetIndex = targetSlot.GetSlotIndex();
 
-            if (sourceIndex != -1 && targetIndex != -1)
+            Debug.Log($"Drop Interaction: {sourceType} Slot {sourceIndex} -> {targetType} Slot {targetIndex}");
+            if (sourceType == SlotContainerType.Inventory && targetType == SlotContainerType.Inventory)
             {
                 inventoryActions.MoveOrSwapItem(sourceIndex, targetIndex);
-                //InventoryManager.Instance.MoveOrSwapItem(sourceIndex, targetIndex);
             }
+            else if (sourceType == SlotContainerType.Inventory && targetType == SlotContainerType.QuickSlot)
+            {
+                if (draggedItem != null)
+                {
+                    quickSlotActions.AssignItem(targetIndex, draggedItem);
+                }
+            }
+            //else if (sourceType == SlotContainerType.Inventory && targetType == SlotContainerType.EquipmentSlot)
+            else if (sourceType == SlotContainerType.QuickSlot && targetType == SlotContainerType.Inventory)
+            {
+                Debug.Log("Unssign QuickSlot" + sourceIndex);
+                quickSlotActions.UnassignItem(sourceIndex);
+            }
+            else if (sourceType == SlotContainerType.QuickSlot && targetType == SlotContainerType.QuickSlot)
+            {
+                quickSlotActions.MoveOrSwapAssignment(sourceIndex, targetIndex);
+            }
+            //else if(sourceType == SlotContainerType.EquipmentSlot && targetType == SlotContainerType.Inventory)
             else
             {
-                Debug.LogError("[InventoryDragDropService] 드래그/드롭을 위한 슬롯 인덱스를 결정할 수 없습니다.");
+                Debug.LogWarning($"[InventoryDragDropService] Unhandled Slot Drop: {sourceType} -> {targetType}");
             }
         }
         else
         {
-            //Debug.Log("[InventoryDragDropService] 유효한 슬롯 외부 또는 원래 슬롯 위에 드롭함.");
+            SlotContainerType sourceType = sourceSlot.ContainerType;
+            int sourceIndex = sourceSlot.GetSlotIndex();
+
+            if (sourceType == SlotContainerType.QuickSlot)
+            {
+                Debug.Log($"[InventoryDragDropService] 퀵슬롯 {sourceIndex} 외부 드롭, 할당 해제.");
+                quickSlotActions.UnassignItem(sourceIndex);
+            }
+            else if (sourceType == SlotContainerType.Inventory)
+            {
+                Debug.Log($"[InventoryDragDropService] 인벤토리 {sourceIndex} 외부 드롭, 아이템 버리기?");
+                inventoryActions.RemoveItemAtIndex(sourceIndex);
+                // 아이템 드롭 효과?
+            }
+            else
+            {
+                Debug.Log("유효하지 않은 대상에 드롭됨.");
+            }
         }
     }
 

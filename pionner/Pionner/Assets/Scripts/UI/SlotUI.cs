@@ -19,7 +19,7 @@ public class SlotUI : MonoBehaviour, IPointerDownHandler, IItemSlot
     [SerializeField] Image itemIcon;
     [SerializeField] GameObject text;
     [SerializeField] int quantity = 0;
-    private int slotIndex = -1;
+    [SerializeField] private int slotIndex = -1;
     private Item currentItem;
     [SerializeField] private Image backroundImage;
     [SerializeField] private Canvas canvas;
