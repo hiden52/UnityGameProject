@@ -152,9 +152,24 @@ public class InventoryManager : Singleton<InventoryManager>, IInventoryActions /
     private void AddCoutableItem(CountableItemData itemData, int amount)
     {
         int amountToAdd = amount;
-
+        List<int> stackbleIndexes = FindAllStackableItemIndexes(itemData);
         List<CountableItem> existingStacks = FindAllStackableItems(itemData);
 
+        foreach (int i in stackbleIndexes)
+        {
+            CountableItem countableItem = Items[i] as CountableItem;
+            int canAdd = itemData.maxStack - countableItem.currentStack;
+            int addedAmount = Math.Min(amountToAdd, canAdd);
+            countableItem.Add(addedAmount);
+            amountToAdd -= addedAmount;
+
+            if(amountToAdd <= 0)
+            {
+                OnSlotUpdated(i, countableItem);
+                return;
+            }
+        }
+        /*
         foreach (CountableItem item in existingStacks)
         {
             int canAdd = itemData.maxStack - item.currentStack;
@@ -171,6 +186,7 @@ public class InventoryManager : Singleton<InventoryManager>, IInventoryActions /
                 return;
             }
         }
+        */
 
         // new CountableItem stack
         while (amountToAdd > 0)
@@ -182,7 +198,8 @@ public class InventoryManager : Singleton<InventoryManager>, IInventoryActions /
                 // 남은 아이템 처리 로직
                 //
 
-                OnInventoryChanged?.Invoke(Items); // 부분적으로 추가되었을 수 있으므로 알림
+                // ㄴㄴ 이미 추가->슬롯갱신 이빈트 트리거 후 돌아오기 때문에 더이상 갱신할 필요가 없음.
+                //OnInventoryChanged?.Invoke(Items); // 부분적으로 추가되었을 수 있으므로 알림
                 return;
             }
 
@@ -197,6 +214,7 @@ public class InventoryManager : Singleton<InventoryManager>, IInventoryActions /
                     Items[emptySlotIndex] = newItem;
                     amountToAdd -= amountForNewStack;
                     //Debug.Log($"[InventoryManager] Add {itemData.itemName} ({amountForNewStack}) to Slot_{emptySlotIndex}");
+                    OnSlotUpdated(emptySlotIndex, newItem);
                 }
                 else
                 {
@@ -209,8 +227,6 @@ public class InventoryManager : Singleton<InventoryManager>, IInventoryActions /
                 Debug.LogError($"[InventoryManager] 인벤토리에 공간({AvailableSlotCount - GetCurrentItemCount()}개)이 있지만 빈 슬롯(null)을 찾지 못했습니다! 리스트 관리 확인 필요.");
                 break; 
             }
-
-            OnInventoryChanged?.Invoke(Items);
         }
     }
 
