@@ -109,8 +109,7 @@ public class InventoryManager : Singleton<InventoryManager>, IInventoryActions /
             if (newItem != null)
             {
                 Items[emptySlotIndex] = newItem;
-                OnInventoryChanged?.Invoke(Items); 
-                //OnSlotUpdated?.Invoke(emptySlotIndex, newItem);
+                OnSlotUpdated?.Invoke(emptySlotIndex, newItem);
                 Debug.Log($"{itemData.itemName} 1개를 Slot_{emptySlotIndex}에 추가.");
             }
             else
@@ -123,19 +122,21 @@ public class InventoryManager : Singleton<InventoryManager>, IInventoryActions /
             Debug.LogError($"인벤토리에 공간({AvailableSlotCount - GetCurrentItemCount()}개)이 있지만 빈 슬롯(null)을 찾지 못했습니다!");
         }
     }
-    private List<CountableItem> FindAllStackableItems(CountableItemData itemData)
-    {
-        List<CountableItem> result = new List<CountableItem>();
-        foreach (Item item in Items)
-        {
-            if (item is CountableItem countable && countable.Data == itemData && countable.currentStack < itemData.maxStack)
-            {
-                result.Add(countable);
-            }
-        }
-        return result;
-    }
+    /*
+    //private List<CountableItem> FindAllStackableItems(CountableItemData itemData)
+    //{
+    //    List<CountableItem> result = new List<CountableItem>();
+    //    foreach (Item item in Items)
+    //    {
+    //        if (item is CountableItem countable && countable.Data == itemData && countable.currentStack < itemData.maxStack)
+    //        {
+    //            result.Add(countable);
+    //        }
+    //    }
+    //    return result;
+    //}
     // 위 코드를 아래 코드로 바꿀 예정.
+    */
     private List<int> FindAllStackableItemIndexes(CountableItemData itemData)
     {
         List<int> result = new List<int>();
@@ -153,7 +154,7 @@ public class InventoryManager : Singleton<InventoryManager>, IInventoryActions /
     {
         int amountToAdd = amount;
         List<int> stackbleIndexes = FindAllStackableItemIndexes(itemData);
-        List<CountableItem> existingStacks = FindAllStackableItems(itemData);
+       // List<CountableItem> existingStacks = FindAllStackableItems(itemData);
 
         foreach (int i in stackbleIndexes)
         {
@@ -198,8 +199,6 @@ public class InventoryManager : Singleton<InventoryManager>, IInventoryActions /
                 // 남은 아이템 처리 로직
                 //
 
-                // ㄴㄴ 이미 추가->슬롯갱신 이빈트 트리거 후 돌아오기 때문에 더이상 갱신할 필요가 없음.
-                //OnInventoryChanged?.Invoke(Items); // 부분적으로 추가되었을 수 있으므로 알림
                 return;
             }
 
@@ -232,16 +231,10 @@ public class InventoryManager : Singleton<InventoryManager>, IInventoryActions /
 
     public void MoveOrSwapItem(int sourceIndex, int targetIndex)
     {
-        int maxIndex = AvailableSlotCount;
-        if (sourceIndex < 0 || sourceIndex >= maxIndex || targetIndex < 0 || targetIndex >= maxIndex)
+        if(!IsIndexValid(sourceIndex) || !IsIndexValid(targetIndex))
         {
             Debug.LogError($"[InventoryManager] Item move/swap, Index error : Source = {sourceIndex}, Target = {targetIndex}");
             return;
-        }
-
-        while (Items.Count < AvailableSlotCount)
-        {
-            Items.Add(null);
         }
 
         //Debug.Log($"Try Item Move/Swap : {sourceIndex} <-> {targetIndex}");
@@ -252,7 +245,8 @@ public class InventoryManager : Singleton<InventoryManager>, IInventoryActions /
         Items[targetIndex] = sourceItem;
         Items[sourceIndex] = targetItem;
 
-        OnInventoryChanged?.Invoke(Items);
+        OnSlotUpdated(targetIndex, sourceItem);
+        OnSlotUpdated(sourceIndex, targetItem);
     }
     public void AddItem(ItemData itemData, int amount = 1)
     {
@@ -264,8 +258,6 @@ public class InventoryManager : Singleton<InventoryManager>, IInventoryActions /
         {
             AddSingleItem(itemData);
         }
-
-        OnInventoryChanged?.Invoke(Items);
     }
 
     public void RemoveItemByItem(Item removeItem)
@@ -297,15 +289,6 @@ public class InventoryManager : Singleton<InventoryManager>, IInventoryActions /
         }
     }
 
-    // 위의 메서드로 교체예정.
-    public void RemoveItem(Item item)
-    {
-        if (Items.Contains(item))
-        {
-            Items[Items.IndexOf(item)] = null;
-            OnInventoryChanged?.Invoke(Items);
-        }
-    }
     public void ReduceAmount(CountableItem item, int amount)
     {
         if (item == null) return;

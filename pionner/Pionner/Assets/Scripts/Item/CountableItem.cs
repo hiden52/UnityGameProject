@@ -20,7 +20,7 @@ public class CountableItem : Item
         }
         else
         {
-            InventoryManager.Instance.RemoveItem(this);
+            InventoryManager.Instance.RemoveItemByItem(this);
         }
     }
 

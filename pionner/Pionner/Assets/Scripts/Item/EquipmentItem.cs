@@ -15,7 +15,7 @@ public abstract class EquipmentItem : Item
     }
     public override void Use()
     {
-        InventoryManager.Instance.RemoveItem(this);
+        InventoryManager.Instance.RemoveItemByItem(this);
         Equip();
     }
 }
