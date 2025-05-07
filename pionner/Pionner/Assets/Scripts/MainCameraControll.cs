@@ -5,14 +5,18 @@ using UnityEngine;
 
 public class MainCameraControll : MonoBehaviour
 {
-    
 
     [Header("디버깅")]
-    [SerializeField] GameObject playerHead;
     [SerializeField] Vector2 mouseMovement;
     [SerializeField] float MouseX = 0;
     [SerializeField] float MouseY = 0;
+    [SerializeField] bool isAiming = false;
     [SerializeField] Transform upperBody;
+
+    [Header("설정")]
+    [SerializeField] float verticalLookSpeed = 1.0f;
+    [SerializeField] float horizontalLookSpeed = 1.0f;
+    [SerializeField] float verticalClamp = 50f;
 
 
     void Start()
@@ -23,9 +27,9 @@ public class MainCameraControll : MonoBehaviour
     void Update()
     {
         mouseMovement = PlayerInputManager.Instance.MousePos;
-        //MouseX += mouseMovement.x;
-        MouseY -= mouseMovement.y;
-        MouseY = Mathf.Clamp(MouseY, -50f, 50f);
+        MouseX += mouseMovement.x * horizontalLookSpeed;
+        MouseY -= mouseMovement.y * verticalLookSpeed;
+        MouseY = Mathf.Clamp(MouseY, -verticalClamp, verticalClamp);
 
         RotateCamera();
         RotateUpperBody();
@@ -38,9 +42,9 @@ public class MainCameraControll : MonoBehaviour
 
     void RotateUpperBody()
     {        
-        if (upperBody != null)
+        if (isAiming && upperBody != null)
         {
-            upperBody.localEulerAngles = new Vector3(MouseY, 0, 0); // 회전 비율 조정 가능
+            upperBody.localEulerAngles = new Vector3(MouseY, 0, 0); 
         }
     }
 }

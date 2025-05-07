@@ -23,6 +23,7 @@ public class EquipmentManager : Singleton<EquipmentManager>
     public Item ItemOnHand => equipDictionary.TryGetValue(EquipmentWhere.RightHand, out EquipmentItem item) ? item : null;
 
     public static event Action OnEquimentChagned;
+    public event Action<EquipmentWhere, EquipmentItem> OnSlotUpdated;
     protected override void Awake()
     {
         base.Awake();
@@ -51,6 +52,7 @@ public class EquipmentManager : Singleton<EquipmentManager>
 
         InstantiateEquipment(equipItem);
         OnEquimentChagned?.Invoke();
+        OnSlotUpdated?.Invoke(equipItem.EuipType, equipItem);
     }
 
     public void Unequip(EquipmentWhere equipWhere )
@@ -71,6 +73,7 @@ public class EquipmentManager : Singleton<EquipmentManager>
             }
         }
         OnEquimentChagned?.Invoke();
+        OnSlotUpdated?.Invoke(equipWhere, null);
     }
     
 

@@ -5,6 +5,8 @@ using UnityEngine;
 public class UIManager : Singleton<UIManager>
 {
     [SerializeField] private GameObject inventoryUI;
+    [SerializeField] private GameObject equipmentsUI;
+
     [SerializeField] private GameObject crosshairUI;
     [SerializeField] private GameObject statusUI;
     [SerializeField] private GameObject quickMenuUI;
@@ -32,6 +34,7 @@ public class UIManager : Singleton<UIManager>
     void ToggleInventoryUI()
     {
         inventoryUI.SetActive(!inventoryUI.activeSelf);
+        equipmentsUI.SetActive(!equipmentsUI.activeSelf);
         crosshairUI.SetActive(!crosshairUI.activeSelf);
 
         if(inventoryUI.activeSelf)
@@ -58,6 +61,7 @@ public class UIManager : Singleton<UIManager>
     public void DeactivateInteractionUI()
     {
         interactionUI.SetActive(false);
+        equipmentsUI.SetActive(false);
     }
     public void SetStateInteractUI(bool active)
     {
@@ -97,6 +101,7 @@ public class UIManager : Singleton<UIManager>
         SetMouseState(1);
         //quickMenuUI.SetActive(true);
         //statusUI.SetActive(true);
+        equipmentsUI.SetActive(false);
         crosshairUI.SetActive(true);
         inventoryUI.SetActive(false);
         interactionUI.SetActive(false);

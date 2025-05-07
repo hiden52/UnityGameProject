@@ -22,7 +22,9 @@ public class PlayerInputManager : Singleton<PlayerInputManager>
     [SerializeField] bool shift;
     public bool Shift { get { return shift; } }
     [SerializeField] bool mouseLB;
+    [SerializeField] bool isJumping;
 
+    public bool IsJumping => isJumping;
     public event Action OnTabPressed;
     public event Action OnLeftMouseClick;
     public event Action OnKeyFPressed;
@@ -71,6 +73,14 @@ public class PlayerInputManager : Singleton<PlayerInputManager>
             OnKeyFPressed?.Invoke();
         }
 
+        if(Input.GetButtonDown("Jump"))
+        {
+            isJumping = true;
+        }
+        else
+        {
+            isJumping = false;
+        }
         
 
     }

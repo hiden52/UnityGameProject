@@ -11,13 +11,30 @@ public class PlayerAnimationController : MonoBehaviour
     [SerializeField] AnimatorOverrideController armedController;
     [SerializeField] AnimatorOverrideController unarmedController;
 
+    private bool isMoving = false;
+    private bool isSprinting = false;
+    private bool isArmed = false;
+    private bool isGrounded = false;
 
+    private int jumpAnimHash;
+    private int moveSpeedHash;
+    private int isMovingHash;
+    private int isSprintingHash;
+    private int isArmedHash;
+    private int isGroundedHash;
+    private int isAimingHash;
+    private int forwardHash;
+    private int horizontalInputHash;
+    private int verticalInputHash;
 
     private void Awake()
     {
+       
         playerAnimator = GetComponent<Animator>();
-        playerMovementController = GetComponent<PlayerMovementController>();
-        
+        playerMovementController = GetComponentInParent<PlayerMovementController>();
+        CacheAnimationParameters();
+
+
     }
 
     void Start()
@@ -29,11 +46,27 @@ public class PlayerAnimationController : MonoBehaviour
 
         // init
         HandleStateChanged(PlayerStateManager.Instance.CurrentState);
+        playerMovementController.OnStartJunping += Jump;
     }
 
     private void OnDestroy()
     {
         PlayerStateManager.Instance.OnStateChanged -= HandleStateChanged;
+        playerMovementController.OnStartJunping -= Jump;
+    }
+
+
+    private void CacheAnimationParameters()
+    {
+        jumpAnimHash = Animator.StringToHash("Jump");
+        moveSpeedHash = Animator.StringToHash("MoveSpeed");
+        isMovingHash = Animator.StringToHash("IsMoving");
+        isSprintingHash = Animator.StringToHash("IsSprinting");
+        isArmedHash = Animator.StringToHash("IsArmed");
+        isAimingHash = Animator.StringToHash("IsAiming");
+        isGroundedHash = Animator.StringToHash("IsGrounded");
+        horizontalInputHash = Animator.StringToHash("HorizontalInput");
+        verticalInputHash = Animator.StringToHash("VerticalInput");
     }
 
     private void HandleStateChanged(PlayerState newState)
@@ -45,7 +78,7 @@ public class PlayerAnimationController : MonoBehaviour
                 {
                     playerAnimator.runtimeAnimatorController = armedController;
                 }
-                playerAnimator.SetBool("Armed", true);
+                isArmed = true;
                 break;
 
             case PlayerState.Unarmed:
@@ -53,65 +86,36 @@ public class PlayerAnimationController : MonoBehaviour
                 {
                     playerAnimator.runtimeAnimatorController = unarmedController;
                 }
-                playerAnimator.SetBool("Armed", false);
+                isArmed = false;
                 break;
         }
+
+        playerAnimator.SetBool(isArmedHash, isArmed);
     }
-
-    void SetForward()
-    {
-        playerAnimator.SetBool("Forward", true);
-        playerAnimator.SetBool("Backward", false);
-    }
-
-    void SetBackward()
-    {
-        playerAnimator.SetBool("Backward", true);
-        playerAnimator.SetBool("Forward", false);
-    }
-
-    void SetIdle()
-    {
-        playerAnimator.SetBool("Move", false);
-        playerAnimator.SetBool("Forward", false);
-        playerAnimator.SetBool("Backward", false);
-    }
-
-
+    
     // Update is called once per frame
     void Update()
     {
-        playerDir = playerMovementController.localDir;
+        playerDir = playerMovementController.inputDirection;
+        isMoving = (playerDir.z != 0 || playerDir.x != 0);
+        isSprinting = PlayerInputManager.Instance.Shift;
+        isGrounded = playerMovementController.IsGrounded;
+        
+        
+        playerAnimator.SetBool(isMovingHash, isMoving && isGrounded);
+        playerAnimator.SetBool(isSprintingHash, isSprinting);
+        playerAnimator.SetBool(isGroundedHash, isGrounded);
 
-        if (playerDir.z != 0 || playerDir.x != 0)
-        {
-            playerAnimator.SetBool("Move", true);
-        }
-        else
-        {
-            SetIdle();
-        }
-
-        if (playerDir.z > 0)
-        {
-            SetForward();
-        }
-        else if (playerDir.z < 0)
-        {
-            SetBackward();
-        }
-
-        if(PlayerInputManager.Instance.Shift)
-        {
-            playerAnimator.SetBool("Shift", true);
-        }
-        else
-        {
-            playerAnimator.SetBool("Shift", false);
-        }
+        
         
     }
 
+    private void Jump()
+    {
+        isGrounded = false;
+        playerAnimator.Play(jumpAnimHash);
+        
+    }
 
     private void HandleAttack()
     {
