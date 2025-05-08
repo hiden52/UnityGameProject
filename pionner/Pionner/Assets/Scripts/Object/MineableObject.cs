@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MineableObject : DefaultObject, IDamageable, IInteratable
+public class MineableObject : DefaultObject, IDamageable, IInteractable
 {
     [SerializeField] private CountableItemData itemData;
     [SerializeField] private float maxDurability = 5;

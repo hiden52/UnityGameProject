@@ -16327,10 +16327,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0760c08514293b04894f6b4d4628ef16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targets: []
-  outlines: []
   outlineColor: {r: 1, g: 1, b: 1, a: 1}
   outlineWidth: 0.001
+  outlineShader: {fileID: 4800000, guid: 8e4c9736a331ecd4683a23845cd13860, type: 3}
 --- !u!1 &1496919383
 GameObject:
   m_ObjectHideFlags: 0

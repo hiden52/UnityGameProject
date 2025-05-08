@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class ItemObject : DefaultObject, IInteratable
+public abstract class ItemObject : DefaultObject, IInteractable
 {
     [SerializeField] protected ItemData itemData;
     public virtual void Interact()

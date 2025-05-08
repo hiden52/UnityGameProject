@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions.Must;
 
-public class BuildingObject : DefaultObject, IInteratable
+public class BuildingObject : DefaultObject, IInteractable
 {
     [SerializeField] private Building building;
     [SerializeField] private List<Animator> animator;
