@@ -58,7 +58,7 @@ public class PlayerAnimationController : MonoBehaviour
 
     private void CacheAnimationParameters()
     {
-        jumpAnimHash = Animator.StringToHash("Jump");
+        jumpAnimHash = Animator.StringToHash("Jump_Up");
         moveSpeedHash = Animator.StringToHash("MoveSpeed");
         isMovingHash = Animator.StringToHash("IsMoving");
         isSprintingHash = Animator.StringToHash("IsSprinting");

@@ -14,9 +14,14 @@ public class PlayerMovementController : MonoBehaviour
     [SerializeField] public Vector3 inputDirection;
     [SerializeField] private LayerMask layerGround;
     [SerializeField] private float jumpHeight = 3f;
+    [SerializeField] private Collider footCollider;
+
+    private Collider groundDetector;
+
     [Header("State")]
     [SerializeField]public bool isAiming = false;
     [SerializeField] private bool isGrounded = true;
+
     float followYOffset = 1.576f;
     Vector3 followPos;
     private Vector3 forward;
@@ -29,7 +34,12 @@ public class PlayerMovementController : MonoBehaviour
 
     private void Awake()
     {
+        groundDetector = GetComponent<Collider>();
         rb = GetComponent<Rigidbody>();
+        if( footCollider != null )
+        {
+            footCollider.enabled = false;
+        }
         if(rb == null)
         {
             Debug.LogError("[PlayerMovementContoller] RigidBody is null");
@@ -53,6 +63,8 @@ public class PlayerMovementController : MonoBehaviour
         CheckGround();
         if (PlayerInputManager.Instance.IsJumping && isGrounded)
         {
+            groundDetector = footCollider;
+            footCollider.enabled = true;
             Vector3 jumpPower = Vector3.up * jumpHeight;
             rb.AddForce(jumpPower, ForceMode.VelocityChange);
             OnStartJunping?.Invoke();
@@ -126,14 +138,15 @@ public class PlayerMovementController : MonoBehaviour
 
     private void CheckGround()
     {
-        RaycastHit hit;
-        if(Physics.Raycast(transform.position + (Vector3.up * 0.2f), Vector3.down, out hit, 0.3f, layerGround))
+        if(Physics.Raycast(groundDetector.transform.position + (Vector3.up * 0.2f), Vector3.down, out RaycastHit hit, 0.6f, layerGround))
         {
             isGrounded = true;
+            groundDetector = GetComponent<Collider>();
         }
         else
         {
             isGrounded = false;
+            groundDetector = footCollider;
         }
     }
     private void RotateTowardsMovementDirection()
