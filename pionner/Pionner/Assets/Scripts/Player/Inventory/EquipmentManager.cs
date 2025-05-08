@@ -43,9 +43,13 @@ public class EquipmentManager : Singleton<EquipmentManager>
 
     public void Equip(EquipmentItem equipItem)
     {
-        if(equipDictionary.ContainsKey(equipItem.EuipType))
+        if (equipDictionary.TryGetValue(equipItem.EuipType, out EquipmentItem previousEquipment))
         {
             Unequip(equipItem.EuipType);
+            // 05-08 Thu.
+            // 착용중인 장비의 재착용 및 복사 방지
+            // 더 나은 방법 있을까? 뭔가 SRP에 위배되는 느낌
+            if (equipItem == previousEquipment) return;
         }
 
         equipDictionary.Add(equipItem.EuipType, equipItem);

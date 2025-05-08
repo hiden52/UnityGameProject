@@ -133,13 +133,17 @@ public class InventoryDragDropService : MonoBehaviour
         }
     }
 
+    // 05-08 Thu.
+    // if-elseif 로 가독성 최악
+    // 해결해야함.
     private void HandleDrop(PointerEventData eventData)
     {
         SlotUI targetSlot = null;
+        GameObject hitObject = null;
 
         if (eventData.pointerCurrentRaycast.isValid)
         {
-            GameObject hitObject = eventData.pointerCurrentRaycast.gameObject;
+            hitObject = eventData.pointerCurrentRaycast.gameObject;
             targetSlot = hitObject.GetComponentInParent<SlotUI>();
         }
 
@@ -170,7 +174,25 @@ public class InventoryDragDropService : MonoBehaviour
                     quickSlotActions.AssignItem(targetIndex, draggedItem);
                 }
             }
-            //else if (sourceType == SlotContainerType.Inventory && targetType == SlotContainerType.EquipmentSlot)
+            else if (sourceType == SlotContainerType.Inventory && targetType == SlotContainerType.EquipmentSlot)
+            {
+                if(draggedItem != null)
+                {
+                    // 05-08 Thu.
+                    // 현재 EquipmentsUI에서 대상 Slot이 어떤 EquipmentWhere을 관리하는지 알 수 없음
+                    // 1. SlotUI에 EquipmentWhere 필드 추가하기
+                    // 2. SlotUI 기능을 인터페이스로 빼서 EquipmentSlotUI를 만들고 상속받기
+                    // 3. EquipmentUIController를 참조해서 해당 슬롯의 EquipmentWhere 찾기
+                    if(draggedItem is EquipmentItem equipment)
+                    {
+                        equipment.Use();
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+            }
             else if (sourceType == SlotContainerType.QuickSlot && targetType == SlotContainerType.Inventory)
             {
                 Debug.Log("Unssign QuickSlot" + sourceIndex);
@@ -180,7 +202,10 @@ public class InventoryDragDropService : MonoBehaviour
             {
                 quickSlotActions.MoveOrSwapAssignment(sourceIndex, targetIndex);
             }
-            //else if(sourceType == SlotContainerType.EquipmentSlot && targetType == SlotContainerType.Inventory)
+            else if(sourceType == SlotContainerType.EquipmentSlot && targetType == SlotContainerType.Inventory)
+            {
+                draggedItem.Use();
+            }
             else
             {
                 Debug.LogWarning($"[InventoryDragDropService] Unhandled Slot Drop: {sourceType} -> {targetType}");
@@ -190,22 +215,53 @@ public class InventoryDragDropService : MonoBehaviour
         {
             SlotContainerType sourceType = sourceSlot.ContainerType;
             int sourceIndex = sourceSlot.GetSlotIndex();
-
-            if (sourceType == SlotContainerType.QuickSlot)
+            if (hitObject != null && hitObject.layer == 5)
             {
-                Debug.Log($"[InventoryDragDropService] 퀵슬롯 {sourceIndex} 외부 드롭, 할당 해제.");
-                quickSlotActions.UnassignItem(sourceIndex);
-            }
-            else if (sourceType == SlotContainerType.Inventory)
-            {
-                Debug.Log($"[InventoryDragDropService] 인벤토리 {sourceIndex} 외부 드롭, 아이템 버리기?");
-                inventoryActions.RemoveItemAtIndex(sourceIndex);
-                // 아이템 드롭 효과?
+                switch (sourceType)
+                {
+                    case SlotContainerType.QuickSlot:
+                        if (hitObject.tag == "Inventory UI")
+                        {
+                            quickSlotActions.UnassignItem(sourceIndex);
+                        }
+                        break;
+                    case SlotContainerType.EquipmentSlot:
+                        if(hitObject.tag == "Inventory UI")
+                        {
+                            draggedItem.Use();
+                        }
+                        break;
+                    default:
+                        return;
+                }
             }
             else
             {
-                Debug.Log("유효하지 않은 대상에 드롭됨.");
+                switch (sourceType)
+                {
+                    case SlotContainerType.Inventory:
+                        Debug.Log($"[InventoryDragDropService] 인벤토리 {sourceIndex} 외부 드롭, 아이템 버리기?");
+                        inventoryActions.RemoveItemAtIndex(sourceIndex);
+                        // 아이템 드롭 효과?
+                        break;
+                    case SlotContainerType.QuickSlot:
+                        Debug.Log($"[InventoryDragDropService] 퀵슬롯 {sourceIndex} 외부 드롭, 할당 해제.");
+                        quickSlotActions.UnassignItem(sourceIndex);
+                        break;
+                    case SlotContainerType.EquipmentSlot:
+                        Debug.Log($"[InventoryDragDropService] 장비창 {sourceIndex} 외부 드롭, 장착 해제.");
+                        if(draggedItem is EquipmentItem)
+                        {
+                            draggedItem.Use();
+                        }
+                        break;
+                    default:
+                        Debug.Log("유효하지 않은 대상에 드롭됨.");
+                        break;
+                }
             }
+            
+            
         }
     }
 

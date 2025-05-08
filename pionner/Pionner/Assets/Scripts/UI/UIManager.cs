@@ -12,11 +12,6 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private GameObject quickMenuUI;
     [SerializeField] private GameObject interactionUI;
 
-
-    // 
-
-
-    
     private void Start()
     {
         InitUI();
@@ -61,7 +56,6 @@ public class UIManager : Singleton<UIManager>
     public void DeactivateInteractionUI()
     {
         interactionUI.SetActive(false);
-        equipmentsUI.SetActive(false);
     }
     public void SetStateInteractUI(bool active)
     {

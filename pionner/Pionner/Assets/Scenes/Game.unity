@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.7619173, g: 0.7857206, b: 0.73050946, a: 1}
+  m_IndirectSpecularColor: {r: 0.7619173, g: 0.78572065, b: 0.73050946, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1024,11 +1024,11 @@ GameObject:
   - component: {fileID: 86306141}
   m_Layer: 5
   m_Name: Equipment UI
-  m_TagString: Untagged
+  m_TagString: SlotUI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &86306140
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1841,7 +1841,7 @@ GameObject:
   - component: {fileID: 148427068}
   m_Layer: 5
   m_Name: Quick Slot UI
-  m_TagString: Untagged
+  m_TagString: Quickslot UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2637,7 +2637,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0773eb8d904d7c642b6f44dbc18aa206, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  slotContainerType: 0
+  slotContainerType: 3
   itemIcon: {fileID: 680328974}
   text: {fileID: 1561251646}
   quantity: 0
@@ -3378,7 +3378,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0773eb8d904d7c642b6f44dbc18aa206, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  slotContainerType: 0
+  slotContainerType: 3
   itemIcon: {fileID: 1691845068}
   text: {fileID: 1689485001}
   quantity: 0
@@ -4155,9 +4155,9 @@ RectTransform:
   - {fileID: 169983655}
   m_Father: {fileID: 86306140}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 0, y: -720}
   m_SizeDelta: {x: 700, y: 100}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &299424670
@@ -5970,10 +5970,10 @@ RectTransform:
   - {fileID: 253497689}
   m_Father: {fileID: 507439684}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 500}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 20, y: 0}
+  m_SizeDelta: {x: 660, y: 500}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &426615625
 MonoBehaviour:
@@ -6844,9 +6844,9 @@ RectTransform:
   - {fileID: 426615623}
   m_Father: {fileID: 86306140}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 700, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 700, y: -720}
   m_SizeDelta: {x: 700, y: 670}
   m_Pivot: {x: 1, y: 0}
 --- !u!114 &507439685
@@ -6960,9 +6960,9 @@ RectTransform:
   - {fileID: 857504370}
   m_Father: {fileID: 734465698}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 350, y: 0}
   m_SizeDelta: {x: 700, y: 50}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &533679736
@@ -7069,6 +7069,10 @@ PrefabInstance:
     - target: {fileID: 424708, guid: cd918f355f278d740a893b9a8b49a85c, type: 3}
       propertyPath: m_LocalRotation.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6419088, guid: cd918f355f278d740a893b9a8b49a85c, type: 3}
+      propertyPath: m_Convex
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -7277,7 +7281,7 @@ GameObject:
   - component: {fileID: 595781571}
   m_Layer: 5
   m_Name: Slots
-  m_TagString: Untagged
+  m_TagString: Inventory UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7296,10 +7300,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1836977722}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 500}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 15, y: 0}
+  m_SizeDelta: {x: 670, y: 500}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &595781571
 MonoBehaviour:
@@ -8693,11 +8697,11 @@ GameObject:
   - component: {fileID: 734465699}
   m_Layer: 5
   m_Name: Invetory UI
-  m_TagString: Untagged
+  m_TagString: Inventory UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &734465698
 RectTransform:
   m_ObjectHideFlags: 0
@@ -10445,7 +10449,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0773eb8d904d7c642b6f44dbc18aa206, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  slotContainerType: 0
+  slotContainerType: 3
   itemIcon: {fileID: 1817824498}
   text: {fileID: 1176457637}
   quantity: 0
@@ -14252,6 +14256,10 @@ PrefabInstance:
       propertyPath: mainCamera
       value: 
       objectReference: {fileID: 1219938379}
+    - target: {fileID: 7694976117358601978, guid: eadb9d098d0673c4ebbd8b97b8c22303, type: 3}
+      propertyPath: rotationSpeed
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -15369,9 +15377,9 @@ RectTransform:
   - {fileID: 104027627}
   m_Father: {fileID: 734465698}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 0, y: -720}
   m_SizeDelta: {x: 700, y: 100}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1370783472
@@ -17633,7 +17641,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0773eb8d904d7c642b6f44dbc18aa206, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  slotContainerType: 0
+  slotContainerType: 3
   itemIcon: {fileID: 792999488}
   text: {fileID: 1040692529}
   quantity: 0
@@ -19689,7 +19697,7 @@ GameObject:
   - component: {fileID: 1836977723}
   m_Layer: 5
   m_Name: Panel
-  m_TagString: Untagged
+  m_TagString: Inventory UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -19709,9 +19717,9 @@ RectTransform:
   - {fileID: 595781570}
   m_Father: {fileID: 734465698}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 700, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 700, y: -720}
   m_SizeDelta: {x: 700, y: 670}
   m_Pivot: {x: 1, y: 0}
 --- !u!114 &1836977723
@@ -20219,6 +20227,10 @@ PrefabInstance:
       propertyPath: m_LocalRotation.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6419088, guid: cd918f355f278d740a893b9a8b49a85c, type: 3}
+      propertyPath: m_Convex
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -20675,9 +20687,9 @@ RectTransform:
   - {fileID: 645147860}
   m_Father: {fileID: 86306140}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 350, y: 0}
   m_SizeDelta: {x: 700, y: 50}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1906775996
@@ -23014,7 +23026,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0773eb8d904d7c642b6f44dbc18aa206, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  slotContainerType: 0
+  slotContainerType: 3
   itemIcon: {fileID: 3680535226447139928}
   text: {fileID: 1102958862}
   quantity: 0
