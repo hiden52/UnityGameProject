@@ -16,11 +16,14 @@ public class PlayerMovementController : MonoBehaviour
     [SerializeField] private float jumpHeight = 3f;
     [SerializeField] private Collider footCollider;
 
-    private Collider groundDetector;
 
     [Header("State")]
     [SerializeField]public bool isAiming = false;
     [SerializeField] private bool isGrounded = true;
+
+    [Header("Debug")]
+    [SerializeField] private Collider groundDetector;
+    private Collider mainCollider;
 
     float followYOffset = 1.576f;
     Vector3 followPos;
@@ -34,7 +37,11 @@ public class PlayerMovementController : MonoBehaviour
 
     private void Awake()
     {
-        groundDetector = GetComponent<Collider>();
+        mainCollider = GetComponent<Collider>();
+        if (mainCollider != null)
+        {
+            groundDetector = mainCollider;
+        }
         rb = GetComponent<Rigidbody>();
         if( footCollider != null )
         {
@@ -63,16 +70,22 @@ public class PlayerMovementController : MonoBehaviour
         CheckGround();
         if (PlayerInputManager.Instance.IsJumping && isGrounded)
         {
-            groundDetector = footCollider;
-            footCollider.enabled = true;
-            Vector3 jumpPower = Vector3.up * jumpHeight;
-            rb.AddForce(jumpPower, ForceMode.VelocityChange);
-            OnStartJunping?.Invoke();
+            Jump();
         }
 
         followPos = rb.position;
         followPos.y += followYOffset;
         followTarget.position = followPos;
+    }
+
+    private void Jump()
+    {
+        isGrounded = false;
+        groundDetector = footCollider;
+        footCollider.enabled = true;
+        Vector3 jumpPower = Vector3.up * jumpHeight;
+        rb.AddForce(jumpPower, ForceMode.VelocityChange);
+        OnStartJunping?.Invoke();
     }
 
     private void FixedUpdate()
@@ -136,17 +149,38 @@ public class PlayerMovementController : MonoBehaviour
         }
     }
 
+    // 05-08 Thu.
+    // Gorounded 검출을 레이캐스팅으로 하는 중.
+    // 콜라이더 충돌 or Trigger 로 검출하면 더 낫지 않을까
+    // 생각해보자. 
+    // 대신 mainCollider와의 충돌이 발생할 수 있으므로 주의
+
+    //private void OnCollisionEnter(Collision other)
+    //{
+    //    Debug.Log(gameObject.layer);
+    //    if (other.gameObject.layer == layerGround)
+    //    {
+    //        Debug.Log("Grounded layer");
+    //    }
+    //}
     private void CheckGround()
     {
-        if(Physics.Raycast(groundDetector.transform.position + (Vector3.up * 0.2f), Vector3.down, out RaycastHit hit, 0.6f, layerGround))
+        // 콜라이더 사이에 껴서 허공에 계속 떠있는 경우를 방지하기 위해 
+        // isGrounded == false 때 mainCollider를 비활성화
+        // Bug :: 오브젝트 사이에 아예 끼어버리거나 의도하지 않은 공간으로 들어가버리는 버그가 발생할 수 있음
+        // !다른 방법 찾아야함!
+        if (Physics.Raycast(groundDetector.transform.position + (Vector3.up * 0.2f), Vector3.down, out RaycastHit hit, 0.6f, layerGround))
         {
             isGrounded = true;
-            groundDetector = GetComponent<Collider>();
+            groundDetector = mainCollider;
+            mainCollider.enabled = true;
         }
         else
         {
+            Debug.DrawRay(groundDetector.transform.position + (Vector3.up * 0.2f),(Vector3.down * 0.6f), Color.red);
             isGrounded = false;
             groundDetector = footCollider;
+            mainCollider.enabled = false;
         }
     }
     private void RotateTowardsMovementDirection()
