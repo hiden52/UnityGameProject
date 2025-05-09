@@ -25,6 +25,13 @@ public class DoorPlayerSensor : MonoBehaviour
             targetDoorActions.HandlePlayerEnter(other);
         }
     }
+    private void OnTriggerStay(Collider other)
+    {
+        if(targetDoorActions != null)
+        {
+            targetDoorActions.HandlePlayerStay(other);
+        }
+    }
     private void OnTriggerExit(Collider other)
     {
         if (targetDoorActions != null)

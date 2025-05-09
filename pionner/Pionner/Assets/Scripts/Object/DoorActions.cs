@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class DoorActions : MonoBehaviour
 {
-    [SerializeField] Animator animator;
+    [SerializeField] private Animator animator;
+    [SerializeField] private bool isDoorCurrentlyOpen = false;
+    [SerializeField] private bool playerWasInTrigger = false;
 
     private int nearbyHash;
 
@@ -15,6 +17,8 @@ public class DoorActions : MonoBehaviour
         {
             Debug.LogError($"[{gameObject.name}.DoorActions] Animator animator is null!");
         }
+        isDoorCurrentlyOpen = false;
+        playerWasInTrigger= false;
         CachingAnimParams();
     }
 
@@ -26,16 +30,63 @@ public class DoorActions : MonoBehaviour
 
     public void HandlePlayerEnter(Collider other)
     {
+        if (animator == null) return;
         if (other.CompareTag("Player"))
         {
-            animator.SetBool(nearbyHash, true);
+            if (!isDoorCurrentlyOpen)
+            {
+                Debug.Log($"Player entered {gameObject.name}, opening door.");
+                animator.SetBool(nearbyHash, true);
+                isDoorCurrentlyOpen = true;
+            }
+            playerWasInTrigger = true;
+        }
+    }
+    public void HandlePlayerStay(Collider other)
+    {
+        if (animator == null) return;
+        if (other.CompareTag("Player"))
+        {
+            playerWasInTrigger = true;
+            if (!isDoorCurrentlyOpen)
+            {
+                Debug.Log($"Player still in trigger on {gameObject.name}. Re-open " + gameObject.name);
+                animator.SetBool(nearbyHash, true);
+                isDoorCurrentlyOpen = true;
+            }
         }
     }
     public void HandlePlayerExit(Collider other)
     {
+        if (animator == null) return;
         if (other.CompareTag("Player"))
         {
+            if (isDoorCurrentlyOpen)
+            {
+                Debug.Log($"Player exited {gameObject.name}, closing door.");
+                animator.SetBool(nearbyHash, false);
+                isDoorCurrentlyOpen = false;
+            }
+            playerWasInTrigger = false;
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        if (animator == null) return;
+        if (!isDoorCurrentlyOpen)
+        {
+            playerWasInTrigger = false;
+            return;
+        }
+
+        if (!playerWasInTrigger)
+        {
+            Debug.LogWarning($"FixedUpdate: Player not detected for {gameObject.name} while door was open. Closing door.");
+            isDoorCurrentlyOpen = false;
             animator.SetBool(nearbyHash, false);
         }
+        playerWasInTrigger = false;
+
     }
 }
