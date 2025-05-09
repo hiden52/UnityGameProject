@@ -544,9 +544,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 2474810913531343733}
   - {fileID: 408768}
   - {fileID: 470226}
-  - {fileID: 2474810913531343733}
   - {fileID: 7728936439561758485}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -571,6 +571,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
+  isDoorCurrentlyOpen: 0
+  playerWasInTrigger: 0
 --- !u!23 &2326234
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -708,7 +710,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 4, y: 4, z: 6}
+  m_Size: {x: 6, y: 4, z: 7}
   m_Center: {x: 0, y: 2, z: 0}
 --- !u!114 &1796994379010259648
 MonoBehaviour:

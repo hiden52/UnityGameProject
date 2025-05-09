@@ -48,12 +48,7 @@ public class DoorActions : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             playerWasInTrigger = true;
-            if (!isDoorCurrentlyOpen)
-            {
-                Debug.Log($"Player still in trigger on {gameObject.name}. Re-open " + gameObject.name);
-                animator.SetBool(nearbyHash, true);
-                isDoorCurrentlyOpen = true;
-            }
+            
         }
     }
     public void HandlePlayerExit(Collider other)
@@ -71,6 +66,7 @@ public class DoorActions : MonoBehaviour
         }
     }
 
+    // 05-09 문사이에 있으면 닫히는 버그
     private void FixedUpdate()
     {
         if (animator == null) return;
@@ -80,11 +76,23 @@ public class DoorActions : MonoBehaviour
             return;
         }
 
-        if (!playerWasInTrigger)
+        if (playerWasInTrigger)
         {
-            Debug.LogWarning($"FixedUpdate: Player not detected for {gameObject.name} while door was open. Closing door.");
-            isDoorCurrentlyOpen = false;
-            animator.SetBool(nearbyHash, false);
+            if (!isDoorCurrentlyOpen)
+            {
+                Debug.Log($"Player still in trigger on {gameObject.name}. Re-open " + gameObject.name);
+                animator.SetBool(nearbyHash, true);
+                isDoorCurrentlyOpen = true;
+            }
+        }
+        else
+        {
+            if (isDoorCurrentlyOpen)
+            {
+                Debug.LogWarning($"FixedUpdate: Player not detected for {gameObject.name} while door was open. Closing door.");
+                isDoorCurrentlyOpen = false;
+                animator.SetBool(nearbyHash, false);
+            }
         }
         playerWasInTrigger = false;
 
