@@ -9,6 +9,7 @@ public class PlayerMovementController : MonoBehaviour
     [SerializeField] Transform followTarget;
     [SerializeField] Rigidbody rb;
     [SerializeField] float moveSpeed;
+    [SerializeField] float sprintMultiflier;
     [SerializeField] float rotationSpeed;
     [SerializeField] public Vector3 moveDirection;
     [SerializeField] public Vector3 inputDirection;
@@ -130,7 +131,7 @@ public class PlayerMovementController : MonoBehaviour
             float currentSpeed = moveSpeed;
             if (PlayerInputManager.Instance.Shift)
             {
-                currentSpeed *= 1.25f;
+                currentSpeed *= sprintMultiflier;
             }
 
             rb.MovePosition(rb.position + moveDirection * currentSpeed * Time.fixedDeltaTime);

@@ -4,23 +4,18 @@ using UnityEngine;
 
 public class DoorActions : MonoBehaviour
 {
-    [SerializeField] Collider openSite;
     [SerializeField] Animator animator;
 
     private int nearbyHash;
 
     private void Awake()
     {
-        if (openSite == null)
-        {
-            Debug.LogError("[DoorActions] Collider opensite is Null");
-        }
-
         animator = GetComponent<Animator>();
-        if(animator != null)
+        if (animator == null)
         {
-            CachingAnimParams();
+            Debug.LogError($"[{gameObject.name}.DoorActions] Animator animator is null!");
         }
+        CachingAnimParams();
     }
 
     private void CachingAnimParams()
@@ -28,17 +23,19 @@ public class DoorActions : MonoBehaviour
         nearbyHash = Animator.StringToHash("character_nearby");
     }
 
-    // 05-08 아직 테스트 안함
-    private void OnTriggerEnter(Collider other)
+
+    public void HandlePlayerEnter(Collider other)
     {
-        if(other.tag == "Player")
+        if (other.CompareTag("Player"))
         {
             animator.SetBool(nearbyHash, true);
         }
     }
-
-    private void OnTriggerExit(Collider other)
+    public void HandlePlayerExit(Collider other)
     {
-        animator.SetBool(nearbyHash, false);
+        if (other.CompareTag("Player"))
+        {
+            animator.SetBool(nearbyHash, false);
+        }
     }
 }
