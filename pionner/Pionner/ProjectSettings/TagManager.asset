@@ -7,6 +7,7 @@ TagManager:
   - SlotUI
   - Quickslot UI
   - Inventory UI
+  - Enemy
   layers:
   - Default
   - TransparentFX

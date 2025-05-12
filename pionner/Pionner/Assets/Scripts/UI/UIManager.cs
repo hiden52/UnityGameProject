@@ -1,53 +1,80 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class UIManager : Singleton<UIManager>
 {
-    [SerializeField] private GameObject inventoryUI;
-    [SerializeField] private GameObject equipmentsUI;
+    [SerializeField] private GameObject InvenAndEquipmentUI;
+    [SerializeField] private GameObject buildMenuUI;
 
     [SerializeField] private GameObject crosshairUI;
     [SerializeField] private GameObject statusUI;
     [SerializeField] private GameObject quickMenuUI;
     [SerializeField] private GameObject interactionUI;
 
+    [Header("Debug")]
+    [SerializeField] private GameObject currentlyActivatedUI;
+
     private void Start()
     {
         InitUI();
         PlayerInputManager.Instance.OnTabPressed += ToggleInventoryUI;
+        PlayerInputManager.Instance.OnKeyBPressed += ToggleBuildMenuUI;
     }
     protected override void Awake()
     {
         base.Awake();
+        currentlyActivatedUI = null;
     }
     private void OnDisable()
     {
         PlayerInputManager.Instance.OnTabPressed -= ToggleInventoryUI;
+        PlayerInputManager.Instance.OnKeyBPressed -= ToggleBuildMenuUI;
     }
         
-    void ToggleInventoryUI()
+    private void ToggleUI(GameObject targetUI)
     {
-        inventoryUI.SetActive(!inventoryUI.activeSelf);
-        equipmentsUI.SetActive(!equipmentsUI.activeSelf);
-        crosshairUI.SetActive(!crosshairUI.activeSelf);
-
-        if(inventoryUI.activeSelf)
+        if ( currentlyActivatedUI != null )
         {
-            SetMouseState(0);
-            // InventoryUI 활성화시 회전값, 이동값 초기화
-            PlayerInputManager.Instance.ResetMouseDelta();
-            PlayerInputManager.Instance.ResetMovementDelta();
+            currentlyActivatedUI.SetActive(false);
+
+            if (currentlyActivatedUI == targetUI )
+            {
+                crosshairUI.SetActive(true);
+                currentlyActivatedUI = null;
+                SetMouseState(1);
+                return;
+            }
         }
         else
         {
-            SetMouseState(1);
+            crosshairUI.SetActive(false);
+            SetMouseState(0);
+        }
+
+        ResetMouse();
+        targetUI.SetActive(true);
+        currentlyActivatedUI = targetUI;
+    }
+    private void ToggleInventoryUI()
+    {
+        if (InvenAndEquipmentUI != null)
+        {
+            ToggleUI(InvenAndEquipmentUI);
+        }
+    }
+    private void ToggleBuildMenuUI()
+    {
+        if (buildMenuUI != null)
+        {
+            ToggleUI(buildMenuUI);
         }
     }
 
-    public bool IsInventoryActivated()
+    public bool IsAnyUIActivated()
     {
-        return inventoryUI.activeSelf;
+        return currentlyActivatedUI != null;
     }
     public void  ActivateInteractionUI()
     {
@@ -83,6 +110,11 @@ public class UIManager : Singleton<UIManager>
                 break;
         }
     }
+    private void ResetMouse()
+    {
+        PlayerInputManager.Instance.ResetMouseDelta();
+        PlayerInputManager.Instance.ResetMovementDelta();
+    }
 
     private void ToggleMouseState()
     {
@@ -94,10 +126,9 @@ public class UIManager : Singleton<UIManager>
     {
         SetMouseState(1);
         //quickMenuUI.SetActive(true);
-        //statusUI.SetActive(true);
-        equipmentsUI.SetActive(false);
+        statusUI.SetActive(true);
         crosshairUI.SetActive(true);
-        inventoryUI.SetActive(false);
+        InvenAndEquipmentUI.SetActive(false);
         interactionUI.SetActive(false);
     }
 

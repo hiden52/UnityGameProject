@@ -15,8 +15,8 @@ public class PlayerInteractionController : MonoBehaviour
         bool isHit = false;
 
         //Debug.DrawRay(Camera.main.transform.position, Camera.main.transform.forward * 3f, Color.red, 0.1f);
-        // 인벤토리UI가 활성화 되어 있을 경우, 레이캐스트 무시
-        if (!UIManager.Instance.IsInventoryActivated())
+        // UI창이 활성화 되어 있을 경우, 레이캐스트 무시
+        if (!UIManager.Instance.IsAnyUIActivated())
         {
             isHit = Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out RaycastHit hit, interactionDistance, layerMask);
             if (isHit)
