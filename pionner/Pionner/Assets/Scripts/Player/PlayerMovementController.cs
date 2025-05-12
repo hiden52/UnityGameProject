@@ -57,6 +57,14 @@ public class PlayerMovementController : MonoBehaviour
     private void Start()
     {
         rb.freezeRotation = true;
+        // 05-12 공격할 때, 카메라 중앙 방향으로 캐릭터를 회전시키고 싶음
+        // 지금의 방법은 클릭했을 slerp 1번만 실행되면서 카메라 방향으로 완전한 회전이 안됨.
+        PlayerInputManager.Instance.OnAttackPressed += RotateTowardsCameraForward;
+    }
+
+    private void OnDestroy()
+    {
+        PlayerInputManager.Instance.OnAttackPressed -= RotateTowardsCameraForward;
     }
 
     private void Update()
@@ -189,7 +197,8 @@ public class PlayerMovementController : MonoBehaviour
         targetRotation = Quaternion.LookRotation(moveDirection);
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime);
     }
-
+    
+    
     private void RotateTowardsCameraForward()
     {
         targetRotation = Quaternion.LookRotation(forward);

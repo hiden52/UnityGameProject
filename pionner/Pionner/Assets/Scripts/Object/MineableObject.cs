@@ -42,7 +42,7 @@ public class MineableObject : DefaultObject, IDamageable, IInteractable
         currentDurability = maxDurability;
     }
 
-    public void TakeDamage( DamageInfo damageInfo)
+    public void TakeDamage( DamageInfo damageInfo, Vector3 hitPoint)
     {
         float actualDamage = damageInfo.DamageAmount;
         if (damageInfo.Type == requiredWeaponType)
@@ -59,7 +59,7 @@ public class MineableObject : DefaultObject, IDamageable, IInteractable
         currentDurability = Mathf.Max(0, currentDurability - actualDamage);
 
         // 히트 이펙트 재생
-        PlayHitEffect();
+        PlayHitEffect(hitPoint);
 
         // 내구도가 0이 되면 파괴 처리
         if (IsDead)
@@ -79,15 +79,15 @@ public class MineableObject : DefaultObject, IDamageable, IInteractable
             damage = equippedWeapon.GetDamage();
         }
         DamageInfo damageInfo = new DamageInfo { DamageAmount = 1f, Type = WeaponType.None };
-        TakeDamage(damageInfo);
+        TakeDamage(damageInfo, transform.position);
     }
 
-    private void PlayHitEffect()
+    private void PlayHitEffect(Vector3 point)
     {
         // Hit effect
         if (hitEffectPrefab != null)
         {
-            GameObject effect = Instantiate(hitEffectPrefab, transform.position, Quaternion.identity, transform);
+            GameObject effect = Instantiate(hitEffectPrefab, point, Quaternion.identity, transform);
             Destroy(effect, 2f);
         }
 

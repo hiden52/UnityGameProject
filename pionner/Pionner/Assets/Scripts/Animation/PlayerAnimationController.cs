@@ -113,6 +113,7 @@ public class PlayerAnimationController : MonoBehaviour
     private void Jump()
     {
         isGrounded = false;
+        playerAnimator.SetFloat("Movement", PlayerInputManager.Instance.Movement.magnitude);
         playerAnimator.Play(jumpAnimHash);
         
     }

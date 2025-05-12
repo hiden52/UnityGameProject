@@ -14,7 +14,7 @@ public class Enemy : MonoBehaviour, IDamageable
         currentHp = maxHp;
     }
 
-    public void TakeDamage(DamageInfo damageInfo)
+    public void TakeDamage(DamageInfo damageInfo, Vector3 hitPoint)
     {
         currentHp -= damageInfo.DamageAmount;
         if (IsDead)

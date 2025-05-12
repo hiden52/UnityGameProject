@@ -30,7 +30,7 @@ public class PlayerStat : MonoBehaviour, IDamageable
             Debug();
         }
     }
-    public void TakeDamage(DamageInfo damageInfo)
+    public void TakeDamage(DamageInfo damageInfo, Vector3 hitPoint)
     {
         currentHp = Mathf.Clamp(currentHp - damageInfo.DamageAmount, 0f, maxHp);
         OnHealthChanged?.Invoke();
@@ -44,7 +44,7 @@ public class PlayerStat : MonoBehaviour, IDamageable
     private void Debug()
     {
         takeDamage = false;
-        TakeDamage(new DamageInfo { DamageAmount = 10, Type = WeaponType.None });
+        TakeDamage(new DamageInfo { DamageAmount = 10, Type = WeaponType.None }, transform.position);
     }
 
     public void Heal(float amount)

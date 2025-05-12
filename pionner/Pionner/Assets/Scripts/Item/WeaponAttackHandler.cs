@@ -91,10 +91,11 @@ public class WeaponAttackHandler : MonoBehaviour
                 DamageAmount = currentWeapon.GetDamage(),
                 Type = currentWeapon.GetWeaponType(),
             };
-            damageable.TakeDamage(damageInfo);
+           
 
             Vector3 hitPoint = other.ClosestPoint(attackCollider.bounds.center);
             Vector3 hitNormal = (hitPoint - attackCollider.bounds.center).normalized;
+            damageable.TakeDamage(damageInfo, hitPoint);
             PlayHitEffect(hitPoint, hitNormal);
         }
 
