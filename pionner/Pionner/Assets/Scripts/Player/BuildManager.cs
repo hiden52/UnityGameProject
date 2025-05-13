@@ -31,7 +31,14 @@ public class BuildManager : Singleton<BuildManager>
         _obstacleLayerMask = ~_layerMask;
 
     }
-
+    public void StartBuildMode()
+    {
+        isBuildMode = true;
+    }
+    public void StopBuildMode()
+    {
+        isBuildMode = false;
+    }
     private void Update()
     {
         if (isBuildMode) DrawGhost();
@@ -62,6 +69,9 @@ public class BuildManager : Singleton<BuildManager>
             Debug.LogError($"[BuildManager] Ghost object for '{targetBuildingRecipe.buildingToConstruct.BuildingName}' is missing a BoxCollider!", _buildingGhost);
             return false;
         }
+
+        // 아래 주석들은 흐름과 이유를 잘 이해하고 지울 것.
+        //
         // OverlapBox 매개변수 계산:
         // 1. 중심점(Center): 고스트의 월드 위치 + (회전된 로컬 중심 오프셋 * 스케일)
         Vector3 center = placementPosition + placementRotation * Vector3.Scale(boxCollider.center, _buildingGhost.transform.lossyScale);

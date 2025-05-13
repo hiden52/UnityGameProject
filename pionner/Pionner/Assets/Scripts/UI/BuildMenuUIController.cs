@@ -92,7 +92,7 @@ public class BuildMenuUIController : MonoBehaviour
             BuildingIconSlotUI buildingIconSlot = buttonGO.GetComponent<BuildingIconSlotUI>();
             BuildingData buildingDataToShow = constructionRecipe.buildingToConstruct;
             Debug.Log(buildingDataToShow.BuildingName);
-            buildingIconSlot.SetSlot(buildingDataToShow.icon, buildingDataToShow.BuildingName);
+            buildingIconSlot.SetSlot(constructionRecipe);
 
 
             Button button = buttonGO.GetComponent<Button>();
