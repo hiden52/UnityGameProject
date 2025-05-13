@@ -23,9 +23,15 @@ public class BuildMenuUIController : MonoBehaviour
     public Transform buildingInfoRecipeTransfrom;
     public GameObject buildingRecipePrefab;
 
+    private void Awake()
+    {
+
+    }
     private void Start()
     {
         InitializeCategoryButtons();
+        if (buildingCategories.Count <= 0) return;
+        DisplayBuildingRecipesForCategory(buildingCategories[0]);
     }
 
     void InitializeCategoryButtons()
@@ -55,7 +61,6 @@ public class BuildMenuUIController : MonoBehaviour
             Button button = buttonGO.GetComponent<Button>();
             if (button != null)
             {
-                // C#의 클로저 문제 방지를 위해 로컬 변수 사용
                 BuildingCategoryData currentCategory = categoryData;
                 button.onClick.AddListener(() => DisplayBuildingRecipesForCategory(currentCategory));
             }
@@ -84,18 +89,15 @@ public class BuildMenuUIController : MonoBehaviour
             }
 
             GameObject buttonGO = Instantiate(buildingButtonPrefab, buildingListParent);
+            BuildingIconSlotUI buildingIconSlot = buttonGO.GetComponent<BuildingIconSlotUI>();
             BuildingData buildingDataToShow = constructionRecipe.buildingToConstruct;
-
-            Image iconComponent = buttonGO.gameObject.GetComponentInChildren<Image>();
-            Text nameComponent = buttonGO.gameObject.GetComponentInChildren<Text>();
-            if (iconComponent != null) iconComponent.sprite = buildingDataToShow.icon;
-            if (nameComponent != null) nameComponent.text = buildingDataToShow.BuildingName;
+            Debug.Log(buildingDataToShow.BuildingName);
+            buildingIconSlot.SetSlot(buildingDataToShow.icon, buildingDataToShow.BuildingName);
 
 
             Button button = buttonGO.GetComponent<Button>();
             if (button != null)
             {
-                // C#의 클로저 문제 방지를 위해 로컬 변수 사용
                 BuildingRecipeData currentRecipe = constructionRecipe;
                 button.onClick.AddListener(() => SelectBuildingToConstruct(currentRecipe));
             }
@@ -104,12 +106,12 @@ public class BuildMenuUIController : MonoBehaviour
 
     void SelectBuildingToConstruct(BuildingRecipeData constructionRecipe)
     {
-        // 선택된 건물(constructionRecipe.buildingToConstruct)의 상세 정보를 오른쪽에 표시
-        // (필요 재료: constructionRecipe.ingredients)
-        // 건설 모드 시작 등의 로직 호출
+        // 선택된 건물의 상세 정보를 Building Info에 표시
+        // 
         Debug.Log($"Selected building to construct: {constructionRecipe.buildingToConstruct.BuildingName}");
-        // 예: UIManager.Instance.ShowBuildingInfo(constructionRecipe);
-        // 예: PlayerBuildingSystem.Instance.StartPlacementMode(constructionRecipe.buildingToConstruct, constructionRecipe);
+        
+        // 건설 관련
+        // BuildManager.Instance.StartPlacementMode(constructionRecipe.buildingToConstruct, constructionRecipe);
     }
 
 

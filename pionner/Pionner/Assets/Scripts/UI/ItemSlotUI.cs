@@ -15,7 +15,6 @@ public enum SlotContainerType
 }
 public class ItemSlotUI : SlotUI, IPointerDownHandler, IItemSlot
 {
-
     [SerializeField] private SlotContainerType slotContainerType = SlotContainerType.None;
     [SerializeField] private int slotIndex = -1;
     private Item currentItem;
@@ -42,10 +41,16 @@ public class ItemSlotUI : SlotUI, IPointerDownHandler, IItemSlot
     }
     private void Start()
     {
-        itemIcon = transform.GetChild(0).GetComponent<Image>();
+        icon = transform.GetChild(0).GetComponent<Image>();
     }
 
-    
+    protected void SetQuantity(int n)
+    {
+        quantity = n;
+
+        text.SetActive(true);
+        text.GetComponent<TextMeshProUGUI>().SetText(quantity.ToString());
+    }
 
     public void SetContainerType(SlotContainerType container)
     {
@@ -62,7 +67,7 @@ public class ItemSlotUI : SlotUI, IPointerDownHandler, IItemSlot
 
         if (currentItem != null)
         {           
-            itemIcon.sprite = item.Data.icon;
+            icon.sprite = item.Data.icon;
             SetAlpha(1f);
 
             if(item is CountableItem countable)
@@ -79,13 +84,7 @@ public class ItemSlotUI : SlotUI, IPointerDownHandler, IItemSlot
             ClearSlot();
         }
     }
-    protected void SetQuantity(int n)
-    {
-        quantity = n;
 
-        text.SetActive(true);
-        text.GetComponent<TextMeshProUGUI>().SetText(quantity.ToString());
-    }
     public override void ClearSlot()
     {
         currentItem = null;

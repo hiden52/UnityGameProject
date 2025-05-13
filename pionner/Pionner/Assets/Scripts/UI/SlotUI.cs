@@ -8,7 +8,7 @@ using static UnityEditor.Progress;
 
 public class SlotUI : MonoBehaviour
 {
-    [SerializeField] protected Image itemIcon;
+    [SerializeField] protected Image icon;
     [SerializeField] protected GameObject text;
     [SerializeField] protected int quantity = 0;
     [SerializeField] protected Image backroundImage;
@@ -25,15 +25,15 @@ public class SlotUI : MonoBehaviour
     // 이미지의 알파값 수정
     protected void SetAlpha(float alpha)
     {
-        Color colorIcon = itemIcon.color;
+        Color colorIcon = icon.color;
         colorIcon.a = alpha;
-        itemIcon.color = colorIcon;
+        icon.color = colorIcon;
     }
 
 
     public virtual void ClearSlot()
     {
-        itemIcon.sprite = null;
+        icon.sprite = null;
         SetAlpha(0);
         text.SetActive(false);
 

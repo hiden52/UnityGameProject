@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   recipeId: 1
   recipeName: Workbench
-  description: 
+  description: Can make basic items.
   recipeIcon: {fileID: 21300000, guid: 2a2ff97f7ea013e498970b1c6acda700, type: 3}
   recipeType: 1
   ingredients: []
-  buildingToConstruct: {fileID: 0}
+  buildingToConstruct: {fileID: 11400000, guid: e2eb0bdcc683f2642862d3bed9b99fa5, type: 2}

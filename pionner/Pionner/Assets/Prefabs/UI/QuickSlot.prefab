@@ -159,7 +159,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 329f0cba973a57148b43a48596e8e509, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemIcon: {fileID: 3257875267003414609}
+  icon: {fileID: 3257875267003414609}
   text: {fileID: 9173953784136356398}
   quantity: 0
   backroundImage: {fileID: 0}
