@@ -17,8 +17,6 @@ public class BuildingData : ScriptableObject
     [TextArea] public string BuildingDescription;
     public Sprite icon;
     public GameObject prefab;
-    public Material originMat;
-    public Material bluePrintMat;
     public BuildingType buildingType; 
     public Vector3Int size = Vector3Int.one; //건물이 차지하는 그리드 크기
 
