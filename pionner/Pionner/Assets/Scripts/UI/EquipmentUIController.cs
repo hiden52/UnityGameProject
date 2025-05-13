@@ -10,16 +10,16 @@ public class EquipmentUIController : MonoBehaviour
     [SerializeField] private GameObject bodySlot;
     [SerializeField] private GameObject backSlot;
 
-    Dictionary<EquipmentWhere, SlotUI> equipmentWhereDic = new Dictionary<EquipmentWhere, SlotUI>();
+    Dictionary<EquipmentWhere, ItemSlotUI> equipmentWhereDic = new Dictionary<EquipmentWhere, ItemSlotUI>();
 
     [SerializeField] EquipmentManager equipmentManager;
 
     private void Awake()
     {
-        equipmentWhereDic.Add(EquipmentWhere.Head, headSlot.GetComponent<SlotUI>());
-        equipmentWhereDic.Add(EquipmentWhere.RightHand, handSlot.GetComponent<SlotUI>());
-        equipmentWhereDic.Add(EquipmentWhere.Foot, legsSlot.GetComponent<SlotUI>());
-        equipmentWhereDic.Add(EquipmentWhere.Body, bodySlot.GetComponent<SlotUI>());
+        equipmentWhereDic.Add(EquipmentWhere.Head, headSlot.GetComponent<ItemSlotUI>());
+        equipmentWhereDic.Add(EquipmentWhere.RightHand, handSlot.GetComponent<ItemSlotUI>());
+        equipmentWhereDic.Add(EquipmentWhere.Foot, legsSlot.GetComponent<ItemSlotUI>());
+        equipmentWhereDic.Add(EquipmentWhere.Body, bodySlot.GetComponent<ItemSlotUI>());
         //equipmentWhereDic.Add(EquipmentWhere.Back, backSlot.GetComponent<SlotUI>());
 
     }

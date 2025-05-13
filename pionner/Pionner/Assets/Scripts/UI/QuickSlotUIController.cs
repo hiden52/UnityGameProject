@@ -11,7 +11,7 @@ public class QuickSlotUIController : MonoBehaviour
     [SerializeField] private Transform slotPannel;
     [SerializeField] private Item[] items;
     private IQuickSlotActions quickSlotActions;
-    private List<SlotUI> slots = new List<SlotUI>();
+    private List<ItemSlotUI> slots = new List<ItemSlotUI>();
     private int MAX_SLOT_COUNT;
 
 
@@ -60,7 +60,7 @@ public class QuickSlotUIController : MonoBehaviour
         {
             GameObject slotObj = Instantiate(slotPrefab, slotPannel);
             slotObj.name = $"QuickSlot_{i}";
-            SlotUI slotUI = slotObj.GetComponent<SlotUI>();
+            ItemSlotUI slotUI = slotObj.GetComponent<ItemSlotUI>();
             slotUI.SetContainerType(SlotContainerType.QuickSlot);
             slotUI.SetSlotIndex(i);
             slotUI.SetSlot(null);

@@ -86,9 +86,10 @@ GameObject:
   - component: {fileID: 6996500767547562155}
   - component: {fileID: 2785624004641135307}
   - component: {fileID: 9216713250046743636}
-  - component: {fileID: 409733473221413328}
+  - component: {fileID: 8454467880705004189}
   - component: {fileID: 4468614865061776099}
   - component: {fileID: 7149325714155500502}
+  - component: {fileID: 6284556395449351276}
   m_Layer: 5
   m_Name: Slot
   m_TagString: Untagged
@@ -129,6 +130,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f85470f8cd3c334c91c382ce611a4e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  group: {fileID: 0}
+  rectTransform: {fileID: 0}
+  slot: {fileID: 0}
+  inventoryDragDropService: {fileID: 0}
 --- !u!114 &9216713250046743636
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -142,7 +147,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   image: {fileID: 0}
---- !u!114 &409733473221413328
+--- !u!114 &8454467880705004189
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -151,13 +156,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 5912252552843713250}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0773eb8d904d7c642b6f44dbc18aa206, type: 3}
+  m_Script: {fileID: 11500000, guid: 329f0cba973a57148b43a48596e8e509, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   itemIcon: {fileID: 7821094885246218716}
   text: {fileID: 7014645300900052331}
   quantity: 0
-  backroundImage: {fileID: 0}
+  backroundImage: {fileID: 7149325714155500502}
+  slotContainerType: 0
+  slotIndex: -1
   canvas: {fileID: 0}
   hoverHandler: {fileID: 0}
   dragHandler: {fileID: 0}
@@ -199,6 +206,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!225 &6284556395449351276
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5912252552843713250}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &7014645300900052331
 GameObject:
   m_ObjectHideFlags: 0

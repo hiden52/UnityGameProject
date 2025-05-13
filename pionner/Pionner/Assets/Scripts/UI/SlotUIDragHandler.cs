@@ -8,13 +8,13 @@ public class SlotUIDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler,
 {
     [SerializeField] private CanvasGroup group;
     [SerializeField] private RectTransform rectTransform;
-    [SerializeField] private SlotUI slot;
+    [SerializeField] private ItemSlotUI slot;
     [SerializeField] private InventoryDragDropService inventoryDragDropService;
 
     private void Awake()
     {
         group = GetComponent<CanvasGroup>();
-        slot = GetComponent<SlotUI>();
+        slot = GetComponent<ItemSlotUI>();
 
         if(inventoryDragDropService == null)
         {

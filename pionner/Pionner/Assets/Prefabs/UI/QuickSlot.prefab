@@ -86,7 +86,7 @@ GameObject:
   - component: {fileID: 347409128799370823}
   - component: {fileID: 3206353227107861053}
   - component: {fileID: 3710988214739170927}
-  - component: {fileID: 8580340690970323536}
+  - component: {fileID: 2310409521333770751}
   - component: {fileID: 7642174852332250537}
   - component: {fileID: 2604006990012758897}
   - component: {fileID: 676585368108570854}
@@ -147,7 +147,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   image: {fileID: 0}
---- !u!114 &8580340690970323536
+--- !u!114 &2310409521333770751
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -156,13 +156,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 7614064247539186405}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0773eb8d904d7c642b6f44dbc18aa206, type: 3}
+  m_Script: {fileID: 11500000, guid: 329f0cba973a57148b43a48596e8e509, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   itemIcon: {fileID: 3257875267003414609}
   text: {fileID: 9173953784136356398}
   quantity: 0
   backroundImage: {fileID: 0}
+  slotContainerType: 2
+  slotIndex: -1
   canvas: {fileID: 0}
   hoverHandler: {fileID: 0}
   dragHandler: {fileID: 0}

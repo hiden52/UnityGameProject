@@ -8,7 +8,7 @@ public class InventoryUIController : MonoBehaviour
     [SerializeField] private Transform slotPannel;
     [SerializeField] private InventoryData inventoryData;
 
-    private List<SlotUI> slots = new List<SlotUI>();
+    private List<ItemSlotUI> slots = new List<ItemSlotUI>();
     private void OnEnable()
     {
         // 초기화 되지 않았다면 초기화
@@ -36,7 +36,7 @@ public class InventoryUIController : MonoBehaviour
         {
             GameObject slotObj = Instantiate(slotPrefab, slotPannel);
             slotObj.name = $"Slot_{i}";
-            SlotUI slotUI = slotObj.GetComponent<SlotUI>();
+            ItemSlotUI slotUI = slotObj.GetComponent<ItemSlotUI>();
             slotUI.SetContainerType(SlotContainerType.Inventory);
             slotUI.SetSlotIndex(i);
             slotUI.SetSlot(null);

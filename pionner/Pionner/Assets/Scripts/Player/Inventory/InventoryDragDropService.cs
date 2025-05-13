@@ -15,7 +15,7 @@ public class InventoryDragDropService : MonoBehaviour
     private IQuickSlotActions quickSlotActions;
 
     private Item draggedItem = null;
-    private SlotUI sourceSlot = null;
+    private ItemSlotUI sourceSlot = null;
     private bool isDragging = false;
     private RectTransform draggedItemRectTransform;
 
@@ -51,7 +51,7 @@ public class InventoryDragDropService : MonoBehaviour
     }
 
 
-    public void StartDrag(SlotUI slot, PointerEventData eventData)
+    public void StartDrag(ItemSlotUI slot, PointerEventData eventData)
     {
         if (inventoryActions == null || quickSlotActions == null)
         {
@@ -138,13 +138,13 @@ public class InventoryDragDropService : MonoBehaviour
     // 해결해야함.
     private void HandleDrop(PointerEventData eventData)
     {
-        SlotUI targetSlot = null;
+        ItemSlotUI targetSlot = null;
         GameObject hitObject = null;
 
         if (eventData.pointerCurrentRaycast.isValid)
         {
             hitObject = eventData.pointerCurrentRaycast.gameObject;
-            targetSlot = hitObject.GetComponentInParent<SlotUI>();
+            targetSlot = hitObject.GetComponentInParent<ItemSlotUI>();
         }
 
         if (targetSlot != null && sourceSlot != null)
@@ -267,5 +267,5 @@ public class InventoryDragDropService : MonoBehaviour
 
     public bool IsDragging() => isDragging;
     public Item GetDraggedItem() => draggedItem;
-    public SlotUI GetSourceSlot() => sourceSlot;
+    public ItemSlotUI GetSourceSlot() => sourceSlot;
 }
