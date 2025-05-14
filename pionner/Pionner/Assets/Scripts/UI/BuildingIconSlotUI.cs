@@ -38,7 +38,6 @@ public class BuildingIconSlotUI : SlotUI, IPointerDownHandler
         if (buildingRecipeData == null) return;
         if(eventData.button == PointerEventData.InputButton.Left)
         {
-            Debug.Log(selectedColor);
             backroundImage.color = selectedColor;
         }
 

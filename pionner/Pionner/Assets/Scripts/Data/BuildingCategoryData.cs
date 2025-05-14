@@ -8,5 +8,5 @@ public class BuildingCategoryData : ScriptableObject
     public Sprite categoryIcon;
     [TextArea] public string categoryDescription;
 
-    public List<RecipeData> buildingConstructionRecipes;
+    public List<BuildingRecipeData> buildingConstructionRecipes;
 }

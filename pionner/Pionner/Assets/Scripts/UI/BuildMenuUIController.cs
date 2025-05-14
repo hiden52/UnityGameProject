@@ -17,15 +17,15 @@ public class BuildMenuUIController : MonoBehaviour
     public GameObject buildingButtonPrefab; // 건물 버튼 프리팹 (RecipeData를 표시)
 
     [Header("Buiding Info")]
-    public Text buildingInfoName;
-    public Image buildingInfoIcon;
-    public Text buildingInfoDescription;
-    public Transform buildingInfoRecipeTransfrom;
-    public GameObject buildingRecipePrefab;
+    public BuildingInfoUI buildingInfoUI;
+
+    private BuildingCategoryData currentlySelectedCategory;
+    private BuildingRecipeData currentlySelectedRecipe;
 
     private void Awake()
     {
-
+        currentlySelectedCategory = null;
+        currentlySelectedRecipe = null;
     }
     private void Start()
     {
@@ -102,16 +102,34 @@ public class BuildMenuUIController : MonoBehaviour
                 button.onClick.AddListener(() => SelectBuildingToConstruct(currentRecipe));
             }
         }
+        currentlySelectedCategory = categoryData;
+        currentlySelectedRecipe = null;
+        SelectBuildingToConstruct(categoryData.buildingConstructionRecipes[0]);
     }
 
     void SelectBuildingToConstruct(BuildingRecipeData constructionRecipe)
     {
-        // 선택된 건물의 상세 정보를 Building Info에 표시
-        // 
-        Debug.Log($"Selected building to construct: {constructionRecipe.buildingToConstruct.BuildingName}");
-        
-        // 건설 관련
+        if (currentlySelectedRecipe == null || currentlySelectedRecipe != constructionRecipe)
+        {
+            UpdateBuildingInfo(constructionRecipe);
+            currentlySelectedRecipe = constructionRecipe;
+        }
+        else
+        {
+            Debug.Log($"Start to Contruct {currentlySelectedRecipe.recipeName}.");
+            BuildManager.Instance.StartBuildMode(currentlySelectedRecipe);
+            currentlySelectedRecipe = null;
+
+        }
+
+        // 두 번째 클릭 시에 BuildMode
         // BuildManager.Instance.StartPlacementMode(constructionRecipe.buildingToConstruct, constructionRecipe);
+    }
+
+    private void UpdateBuildingInfo(BuildingRecipeData constructionRecipe)
+    {
+        Debug.Log("Update Building Recipe");
+        buildingInfoUI.SetBuildingInfo(constructionRecipe);
     }
 
 

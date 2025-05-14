@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,6 +20,7 @@ public class BuildManager : Singleton<BuildManager>
     private int _obstacleLayerMask;
     private readonly int _isEnabledPropertyID = Shader.PropertyToID("_IsEnabled");
 
+    public event Action OnStartBuildMode;
 
 
     private void Start()
@@ -31,20 +33,35 @@ public class BuildManager : Singleton<BuildManager>
         _obstacleLayerMask = ~_layerMask;
 
     }
-    public void StartBuildMode()
+    public void StartBuildMode(BuildingRecipeData target)
     {
+        OnStartBuildMode?.Invoke();
         isBuildMode = true;
+        targetBuildingRecipe = target;
     }
     public void StopBuildMode()
     {
         isBuildMode = false;
+        targetBuildingRecipe = null;
+        DestoryGhost();
     }
     private void Update()
     {
-        if (isBuildMode) DrawGhost();
+        if (!isBuildMode) return;
+
+        DrawGhost();
+        if(Input.GetMouseButtonDown(0))
+        {
+            PlaceBuilding();
+        }
+        
     }
     private void DrawGhost()
     {
+        if(targetBuildingRecipe == null)
+        {
+            Debug.LogError($"[BuildManager] Target Building Recipe is null!", targetBuildingRecipe);
+        }
         ray = _camera.ScreenPointToRay(Input.mousePosition);
         if (!Physics.Raycast(ray, out RaycastHit hitInfo, buildDistance, _layerMask))
         {
@@ -52,8 +69,8 @@ public class BuildManager : Singleton<BuildManager>
             return;
         }
 
-        Debug.DrawRay(_camera.transform.position, _camera.transform.forward * buildDistance, Color.red);
-        CreateGhost();
+        //Debug.DrawRay(_camera.transform.position, _camera.transform.forward * buildDistance, Color.red);
+        CreateGhost(hitInfo.point);
         _buildingGhost.transform.position = hitInfo.point;
 
         _canBuild = CheckPlacementVaildity(hitInfo.point, _buildingGhost.transform.rotation);
@@ -99,28 +116,57 @@ public class BuildManager : Singleton<BuildManager>
 
     }
 
-    private void CreateGhost()
+    private void PlaceBuilding()
+    {
+        if (!_canBuild) return;
+
+        GameObject building = Instantiate(
+            targetBuildingRecipe.buildingToConstruct.prefab
+            , _buildingGhost.transform.position
+            , _buildingGhost.transform.rotation
+            );
+        StopBuildMode();        
+    }
+
+    private void DestoryGhost()
+    {
+        Destroy(_buildingGhost);
+        _buildingGhost = null;
+        _ghostRenderers = null;
+    }
+    private void CreateGhost(Vector3 initPoint)
     {
         if (_buildingGhost != null)
         {
             _buildingGhost.gameObject.SetActive(true);
             return;
         }
+        Quaternion targetRotation =_camera.transform.rotation;
+        targetRotation.x = 0;
+        targetRotation.z = 0;
+        targetRotation *= Quaternion.Euler(0, 180, 0);
+        
 
-        _buildingGhost = GameObject.Instantiate(targetBuildingRecipe.buildingToConstruct.prefab, transform);
+        _buildingGhost = GameObject.Instantiate(
+            targetBuildingRecipe.buildingToConstruct.prefab
+            , initPoint
+            , targetRotation
+            , transform
+            );
         _buildingGhost.name = $"{targetBuildingRecipe.buildingToConstruct.BuildingName}_Ghost";
-        Collider collider = _buildingGhost.GetComponent<Collider>();
-        if (collider != null)
+        Collider[] colliders = _buildingGhost.GetComponents<Collider>();
+        if (colliders.Length >= 0)
         {
-            collider.enabled = false;
+            foreach (Collider col in colliders)
+            {
+                col.enabled = false;
+            }
         }
 
         _ghostRenderers = GetComponentsInChildren<Renderer>();
         SetGhostMaterial();
-
-
-
     }
+
     private void SetGhostMaterial()
     {
         if (_ghostRenderers != null && ghostMaterial != null)

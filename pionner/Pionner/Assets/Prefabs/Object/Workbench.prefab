@@ -12,7 +12,8 @@ GameObject:
   - component: {fileID: 9012830677334553404}
   - component: {fileID: 6553008995678029814}
   - component: {fileID: 5315294928531956519}
-  m_Layer: 0
+  - component: {fileID: 6802592552991811736}
+  m_Layer: 8
   m_Name: Workbench
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -105,3 +106,17 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.6826614, y: 1.7386565, z: 0.8775629}
   m_Center: {x: 0, y: 0.8717766, z: 0.032813087}
+--- !u!114 &6802592552991811736
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4751309179195205155}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0eacba43525169a44abe19c28188a487, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: []
+  debug: 0

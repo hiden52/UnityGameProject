@@ -21,6 +21,7 @@ public class UIManager : Singleton<UIManager>
         InitUI();
         PlayerInputManager.Instance.OnTabPressed += ToggleInventoryUI;
         PlayerInputManager.Instance.OnKeyBPressed += ToggleBuildMenuUI;
+        BuildManager.Instance.OnStartBuildMode += ToggleBuildMenuUI;
     }
     protected override void Awake()
     {
@@ -31,6 +32,7 @@ public class UIManager : Singleton<UIManager>
     {
         PlayerInputManager.Instance.OnTabPressed -= ToggleInventoryUI;
         PlayerInputManager.Instance.OnKeyBPressed -= ToggleBuildMenuUI;
+        BuildManager.Instance.OnStartBuildMode -= ToggleBuildMenuUI;
     }
         
     private void ToggleUI(GameObject targetUI)

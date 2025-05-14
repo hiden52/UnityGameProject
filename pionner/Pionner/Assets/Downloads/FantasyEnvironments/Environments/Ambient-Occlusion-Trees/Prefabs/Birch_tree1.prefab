@@ -12,7 +12,9 @@ GameObject:
   - component: {fileID: 33990256434022284}
   - component: {fileID: 23320235798237312}
   - component: {fileID: 136367590879483440}
-  m_Layer: 0
+  - component: {fileID: 7511455267508262834}
+  - component: {fileID: 3809489563120766573}
+  m_Layer: 10
   m_Name: Birch_tree1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -108,3 +110,46 @@ CapsuleCollider:
   m_Height: 13.553929
   m_Direction: 1
   m_Center: {x: 0.01, y: 5.69, z: 0.02}
+--- !u!95 &7511455267508262834
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1216688828669844}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: d897f8c30d65a834bbad85f4bfbdf258, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &3809489563120766573
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1216688828669844}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 849ef8f61eb1caa418aba5c25efa5682, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemData: {fileID: 11400000, guid: 070bf69ae0874e84cb34e7b26200008d, type: 2}
+  maxDurability: 5
+  currentDurability: 0
+  col: {fileID: 0}
+  requiredWeaponType: 1
+  damageMultiplierForCorrectTool: 1.25
+  hitEffectPrefab: {fileID: 0}
+  hitSound: {fileID: 0}
+  breakSound: {fileID: 0}
+  animator: {fileID: 0}

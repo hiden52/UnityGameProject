@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class OutlineManager : Singleton<OutlineManager>
 {
     [Header("Outline Settings")]
-    [SerializeField] private Color outlineColor = Color.white;
+    [SerializeField] private Color outlineColor = Color.black;
     [SerializeField] private float outlineWidth = 0.03f;
 
     [Tooltip("Custom/Outline 셰이더 할당 필요")]

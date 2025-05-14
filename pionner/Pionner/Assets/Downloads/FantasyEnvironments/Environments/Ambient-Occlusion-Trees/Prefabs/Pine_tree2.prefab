@@ -12,7 +12,9 @@ GameObject:
   - component: {fileID: 33356936782184882}
   - component: {fileID: 23052789588344098}
   - component: {fileID: 136908101548686026}
-  m_Layer: 0
+  - component: {fileID: -7157568603601393935}
+  - component: {fileID: 7471242430653499325}
+  m_Layer: 10
   m_Name: Pine_tree2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -108,3 +110,46 @@ CapsuleCollider:
   m_Height: 19.388876
   m_Direction: 1
   m_Center: {x: -0.01, y: 7.99, z: 0.01}
+--- !u!95 &-7157568603601393935
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1589722417147216}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: d897f8c30d65a834bbad85f4bfbdf258, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &7471242430653499325
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1589722417147216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 849ef8f61eb1caa418aba5c25efa5682, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemData: {fileID: 0}
+  maxDurability: 5
+  currentDurability: 0
+  col: {fileID: 0}
+  requiredWeaponType: 1
+  damageMultiplierForCorrectTool: 1.25
+  hitEffectPrefab: {fileID: 0}
+  hitSound: {fileID: 0}
+  breakSound: {fileID: 0}
+  animator: {fileID: 0}

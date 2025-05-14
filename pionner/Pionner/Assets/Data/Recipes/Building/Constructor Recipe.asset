@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4d7d1de1b250064b81bb4d8a89ad275, type: 3}
+  m_Name: Constructor Recipe
+  m_EditorClassIdentifier: 
+  recipeId: 2
+  recipeName: Constructor
+  description: The Constructor is a building used to automate the production of single-ingredient
+    parts.
+  recipeIcon: {fileID: 21300000, guid: 5a546954c4f1f62409b4467ee6bf801e, type: 3}
+  recipeType: 1
+  ingredients:
+  - itemData: {fileID: 11400000, guid: 84356b9b26451844ca516daa113ffdbb, type: 2}
+    amount: 1
+  - itemData: {fileID: 11400000, guid: 070bf69ae0874e84cb34e7b26200008d, type: 2}
+    amount: 10
+  buildingToConstruct: {fileID: 11400000, guid: 9b690d478403c9341a95b7bde18486e7, type: 2}

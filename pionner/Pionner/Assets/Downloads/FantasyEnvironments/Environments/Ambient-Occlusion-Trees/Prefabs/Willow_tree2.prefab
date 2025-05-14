@@ -12,7 +12,9 @@ GameObject:
   - component: {fileID: 33885435253112536}
   - component: {fileID: 23024790056582150}
   - component: {fileID: 136748734647386432}
-  m_Layer: 0
+  - component: {fileID: 6496507923587912563}
+  - component: {fileID: 5165846026686641907}
+  m_Layer: 10
   m_Name: Willow_tree2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -108,3 +110,46 @@ CapsuleCollider:
   m_Height: 7.71
   m_Direction: 1
   m_Center: {x: -0.05, y: 3, z: 0.01}
+--- !u!95 &6496507923587912563
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1658287458925124}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: d897f8c30d65a834bbad85f4bfbdf258, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &5165846026686641907
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1658287458925124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 849ef8f61eb1caa418aba5c25efa5682, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemData: {fileID: 0}
+  maxDurability: 5
+  currentDurability: 0
+  col: {fileID: 0}
+  requiredWeaponType: 1
+  damageMultiplierForCorrectTool: 1.25
+  hitEffectPrefab: {fileID: 0}
+  hitSound: {fileID: 0}
+  breakSound: {fileID: 0}
+  animator: {fileID: 0}

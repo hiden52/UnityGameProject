@@ -22,7 +22,7 @@ public class BuildingData : ScriptableObject
 
     [Header("Manufacturing (For Factory-type buildings)")]
     [Tooltip("List of recipes this factory building can process.")]
-    public List<RecipeData> availableRecipes; // 이 공장에서 사용할 수 있는 아이템 제작 레시피 목록 (RecipeType.ItemCrafting 이어야 함)
+    public List<ItemRecipeData> availableRecipes; // 이 공장에서 사용할 수 있는 아이템 제작 레시피 목록 (RecipeType.ItemCrafting 이어야 함)
 
     public bool canRotate = true; 
     public float placementCooldown = 0.5f;

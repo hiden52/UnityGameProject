@@ -474,7 +474,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 898353235771666353}
-  - component: {fileID: 2398314744364068660}
+  - component: {fileID: 4033850732910503540}
   - component: {fileID: 3250948697616519464}
   m_Layer: 8
   m_Name: RockObject
@@ -500,7 +500,7 @@ Transform:
   - {fileID: 2473158576669499060}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2398314744364068660
+--- !u!114 &4033850732910503540
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -509,20 +509,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 2342910854664394751}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 89eb29935397a9c4c9666f188dff9ff7, type: 3}
+  m_Script: {fileID: 11500000, guid: 0ab4cae63f88a974997fd6ddbed799f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   itemData: {fileID: 11400000, guid: 070bf69ae0874e84cb34e7b26200008d, type: 2}
   maxDurability: 5
   currentDurability: 0
   col: {fileID: 0}
-  rock: {fileID: 2732026109525708675}
-  debris: {fileID: 6767492119652751091}
   requiredWeaponType: 1
-  damageMultiplierForCorrectTool: 1.5
+  damageMultiplierForCorrectTool: 1.25
   hitEffectPrefab: {fileID: 0}
   hitSound: {fileID: 0}
   breakSound: {fileID: 0}
+  rock: {fileID: 2732026109525708675}
+  debris: {fileID: 6767492119652751091}
 --- !u!135 &3250948697616519464
 SphereCollider:
   m_ObjectHideFlags: 0

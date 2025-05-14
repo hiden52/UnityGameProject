@@ -17,5 +17,7 @@ MonoBehaviour:
   description: Can make basic items.
   recipeIcon: {fileID: 21300000, guid: 2a2ff97f7ea013e498970b1c6acda700, type: 3}
   recipeType: 1
-  ingredients: []
+  ingredients:
+  - itemData: {fileID: 11400000, guid: 070bf69ae0874e84cb34e7b26200008d, type: 2}
+    amount: 5
   buildingToConstruct: {fileID: 11400000, guid: e2eb0bdcc683f2642862d3bed9b99fa5, type: 2}

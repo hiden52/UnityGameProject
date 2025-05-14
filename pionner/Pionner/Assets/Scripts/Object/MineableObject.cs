@@ -7,9 +7,7 @@ public class MineableObject : DefaultObject, IDamageable, IInteractable
     [SerializeField] private CountableItemData itemData;
     [SerializeField] private float maxDurability = 5;
     [SerializeField] private float currentDurability;
-    [SerializeField] private Collider col;
-    [SerializeField] private GameObject rock;
-    [SerializeField] private GameObject debris;
+    [SerializeField] protected Collider col;
 
     [SerializeField] private WeaponType requiredWeaponType = WeaponType.Tool;
     [SerializeField] private float damageMultiplierForCorrectTool = 1.25f;
@@ -23,7 +21,7 @@ public class MineableObject : DefaultObject, IDamageable, IInteractable
 
     public bool IsDead => currentDurability <= 0;
 
-    private void Awake()
+    protected virtual void Awake()
     {
         col = GetComponent<Collider>();
         currentDurability = maxDurability;
@@ -34,10 +32,8 @@ public class MineableObject : DefaultObject, IDamageable, IInteractable
         }
     }
 
-    private void OnEnable()
+    protected virtual void OnEnable()
     {
-        if (debris != null) debris.SetActive(false);
-        if (rock != null) rock.SetActive(true);
         col.enabled = true;
         currentDurability = maxDurability;
     }
@@ -82,7 +78,7 @@ public class MineableObject : DefaultObject, IDamageable, IInteractable
         TakeDamage(damageInfo, transform.position);
     }
 
-    private void PlayHitEffect(Vector3 point)
+    protected virtual void PlayHitEffect(Vector3 point)
     {
         // Hit effect
         if (hitEffectPrefab != null)
@@ -98,18 +94,8 @@ public class MineableObject : DefaultObject, IDamageable, IInteractable
         }
     }
 
-    private void HarvestComplete()
+    protected virtual void HarvestComplete()
     {
-        col.enabled = false;
-        if (rock != null)
-        {
-            rock.SetActive(false);
-        }
-
-        if (debris != null)
-        {
-            debris.SetActive(true);
-        }
         if (audioSource != null && breakSound != null)
         {
             audioSource.PlayOneShot(breakSound);
@@ -121,18 +107,5 @@ public class MineableObject : DefaultObject, IDamageable, IInteractable
             int amount = Random.Range(1, 6);
             InventoryManager.Instance.AddItem(itemData, amount);
         }
-
-        StartCoroutine(CleanupAfterDelay(3f));
-    }
-    private IEnumerator CleanupAfterDelay(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-
-        if (debris != null)
-        {
-            debris.SetActive(false);
-        }
-
-        ObjectPool.Instance.ReturnObject(gameObject);
     }
 }

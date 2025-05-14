@@ -76,6 +76,7 @@ public class WeaponAttackHandler : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log(other.name);
         if (!isAttacking || currentWeapon == null) return;
         if (hitColliders.Contains(other)) return;
 
