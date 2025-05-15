@@ -1,50 +1,96 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class UIManager : Singleton<UIManager>
 {
-    [SerializeField] private GameObject InvenAndEquipmentUI;
+    [SerializeField] private GameObject inventoryUI;
+    [SerializeField] private GameObject equipmentUI;
     [SerializeField] private GameObject buildMenuUI;
+    [SerializeField] private GameObject craftUI;
 
     [SerializeField] private GameObject crosshairUI;
     [SerializeField] private GameObject statusUI;
     [SerializeField] private GameObject quickMenuUI;
     [SerializeField] private GameObject interactionUI;
 
+    private GameObject[] inven;
+    private GameObject[] craft;
+
     [Header("Debug")]
-    [SerializeField] private GameObject currentlyActivatedUI;
+    [SerializeField] private List<GameObject> currentlyActivatedUIs;
 
     private void Start()
     {
         InitUI();
-        PlayerInputManager.Instance.OnTabPressed += ToggleInventoryUI;
+        PlayerInputManager.Instance.OnTabPressed += ToggleInvens;
         PlayerInputManager.Instance.OnKeyBPressed += ToggleBuildMenuUI;
         BuildManager.Instance.OnStartBuildMode += ToggleBuildMenuUI;
     }
     protected override void Awake()
     {
         base.Awake();
-        currentlyActivatedUI = null;
+        currentlyActivatedUIs = new List<GameObject>();
+        currentlyActivatedUIs.Capacity = 2;
+        inven = new GameObject[2] { inventoryUI, equipmentUI };
+        craft = new GameObject[2] { inventoryUI, craftUI };
     }
     private void OnDisable()
     {
-        PlayerInputManager.Instance.OnTabPressed -= ToggleInventoryUI;
+        PlayerInputManager.Instance.OnTabPressed -= ToggleInvens;
         PlayerInputManager.Instance.OnKeyBPressed -= ToggleBuildMenuUI;
         BuildManager.Instance.OnStartBuildMode -= ToggleBuildMenuUI;
     }
         
     private void ToggleUI(GameObject targetUI)
     {
-        if ( currentlyActivatedUI != null )
+        if ( currentlyActivatedUIs.Count > 0 )
         {
-            currentlyActivatedUI.SetActive(false);
+            foreach (GameObject ui in currentlyActivatedUIs) ui.SetActive(false);
 
-            if (currentlyActivatedUI == targetUI )
+            if (currentlyActivatedUIs.Count == 1 && currentlyActivatedUIs[0] == targetUI)
             {
                 crosshairUI.SetActive(true);
-                currentlyActivatedUI = null;
+                currentlyActivatedUIs.Clear();
+                SetMouseState(1);
+                return;
+            }
+        }
+        else
+        {
+            crosshairUI.SetActive(false);
+            SetMouseState(0);
+        }
+        currentlyActivatedUIs.Clear();
+        ResetPlayerInputs();
+        targetUI.SetActive(true);
+        currentlyActivatedUIs.Add(targetUI);
+    }
+
+    private void ToggleUI(GameObject[] targetUIs)
+    {
+        if (currentlyActivatedUIs.Count > 0)
+        {
+            bool isSameUI = true;
+            foreach (var ui in currentlyActivatedUIs.Select((item, index) => (item, index)))
+            {
+                ui.item.SetActive(false);
+                Debug.Log(ui.item.name + " " + ui.index);
+                // 순서대로 넣었다는 가정이 있기에 가능
+                if (ui.item != targetUIs[ui.index])
+                {
+                    Debug.Log($"{ui.item.name}({ui.index}) is not {targetUIs[ui.index]}[{ui.index}]");
+                    isSameUI = false;
+                }
+            }
+            currentlyActivatedUIs.Clear();
+
+            if (isSameUI)
+            {
+                crosshairUI.SetActive(true);
                 SetMouseState(1);
                 return;
             }
@@ -55,15 +101,34 @@ public class UIManager : Singleton<UIManager>
             SetMouseState(0);
         }
 
-        ResetMouse();
-        targetUI.SetActive(true);
-        currentlyActivatedUI = targetUI;
+        currentlyActivatedUIs.Clear();
+        ResetPlayerInputs();
+        // 순서대로 넣음
+        foreach (var target in targetUIs)
+        {
+            target.SetActive(true);
+            currentlyActivatedUIs.Add(target);
+        }
+    }
+    private void ToggleInvens()
+    {
+        if (inventoryUI != null && equipmentUI != null)
+        {
+            ToggleUI(inven);
+        }
     }
     private void ToggleInventoryUI()
     {
-        if (InvenAndEquipmentUI != null)
+        if (inventoryUI != null)
         {
-            ToggleUI(InvenAndEquipmentUI);
+            ToggleUI(inventoryUI);
+        }
+    }
+    private void ToggleEquipmentUI()
+    {
+        if (equipmentUI != null)
+        {
+            ToggleUI(equipmentUI);
         }
     }
     private void ToggleBuildMenuUI()
@@ -76,7 +141,7 @@ public class UIManager : Singleton<UIManager>
 
     public bool IsAnyUIActivated()
     {
-        return currentlyActivatedUI != null;
+        return currentlyActivatedUIs.Count > 0;
     }
     public void  ActivateInteractionUI()
     {
@@ -112,7 +177,7 @@ public class UIManager : Singleton<UIManager>
                 break;
         }
     }
-    private void ResetMouse()
+    private void ResetPlayerInputs()
     {
         PlayerInputManager.Instance.ResetMouseDelta();
         PlayerInputManager.Instance.ResetMovementDelta();
@@ -130,7 +195,10 @@ public class UIManager : Singleton<UIManager>
         //quickMenuUI.SetActive(true);
         statusUI.SetActive(true);
         crosshairUI.SetActive(true);
-        InvenAndEquipmentUI.SetActive(false);
+        inventoryUI.SetActive(false);
+        equipmentUI.SetActive(false);
+        buildMenuUI.SetActive(false);
+        craftUI.SetActive(false);
         interactionUI.SetActive(false);
     }
 

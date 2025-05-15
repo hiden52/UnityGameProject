@@ -8,7 +8,12 @@ public class RecipeSlotUI : SlotUI, IPointerDownHandler
 {
     [SerializeField] private SlotUIHoverHandler hoverHandler;
     [SerializeField] private ItemData itemData;
-    [SerializeField] private int amount;
+
+    [Header("Amount UI")]
+    [SerializeField] private Slider slider;
+    [SerializeField] private int amountHaving;
+    [SerializeField] private int amountRequired;
+    
 
 
     protected override void Awake()
@@ -20,6 +25,7 @@ public class RecipeSlotUI : SlotUI, IPointerDownHandler
         {
             hoverHandler.Initialize(backroundImage);
         }
+        amountHaving = 3;
     }
 
     protected void SetQuantity(int n)
@@ -27,7 +33,16 @@ public class RecipeSlotUI : SlotUI, IPointerDownHandler
         quantity = n;
 
         text.SetActive(true);
-        text.GetComponent<Text>().text = n.ToString();
+        text.GetComponent<Text>().text = amountHaving + "/" + n.ToString();
+    }
+    private void SetSlider()
+    {
+        if(slider != null)
+        {
+            slider.enabled = true;
+            slider.value = Mathf.Clamp01((float)amountHaving / amountRequired);
+            
+        }
     }
 
     public void SetSlot(RecipeIngredient _recipeIngredient)
@@ -35,18 +50,12 @@ public class RecipeSlotUI : SlotUI, IPointerDownHandler
         if (_recipeIngredient.itemData != null)
         {
             itemData = _recipeIngredient.itemData;
-            amount = _recipeIngredient.amount;
+            amountRequired = _recipeIngredient.amount;
             icon.sprite = itemData.icon;
             SetAlpha(1f);
 
-            if (itemData is CountableItemData)
-            {
-                SetQuantity(amount);
-            }
-            else
-            {
-                text.SetActive(false);
-            }
+            SetQuantity(amountRequired);
+            SetSlider();
         }
         else
         {

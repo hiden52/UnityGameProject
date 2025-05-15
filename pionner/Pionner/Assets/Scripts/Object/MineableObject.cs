@@ -17,6 +17,10 @@ public class MineableObject : DefaultObject, IDamageable, IInteractable
     [SerializeField] private AudioClip hitSound;
     [SerializeField] private AudioClip breakSound;
 
+    [SerializeField] private Vector3 knockAngle;
+    [SerializeField] private AnimationCurve knockCurve;
+    [SerializeField] private float knockDuration = 1;
+
     private AudioSource audioSource;
 
     public bool IsDead => currentDurability <= 0;
@@ -92,6 +96,7 @@ public class MineableObject : DefaultObject, IDamageable, IInteractable
         {
             audioSource.PlayOneShot(hitSound);
         }
+        StartCoroutine(Animate());
     }
 
     protected virtual void HarvestComplete()
@@ -106,6 +111,19 @@ public class MineableObject : DefaultObject, IDamageable, IInteractable
         {
             int amount = Random.Range(1, 6);
             InventoryManager.Instance.AddItem(itemData, amount);
+        }
+        
+    }
+
+    private IEnumerator Animate() //Knock animation coroutine.
+    {
+        float t = 0;
+        while (t < knockDuration)
+        {
+            float v = knockCurve.Evaluate(t / knockDuration);
+            transform.localRotation = Quaternion.Lerp(Quaternion.identity, Quaternion.Euler(knockAngle), v);
+            t += Time.deltaTime;
+            yield return null;
         }
     }
 }
