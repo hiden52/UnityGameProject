@@ -31,16 +31,24 @@ public class BuildManager : Singleton<BuildManager>
         _canBuild = false;
         _layerMask = 1 << LayerMask.NameToLayer("Land");
         _obstacleLayerMask = ~_layerMask;
+        PlayerInputManager.Instance.OnEscapePressed += StopBuildMode;
 
+    }
+
+    private void OnDisable()
+    {
+        PlayerInputManager.Instance.OnEscapePressed -= StopBuildMode;
     }
     public void StartBuildMode(BuildingRecipeData target)
     {
+        PlayerInputManager.Instance.SetCanAttack(false);
         OnStartBuildMode?.Invoke();
         isBuildMode = true;
         targetBuildingRecipe = target;
     }
     public void StopBuildMode()
     {
+        PlayerInputManager.Instance.SetCanAttack(true);
         isBuildMode = false;
         targetBuildingRecipe = null;
         DestoryGhost();
@@ -125,6 +133,10 @@ public class BuildManager : Singleton<BuildManager>
             , _buildingGhost.transform.position
             , _buildingGhost.transform.rotation
             );
+        foreach( var item in targetBuildingRecipe.ingredients )
+        {
+            InventoryManager.Instance.ConsumeItem(item.itemData, item.amount);
+        }
         StopBuildMode();        
     }
 

@@ -4,7 +4,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using static UnityEditor.Progress;
 
 public enum SlotContainerType
 {
@@ -20,7 +19,6 @@ public class ItemSlotUI : SlotUI, IPointerDownHandler, IItemSlot
     private Item currentItem;
     [SerializeField] private Canvas canvas;
     [SerializeField] private SlotUIHoverHandler hoverHandler;
-    [SerializeField] private SlotUIDragHandler dragHandler;
     
 
     public SlotContainerType ContainerType => slotContainerType;
@@ -31,7 +29,6 @@ public class ItemSlotUI : SlotUI, IPointerDownHandler, IItemSlot
         canvas = GetComponentInParent<Canvas>();
 
         hoverHandler = GetComponent<SlotUIHoverHandler>();
-        dragHandler = GetComponent<SlotUIDragHandler>();
 
         if (hoverHandler != null)
         {

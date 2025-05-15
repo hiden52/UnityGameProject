@@ -12,6 +12,8 @@ public class BuildingInfoUI : MonoBehaviour
     [SerializeField] private Transform buildingRecipeParent;
     [SerializeField] private RecipeSlotUI[] recipeSlotUIs;
 
+    public RecipeSlotUI[] RecipeSlotUIs => recipeSlotUIs;
+
     private void Awake()
     {
         buildingName.text = null;

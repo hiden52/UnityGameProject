@@ -125,7 +125,7 @@ public class PlayerAnimationController : MonoBehaviour
         {
             if (weapon.EquipData is WeaponItemData weaponData)
             {
-                Debug.Log(weaponData.WeaponType);
+                //Debug.Log(weaponData.WeaponType);
                 switch (weaponData.WeaponType)
                 {
                     case WeaponType.Tool:

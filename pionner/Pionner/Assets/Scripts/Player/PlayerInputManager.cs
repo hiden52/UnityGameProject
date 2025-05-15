@@ -23,6 +23,8 @@ public class PlayerInputManager : Singleton<PlayerInputManager>
     public bool Shift { get { return shift; } }
     [SerializeField] bool mouseLB;
     [SerializeField] bool isJumping;
+    [SerializeField] private bool canAttack;
+    public bool CanAttack => canAttack;
 
     public bool IsJumping => isJumping;
     public event Action OnTabPressed;
@@ -30,12 +32,19 @@ public class PlayerInputManager : Singleton<PlayerInputManager>
     public event Action OnKeyFPressed;
     public event Action OnAttackPressed;
     public event Action OnKeyBPressed;
+    public event Action OnEscapePressed;
 
     void Start()
     {
         mouseSpeed = 1.0f;
         shift = false;
         mouseLB = false;
+        canAttack = true;
+    }
+
+    public void SetCanAttack(bool canAttack)
+    {
+        this.canAttack = canAttack;
     }
 
     void Update()
@@ -48,6 +57,11 @@ public class PlayerInputManager : Singleton<PlayerInputManager>
         if (Input.GetButtonDown("Build Menu"))
         {
             OnKeyBPressed?.Invoke();
+        }
+
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            OnEscapePressed?.Invoke();
         }
 
         // 인벤토리 UI가 활성화 되어 있을 때, 이동, 카메라회전, 캐릭터 상호작용 방지.
@@ -69,6 +83,7 @@ public class PlayerInputManager : Singleton<PlayerInputManager>
 
         if (Input.GetMouseButtonDown(0))
         {
+            if (canAttack == false) return;
             OnLeftMouseClick?.Invoke();
             OnAttackPressed?.Invoke();
         }

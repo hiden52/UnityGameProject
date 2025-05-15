@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using System.Security.Cryptography;
 
 public class RecipeSlotUI : SlotUI, IPointerDownHandler
 {
@@ -13,7 +14,9 @@ public class RecipeSlotUI : SlotUI, IPointerDownHandler
     [SerializeField] private Slider slider;
     [SerializeField] private int amountHaving;
     [SerializeField] private int amountRequired;
-    
+    public bool HasEnoughMaterials => amountHaving >= amountRequired;
+
+
 
 
     protected override void Awake()
@@ -25,22 +28,46 @@ public class RecipeSlotUI : SlotUI, IPointerDownHandler
         {
             hoverHandler.Initialize(backroundImage);
         }
-        amountHaving = 3;
+    }
+    private void Start()
+    {
+        UpdateSlotUI();
+    }
+    private void OnEnable()
+    {
+        UpdateSlotUI();
+    }
+    private void OnDisable()
+    {
     }
 
     protected void SetQuantity(int n)
     {
-        quantity = n;
-
+        amountRequired = n;
         text.SetActive(true);
-        text.GetComponent<Text>().text = amountHaving + "/" + n.ToString();
+        UpdateSlotUI();
+    }
+    private void UpdateSlotUI ()
+    {
+        if(!text.activeSelf) text.SetActive(true);
+        amountHaving = InventoryManager.Instance.GetTotalItemCount(itemData);
+        
+        text.GetComponent<Text>().text = amountHaving + "/" + amountRequired;
+        SetSlider();
     }
     private void SetSlider()
     {
         if(slider != null)
         {
             slider.enabled = true;
-            slider.value = Mathf.Clamp01((float)amountHaving / amountRequired);
+            if (amountRequired > 0)
+            {
+                slider.value = Mathf.Clamp01((float)amountHaving / amountRequired);
+            }
+            else
+            {
+                slider.value = 0;
+            }
             
         }
     }
@@ -65,7 +92,8 @@ public class RecipeSlotUI : SlotUI, IPointerDownHandler
 
     public void OnPointerDown(PointerEventData eventData)
     {
-
+        if (true) return;
+        // 아직 필요 없음
         if (eventData.button == PointerEventData.InputButton.Right)
         {
             Debug.Log($"{itemData.itemName} Right Button Click!");

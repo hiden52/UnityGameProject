@@ -28,6 +28,8 @@ public class UIManager : Singleton<UIManager>
         InitUI();
         PlayerInputManager.Instance.OnTabPressed += ToggleInvens;
         PlayerInputManager.Instance.OnKeyBPressed += ToggleBuildMenuUI;
+        PlayerInputManager.Instance.OnEscapePressed += CloseAllWidows;
+        PlayerInputManager.Instance.OnEscapePressed += ToggleExit;
         BuildManager.Instance.OnStartBuildMode += ToggleBuildMenuUI;
     }
     protected override void Awake()
@@ -42,9 +44,22 @@ public class UIManager : Singleton<UIManager>
     {
         PlayerInputManager.Instance.OnTabPressed -= ToggleInvens;
         PlayerInputManager.Instance.OnKeyBPressed -= ToggleBuildMenuUI;
+        PlayerInputManager.Instance.OnEscapePressed -= CloseAllWidows;
+        PlayerInputManager.Instance.OnEscapePressed -= ToggleExit;
         BuildManager.Instance.OnStartBuildMode -= ToggleBuildMenuUI;
     }
         
+    private void ToggleExit()
+    {
+        if (!IsAnyUIActivated() && PlayerInputManager.Instance.CanAttack)
+        {
+            return;
+            ResetPlayerInputs();
+            crosshairUI.SetActive(false);
+            SetMouseState(0);
+            quickMenuUI.SetActive(!quickMenuUI.activeSelf);
+        }
+    }
     private void ToggleUI(GameObject targetUI)
     {
         if ( currentlyActivatedUIs.Count > 0 )
@@ -109,6 +124,14 @@ public class UIManager : Singleton<UIManager>
             target.SetActive(true);
             currentlyActivatedUIs.Add(target);
         }
+    }
+    private void CloseAllWidows()
+    {
+        if (currentlyActivatedUIs.Count == 0) return;
+        foreach (GameObject ui in currentlyActivatedUIs) ui.SetActive(false);
+        currentlyActivatedUIs.Clear();
+        crosshairUI.SetActive(true);
+        SetMouseState(1);
     }
     private void ToggleInvens()
     {

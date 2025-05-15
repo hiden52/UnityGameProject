@@ -6,14 +6,14 @@ using UnityEngine.UI;
 
 public class SlotUIHoverHandler : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    [SerializeField] Image image;
+    [SerializeField] protected Image image;
     private static readonly Color DefaultColor = new Color(0.8490566f, 0.8490566f, 0.8490566f);
-
+    protected Color hoverColor;
 
     public void Initialize(Image img)
     {
         image = img;
-        
+        hoverColor = Color.yellow;
     }
 
     private void OnEnable()
@@ -24,9 +24,9 @@ public class SlotUIHoverHandler : MonoBehaviour, IPointerEnterHandler, IPointerE
         }
     }
 
-    public void OnPointerEnter(PointerEventData eventData)
+    public virtual void OnPointerEnter(PointerEventData eventData)
     {
-        image.color = Color.yellow;
+        image.color = hoverColor;
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -34,7 +34,7 @@ public class SlotUIHoverHandler : MonoBehaviour, IPointerEnterHandler, IPointerE
         ResetImage();
     }
 
-    public void ResetImage()
+    public virtual void ResetImage()
     {
         image.color = DefaultColor;
     }

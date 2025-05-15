@@ -18,14 +18,16 @@ public class BuildMenuUIController : MonoBehaviour
 
     [Header("Buiding Info")]
     public BuildingInfoUI buildingInfoUI;
+    [SerializeField]
+    private GameObject IngredientAlert;
 
     private BuildingCategoryData currentlySelectedCategory;
-    private BuildingRecipeData currentlySelectedRecipe;
+    //private BuildingRecipeData currentlySelectedRecipe;
 
     private void Awake()
     {
         currentlySelectedCategory = null;
-        currentlySelectedRecipe = null;
+        //currentlySelectedRecipe = null;
     }
     private void Start()
     {
@@ -88,39 +90,47 @@ public class BuildMenuUIController : MonoBehaviour
                 continue;
             }
 
-            GameObject buttonGO = Instantiate(buildingButtonPrefab, buildingListParent);
-            BuildingIconSlotUI buildingIconSlot = buttonGO.GetComponent<BuildingIconSlotUI>();
-            BuildingData buildingDataToShow = constructionRecipe.buildingToConstruct;
-            Debug.Log(buildingDataToShow.BuildingName);
-            buildingIconSlot.SetSlot(constructionRecipe);
-
-
-            Button button = buttonGO.GetComponent<Button>();
-            if (button != null)
+            GameObject buildingIcon = Instantiate(buildingButtonPrefab, buildingListParent);
+            BuildingIconSlotUI buildingIconSlot = buildingIcon.GetComponent<BuildingIconSlotUI>();
+            if (buildingIconSlot != null)
             {
-                BuildingRecipeData currentRecipe = constructionRecipe;
-                button.onClick.AddListener(() => SelectBuildingToConstruct(currentRecipe));
+                buildingIconSlot.SetSlot(constructionRecipe);
+                buildingIconSlot.OnIconClicked += SelectBuildingToConstruct;
+                buildingIconSlot.OnMouseHover += ShowBuildingInfo;
             }
+            
+            
         }
         currentlySelectedCategory = categoryData;
-        currentlySelectedRecipe = null;
-        SelectBuildingToConstruct(categoryData.buildingConstructionRecipes[0]);
+        //currentlySelectedRecipe = null;
+        ShowBuildingInfo(categoryData.buildingConstructionRecipes[0]);
     }
 
-    void SelectBuildingToConstruct(BuildingRecipeData constructionRecipe)
+    private void ShowBuildingInfo(BuildingRecipeData constructionRecipe)
     {
-        if (currentlySelectedRecipe == null || currentlySelectedRecipe != constructionRecipe)
+        if (constructionRecipe != null)
         {
             UpdateBuildingInfo(constructionRecipe);
-            currentlySelectedRecipe = constructionRecipe;
+            //currentlySelectedRecipe = constructionRecipe;
+        }
+    }
+    void SelectBuildingToConstruct(BuildingRecipeData constructionRecipe)
+    {
+        Debug.Log($"Start to Contruct {constructionRecipe.recipeName}.");
+        if (CanBuild())
+        {
+            BuildManager.Instance.StartBuildMode(constructionRecipe);
         }
         else
         {
-            Debug.Log($"Start to Contruct {currentlySelectedRecipe.recipeName}.");
-            BuildManager.Instance.StartBuildMode(currentlySelectedRecipe);
-            currentlySelectedRecipe = null;
-
+            if(IngredientAlert != null)
+            {
+                IngredientAlert.SetActive(true);
+            }
+            Debug.Log("Can't Build. Not enough ingridients");
         }
+        //currentlySelectedRecipe = null;
+
 
         // 두 번째 클릭 시에 BuildMode
         // BuildManager.Instance.StartPlacementMode(constructionRecipe.buildingToConstruct, constructionRecipe);
@@ -128,8 +138,19 @@ public class BuildMenuUIController : MonoBehaviour
 
     private void UpdateBuildingInfo(BuildingRecipeData constructionRecipe)
     {
-        Debug.Log("Update Building Recipe");
+        //Debug.Log("Update Building Recipe");
         buildingInfoUI.SetBuildingInfo(constructionRecipe);
+    }
+
+    private bool CanBuild()
+    {
+        foreach (var recipeSlotUI in buildingInfoUI.RecipeSlotUIs)
+        {
+            if (!recipeSlotUI.gameObject.activeSelf) return true;
+
+            if(!recipeSlotUI.HasEnoughMaterials) return false;
+        }
+        return true;
     }
 
 

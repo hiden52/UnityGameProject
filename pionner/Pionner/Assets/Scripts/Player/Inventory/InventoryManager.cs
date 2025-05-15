@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.Progress;
 
 // 05-02 :: ToDo - HandleInventorySlotUpdate 메서드 수정, 싱글턴 해제
 public class InventoryManager : Singleton<InventoryManager>, IInventoryActions //,ISlotUIController
@@ -18,6 +17,7 @@ public class InventoryManager : Singleton<InventoryManager>, IInventoryActions /
     public static event Action<List<Item>> OnInventoryChanged;  // Items 전체순회 - 성능하락
     public event Action<int, Item> OnSlotUpdated;               // 변경사항 있는 아이템만 업데이트 
     public event Action<Item> OnItemRemoved;
+    public event Action OnItemUpdated;
 
     [Header("Debug")]
     [SerializeField]
@@ -110,6 +110,7 @@ public class InventoryManager : Singleton<InventoryManager>, IInventoryActions /
             {
                 Items[emptySlotIndex] = newItem;
                 OnSlotUpdated?.Invoke(emptySlotIndex, newItem);
+                OnItemUpdated?.Invoke();
                 Debug.Log($"{itemData.itemName} 1개를 Slot_{emptySlotIndex}에 추가.");
             }
             else
@@ -167,6 +168,7 @@ public class InventoryManager : Singleton<InventoryManager>, IInventoryActions /
             if(amountToAdd <= 0)
             {
                 OnSlotUpdated(i, countableItem);
+                OnItemUpdated?.Invoke();
                 return;
             }
         }
@@ -214,6 +216,7 @@ public class InventoryManager : Singleton<InventoryManager>, IInventoryActions /
                     amountToAdd -= amountForNewStack;
                     //Debug.Log($"[InventoryManager] Add {itemData.itemName} ({amountForNewStack}) to Slot_{emptySlotIndex}");
                     OnSlotUpdated(emptySlotIndex, newItem);
+                    OnItemUpdated?.Invoke();
                 }
                 else
                 {
@@ -270,6 +273,77 @@ public class InventoryManager : Singleton<InventoryManager>, IInventoryActions /
         Items[idx] = null;
         OnSlotUpdated?.Invoke(idx, null);
         OnItemRemoved?.Invoke(removeItem);
+        OnItemUpdated?.Invoke();
+    }
+
+    public void ConsumeItem(ItemData itemData, int amountToConsume)
+    {
+        if (itemData == null || amountToConsume <= 0)
+        {
+            Debug.LogWarning($"[InventoryManager.ConsumeItem] Invalid itemData or amountToConsume. itemData: {itemData}, amount: {amountToConsume}");
+            return;
+        }
+
+        int amountRemainingToConsume = amountToConsume;
+
+
+        for (int i = 0; i < Items.Count; i++)
+        {
+            if (amountRemainingToConsume <= 0) break; // 소모할 양이 없으면 종료
+
+            Item currentItemInSlot = Items[i];
+
+            if (currentItemInSlot != null && currentItemInSlot.Data == itemData)
+            {
+                if (currentItemInSlot is CountableItem countableItem)
+                {
+                    if (countableItem.currentStack >= amountRemainingToConsume)
+                    {
+                        // 현재 슬롯의 아이템으로 모든 양을 소모 가능
+                        countableItem.Reduce(amountRemainingToConsume);
+                        
+                        amountRemainingToConsume = 0;
+
+                        if (countableItem.currentStack <= 0)
+                        {
+                            Items[i] = null; // 아이템 제거
+                            OnSlotUpdated?.Invoke(i, null);
+                            OnItemRemoved?.Invoke(countableItem); // OnItemRemoved 이벤트에 Item 객체 전달
+                        }
+                        else
+                        {
+                            OnSlotUpdated?.Invoke(i, countableItem);
+                        }
+                    }
+                    else
+                    {
+                        // 현재 슬롯의 아이템을 모두 소모하고도 부족함
+                        amountRemainingToConsume -= countableItem.currentStack;
+                        Items[i] = null; // 아이템 제거
+                        OnSlotUpdated?.Invoke(i, null);
+                        OnItemRemoved?.Invoke(countableItem);
+                    }
+                    OnItemUpdated?.Invoke(); // 인벤토리 변경 전체 알림 (필요시)
+                }
+                else
+                {
+                    // CountableItem이 아닌 일반 Item (1개만 있다고 가정)
+                    if (amountRemainingToConsume >= 1)
+                    {
+                        Items[i] = null; // 아이템 제거
+                        amountRemainingToConsume -= 1;
+                        OnSlotUpdated?.Invoke(i, null);
+                        OnItemRemoved?.Invoke(currentItemInSlot);
+                        OnItemUpdated?.Invoke();
+                    }
+                }
+            }
+        }
+
+        if (amountRemainingToConsume > 0)
+        {
+            Debug.LogWarning($"[InventoryManager.ConsumeItem] Not enough {itemData.itemName} to consume. {amountRemainingToConsume} amount left unconsumed.");
+        }
     }
 
 
@@ -286,6 +360,7 @@ public class InventoryManager : Singleton<InventoryManager>, IInventoryActions /
             inventoryData.items[index] = null;
             OnSlotUpdated?.Invoke(index, null);
             OnItemRemoved?.Invoke(removeItem);
+            OnItemUpdated?.Invoke();
         }
     }
 
@@ -303,6 +378,7 @@ public class InventoryManager : Singleton<InventoryManager>, IInventoryActions /
         }
 
         OnInventoryChanged?.Invoke(Items);
+        OnItemUpdated?.Invoke();
     }
 
     public Item GetItem(int index)
@@ -325,6 +401,27 @@ public class InventoryManager : Singleton<InventoryManager>, IInventoryActions /
         }
 
         return Items.Contains(item);
+    }
+
+    public int GetTotalItemCount(ItemData itemData)
+    {
+        int totalCount = 0;
+        foreach (Item item in Items)
+        {
+            if (item != null && item.Data == itemData)
+            {
+                if (item is CountableItem countableItem)
+                {
+                    totalCount += countableItem.currentStack;
+                }
+                else
+                {
+                    // Not CountableItem
+                    totalCount += 1;
+                }
+            }
+        }
+        return totalCount;
     }
     public List<Item> GetAllItems()
     {
