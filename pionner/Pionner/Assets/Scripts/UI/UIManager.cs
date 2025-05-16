@@ -161,6 +161,13 @@ public class UIManager : Singleton<UIManager>
             ToggleUI(buildMenuUI);
         }
     }
+    public void ToggleCraftUI()
+    {
+        if(craftUI != null)
+        {
+            ToggleUI(craft);
+        }
+    }
 
     public bool IsAnyUIActivated()
     {

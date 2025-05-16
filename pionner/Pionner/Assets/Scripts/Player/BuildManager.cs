@@ -135,7 +135,7 @@ public class BuildManager : Singleton<BuildManager>
             );
         foreach( var item in targetBuildingRecipe.ingredients )
         {
-            InventoryManager.Instance.ConsumeItem(item.itemData, item.amount);
+            InventoryManager.Instance.ConsumeItemByData(item.itemData, item.amount);
         }
         StopBuildMode();        
     }

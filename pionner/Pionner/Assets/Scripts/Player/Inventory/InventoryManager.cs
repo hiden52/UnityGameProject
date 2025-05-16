@@ -13,7 +13,7 @@ public class InventoryManager : Singleton<InventoryManager>, IInventoryActions /
     public List<Item> Items => inventoryData.items;
 
     // 2025-04-30   높은 결합도 해결해야함
-    //  --> 싱글턴 해제, (서비스로케이터 도입 검토 - (05.02)안써도 될 듯?)
+    //  --> 싱글턴 해제 ㄱㄱ
     public static event Action<List<Item>> OnInventoryChanged;  // Items 전체순회 - 성능하락
     public event Action<int, Item> OnSlotUpdated;               // 변경사항 있는 아이템만 업데이트 
     public event Action<Item> OnItemRemoved;
@@ -276,70 +276,69 @@ public class InventoryManager : Singleton<InventoryManager>, IInventoryActions /
         OnItemUpdated?.Invoke();
     }
 
-    public void ConsumeItem(ItemData itemData, int amountToConsume)
+    public void ConsumeItemByData(ItemData itemData, int amountToConsume)
     {
         if (itemData == null || amountToConsume <= 0)
         {
-            Debug.LogWarning($"[InventoryManager.ConsumeItem] Invalid itemData or amountToConsume. itemData: {itemData}, amount: {amountToConsume}");
+            Debug.LogWarning($"[InventoryManager.ConsumeItemByData] Invalid itemData or amountToConsume. itemData: {itemData}, amount: {amountToConsume}");
             return;
         }
 
         int amountRemainingToConsume = amountToConsume;
-
-
         for (int i = 0; i < Items.Count; i++)
         {
             if (amountRemainingToConsume <= 0) break; // 소모할 양이 없으면 종료
 
-            Item currentItemInSlot = Items[i];
+            Item currentItemInInven = Items[i];
 
-            if (currentItemInSlot != null && currentItemInSlot.Data == itemData)
+            if (currentItemInInven == null || currentItemInInven.Data != itemData)
             {
-                if (currentItemInSlot is CountableItem countableItem)
-                {
-                    if (countableItem.currentStack >= amountRemainingToConsume)
-                    {
-                        // 현재 슬롯의 아이템으로 모든 양을 소모 가능
-                        countableItem.Reduce(amountRemainingToConsume);
-                        
-                        amountRemainingToConsume = 0;
+                return;
+            }
 
-                        if (countableItem.currentStack <= 0)
-                        {
-                            Items[i] = null; // 아이템 제거
-                            OnSlotUpdated?.Invoke(i, null);
-                            OnItemRemoved?.Invoke(countableItem); // OnItemRemoved 이벤트에 Item 객체 전달
-                        }
-                        else
-                        {
-                            OnSlotUpdated?.Invoke(i, countableItem);
-                        }
+            if (currentItemInInven is CountableItem countableItem)
+            {
+                if (countableItem.currentStack >= amountRemainingToConsume)
+                {
+                    countableItem.Reduce(amountRemainingToConsume);
+                        
+                    amountRemainingToConsume = 0;
+
+                    if (countableItem.currentStack <= 0)
+                    {
+                        Items[i] = null; // 아이템 제거
+                        OnSlotUpdated?.Invoke(i, null);
+                        OnItemRemoved?.Invoke(countableItem); // OnItemRemoved 이벤트에 Item 객체 전달
                     }
                     else
                     {
-                        // 현재 슬롯의 아이템을 모두 소모하고도 부족함
-                        amountRemainingToConsume -= countableItem.currentStack;
-                        Items[i] = null; // 아이템 제거
-                        OnSlotUpdated?.Invoke(i, null);
-                        OnItemRemoved?.Invoke(countableItem);
+                        OnSlotUpdated?.Invoke(i, countableItem);
                     }
-                    OnItemUpdated?.Invoke(); // 인벤토리 변경 전체 알림 (필요시)
                 }
                 else
                 {
-                    // CountableItem이 아닌 일반 Item (1개만 있다고 가정)
-                    if (amountRemainingToConsume >= 1)
-                    {
-                        Items[i] = null; // 아이템 제거
-                        amountRemainingToConsume -= 1;
-                        OnSlotUpdated?.Invoke(i, null);
-                        OnItemRemoved?.Invoke(currentItemInSlot);
-                        OnItemUpdated?.Invoke();
-                    }
+                    amountRemainingToConsume -= countableItem.currentStack;
+                    Items[i] = null; // 아이템 제거
+                    OnSlotUpdated?.Invoke(i, null);
+                    OnItemRemoved?.Invoke(countableItem);
+                }
+                OnItemUpdated?.Invoke();
+            }
+            else
+            {
+                // CountableItem이 아닌 일반 Item (1개만 있다고 가정)
+                if (amountRemainingToConsume >= 1)
+                {
+                    Items[i] = null; // 아이템 제거
+                    amountRemainingToConsume -= 1;
+                    OnSlotUpdated?.Invoke(i, null);
+                    OnItemRemoved?.Invoke(currentItemInInven);
+                    OnItemUpdated?.Invoke();
                 }
             }
         }
 
+        // 이 상황이 발생하지 않도록 방지해야함
         if (amountRemainingToConsume > 0)
         {
             Debug.LogWarning($"[InventoryManager.ConsumeItem] Not enough {itemData.itemName} to consume. {amountRemainingToConsume} amount left unconsumed.");

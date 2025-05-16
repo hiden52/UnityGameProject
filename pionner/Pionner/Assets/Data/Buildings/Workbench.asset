@@ -17,7 +17,7 @@ MonoBehaviour:
   BuildingDescription: Can make basic items.
   icon: {fileID: 21300000, guid: 2a2ff97f7ea013e498970b1c6acda700, type: 3}
   prefab: {fileID: 4751309179195205155, guid: 2adf2fe00b9623f4abbfa12d09737ada, type: 3}
-  buildingType: 1
+  buildingType: 0
   size: {x: 1, y: 1, z: 1}
   availableRecipes:
   - {fileID: 11400000, guid: 17fdc0223e8f6c7438709a487c3d0e42, type: 2}

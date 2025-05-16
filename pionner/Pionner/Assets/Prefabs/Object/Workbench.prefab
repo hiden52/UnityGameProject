@@ -120,3 +120,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: []
   debug: 0
+  buildingData: {fileID: 11400000, guid: e2eb0bdcc683f2642862d3bed9b99fa5, type: 2}

@@ -8,6 +8,8 @@ public class BuildingObject : DefaultObject, IInteractable
     [SerializeField] private Building building;
     [SerializeField] private List<Animator> animator;
     [SerializeField] bool debug;
+    [SerializeField] private BuildingData buildingData;
+    
 
     private void Awake()
     {
@@ -25,7 +27,10 @@ public class BuildingObject : DefaultObject, IInteractable
     }
     public void Interact()
     {
-        // 건물 메뉴UI 오픈
+        if (buildingData != null && buildingData.buildingType == BuildingType.None)
+        {
+            UIManager.Instance.ToggleCraftUI();
+        }
     }
 
     private void Update()

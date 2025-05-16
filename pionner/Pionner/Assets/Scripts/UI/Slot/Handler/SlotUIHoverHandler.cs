@@ -10,7 +10,7 @@ public class SlotUIHoverHandler : MonoBehaviour, IPointerEnterHandler, IPointerE
     private static readonly Color DefaultColor = new Color(0.8490566f, 0.8490566f, 0.8490566f);
     protected Color hoverColor;
 
-    public void Initialize(Image img)
+    public virtual void Initialize(Image img)
     {
         image = img;
         hoverColor = Color.yellow;
