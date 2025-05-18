@@ -194,8 +194,17 @@ public class PlayerMovementController : MonoBehaviour
     }
     private void RotateTowardsMovementDirection()
     {
-        targetRotation = Quaternion.LookRotation(moveDirection);
-        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime);
+        targetRotation = Quaternion.LookRotation(forward);
+
+        float currentRotationSpeed = rotationSpeed;
+        if (GetComponent<WeaponAttackHandler>()?.CurrentWeapon != null &&
+            GetComponent<WeaponAttackHandler>().IsAttacking)
+        {
+            currentRotationSpeed *= 3.0f;
+        }
+
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation,
+            currentRotationSpeed * Time.deltaTime);
     }
     
     

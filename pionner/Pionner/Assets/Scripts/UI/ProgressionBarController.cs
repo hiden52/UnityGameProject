@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,8 +8,16 @@ public class ProgressionBarController : MonoBehaviour
 {
     [SerializeField] Image fillment;
     [SerializeField] Text progressionText;
+    [SerializeField] float craftTime;
     [SerializeField] float progress;
     [SerializeField] private bool canFill;
+    [SerializeField] private ItemRecipeData currentRecipe;
+
+    public event Action<bool> OnCanFillUpdated;
+    public event Action<ItemRecipeData> OnCraftingCompleted;
+    public float Progress => progress;
+    public bool CanFill => canFill;
+
 
     private void Awake()
     {
@@ -19,25 +28,54 @@ public class ProgressionBarController : MonoBehaviour
             fillment.fillAmount = progress;
         }
         SetPercentage(progress);
-    }
-    private void Update()
-    {
-        if (canFill)
-        {
-            StartCoroutine(StartFill(3f));
-        }
+        UpdateBar();
     }
     private IEnumerator StartFill(float time)
     {
         float delta = 0;
-        while (canFill && delta < time)
+        while (canFill)
         {
-            float t = delta / time;
-            progress = Mathf.Lerp(0f, 1f, t);
+            if (delta < time)
+            {
+                progress = Mathf.Lerp(0f, 1f, delta / time);
+                delta += Time.deltaTime;
+            }
+            else
+            {
+                progress = 1f;
+            }
             UpdateBar();
 
-            delta = Time.deltaTime;
+            if (progress >= 1f)
+            {
+                SetCanFill(false);
+                CompletePregress();
+            }
+
             yield return null;
+        }
+
+        EndProgress();
+    }
+    
+    public void SetCanFill(bool input)
+    {
+        if (canFill != input)
+        {
+            canFill = input;
+            OnCanFillUpdated?.Invoke(canFill);
+        }
+        else
+        {
+            canFill = input;
+        }
+
+    }
+    public void StartProgress()
+    {
+        if (canFill)
+        {
+            StartCoroutine(StartFill(craftTime));
         }
     }
 
@@ -49,8 +87,20 @@ public class ProgressionBarController : MonoBehaviour
     {
         if (progressionText != null)
         {
-            progressionText.text = progress + "%";
+            progressionText.text = Mathf.Round(progress * 100f) + "%";
         }
+    }
+    private void CompletePregress()
+    {
+        if (currentRecipe != null)
+        {
+            OnCraftingCompleted?.Invoke(currentRecipe);
+        }
+    }
+
+    private void EndProgress()
+    {
+        ResetProgression();
     }
 
     private void UpdateBar()
@@ -66,7 +116,6 @@ public class ProgressionBarController : MonoBehaviour
     public void ResetProgression()
     {
         progress = 0;
-        UpdateFillment();
-        UpdateText();
+        UpdateBar();
     }
 }

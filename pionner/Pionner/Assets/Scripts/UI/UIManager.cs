@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class UIManager : Singleton<UIManager>
@@ -14,7 +15,7 @@ public class UIManager : Singleton<UIManager>
 
     [SerializeField] private GameObject crosshairUI;
     [SerializeField] private GameObject statusUI;
-    [SerializeField] private GameObject quickMenuUI;
+    [SerializeField] private GameObject gameMenuUI;
     [SerializeField] private GameObject interactionUI;
 
     private GameObject[] inven;
@@ -53,11 +54,8 @@ public class UIManager : Singleton<UIManager>
     {
         if (!IsAnyUIActivated() && PlayerInputManager.Instance.CanAttack)
         {
-            return;
             ResetPlayerInputs();
-            crosshairUI.SetActive(false);
-            SetMouseState(0);
-            quickMenuUI.SetActive(!quickMenuUI.activeSelf);
+            gameMenuUI.GetComponent<GameMenuUI>().ToggleMenu();
         }
     }
     private void ToggleUI(GameObject targetUI)
@@ -161,11 +159,39 @@ public class UIManager : Singleton<UIManager>
             ToggleUI(buildMenuUI);
         }
     }
-    public void ToggleCraftUI()
+    public void ToggleCraftUI(BuildingType buildingType = BuildingType.None)
     {
         if(craftUI != null)
         {
             ToggleUI(craft);
+
+            ManualCraftSystem manualSystem = craftUI.GetComponent<ManualCraftSystem>();
+            AutomatedCraftSystem autoSystem = craftUI.GetComponent<AutomatedCraftSystem>();
+
+            // 수동/자동 UI 패널 참조
+            Transform recipeInfo = craftUI.transform.Find("Recipe Info");
+            Transform manualPanel = recipeInfo.transform.Find("ManualCraftPanel");
+            Transform autoPanel = recipeInfo.transform.Find("AutomatedCraftPanel");
+            Debug.Log(manualPanel, manualPanel);
+            Debug.Log(autoPanel, autoPanel);
+            if (buildingType == BuildingType.Factory)
+            {
+                // 자동화 UI 활성화
+                if (manualPanel) manualPanel.gameObject.SetActive(false);
+                if (autoPanel) autoPanel.gameObject.SetActive(true);
+
+                if (manualSystem) manualSystem.enabled = false;
+                if (autoSystem) autoSystem.enabled = true;
+            }
+            else
+            {
+                // 수동 제작 UI 활성화
+                if (manualPanel) manualPanel.gameObject.SetActive(true);
+                if (autoPanel) autoPanel.gameObject.SetActive(false);
+
+                if (manualSystem) manualSystem.enabled = true;
+                if (autoSystem) autoSystem.enabled = false;
+            }
         }
     }
 

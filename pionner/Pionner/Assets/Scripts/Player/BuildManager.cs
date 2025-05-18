@@ -10,6 +10,7 @@ public class BuildManager : Singleton<BuildManager>
     [SerializeField] private float buildDistance;
     [SerializeField] private LayerMask buildLayer;
     [SerializeField] private bool isBuildMode;
+    [SerializeField] private ItemRecipeForwarder recipeForwarder;
 
     private Camera _camera;
     private Ray ray;
@@ -133,6 +134,8 @@ public class BuildManager : Singleton<BuildManager>
             , _buildingGhost.transform.position
             , _buildingGhost.transform.rotation
             );
+
+        building.GetComponent<CraftBuildingAction>().SetForwarder(recipeForwarder);
         foreach( var item in targetBuildingRecipe.ingredients )
         {
             InventoryManager.Instance.ConsumeItemByData(item.itemData, item.amount);

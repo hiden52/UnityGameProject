@@ -36,9 +36,11 @@ public class RecipeSlotUI : SlotUI, IPointerDownHandler
     private void OnEnable()
     {
         UpdateSlotUI();
+        InventoryManager.Instance.OnItemUpdated += UpdateSlotUI;
     }
     private void OnDisable()
     {
+        InventoryManager.Instance.OnItemUpdated -= UpdateSlotUI;
     }
 
     protected void SetQuantity(int n)

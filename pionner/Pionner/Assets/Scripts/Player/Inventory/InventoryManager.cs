@@ -123,21 +123,7 @@ public class InventoryManager : Singleton<InventoryManager>, IInventoryActions /
             Debug.LogError($"인벤토리에 공간({AvailableSlotCount - GetCurrentItemCount()}개)이 있지만 빈 슬롯(null)을 찾지 못했습니다!");
         }
     }
-    /*
-    //private List<CountableItem> FindAllStackableItems(CountableItemData itemData)
-    //{
-    //    List<CountableItem> result = new List<CountableItem>();
-    //    foreach (Item item in Items)
-    //    {
-    //        if (item is CountableItem countable && countable.Data == itemData && countable.currentStack < itemData.maxStack)
-    //        {
-    //            result.Add(countable);
-    //        }
-    //    }
-    //    return result;
-    //}
-    // 위 코드를 아래 코드로 바꿀 예정.
-    */
+    
     private List<int> FindAllStackableItemIndexes(CountableItemData itemData)
     {
         List<int> result = new List<int>();
@@ -172,24 +158,7 @@ public class InventoryManager : Singleton<InventoryManager>, IInventoryActions /
                 return;
             }
         }
-        /*
-        foreach (CountableItem item in existingStacks)
-        {
-            int canAdd = itemData.maxStack - item.currentStack;
-            int added = Mathf.Min(amountToAdd, canAdd);
-            item.Add(added);
-            amountToAdd -= added;
-
-            if (amountToAdd <= 0)
-            {
-                OnInventoryChanged?.Invoke(Items);
-                // 05.02 :: FindAllStackableItemIndexes 사용해서 아래 이벤트 사용할 것임
-                //OnSlotUpdated?.Invoke()
-
-                return;
-            }
-        }
-        */
+       
 
         // new CountableItem stack
         while (amountToAdd > 0)
@@ -285,6 +254,7 @@ public class InventoryManager : Singleton<InventoryManager>, IInventoryActions /
         }
 
         int amountRemainingToConsume = amountToConsume;
+        Debug.Log(amountRemainingToConsume, this);
         for (int i = 0; i < Items.Count; i++)
         {
             if (amountRemainingToConsume <= 0) break; // 소모할 양이 없으면 종료
@@ -293,7 +263,7 @@ public class InventoryManager : Singleton<InventoryManager>, IInventoryActions /
 
             if (currentItemInInven == null || currentItemInInven.Data != itemData)
             {
-                return;
+                continue;
             }
 
             if (currentItemInInven is CountableItem countableItem)

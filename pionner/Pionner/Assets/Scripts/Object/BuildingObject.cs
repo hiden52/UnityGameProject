@@ -9,7 +9,10 @@ public class BuildingObject : DefaultObject, IInteractable
     [SerializeField] private List<Animator> animator;
     [SerializeField] bool debug;
     [SerializeField] private BuildingData buildingData;
-    
+    private IIBuildingActions buildingActions;
+
+    public BuildingData BuildingData => buildingData;
+
 
     private void Awake()
     {
@@ -24,12 +27,15 @@ public class BuildingObject : DefaultObject, IInteractable
         {
             building.SetAnimator(animator);
         }
+        buildingActions = GetComponent<IIBuildingActions>();
+
     }
     public void Interact()
     {
-        if (buildingData != null && buildingData.buildingType == BuildingType.None)
+        if (buildingData != null)
         {
-            UIManager.Instance.ToggleCraftUI();
+            UIManager.Instance.ToggleCraftUI(buildingData.buildingType);
+            buildingActions?.BuildingAction();
         }
     }
 
