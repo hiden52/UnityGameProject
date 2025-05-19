@@ -74,7 +74,12 @@ public class WeaponAttackHandler : MonoBehaviour
 
         currentWeapon.Attack();
 
-        if (animator != null)
+        var animController = GetComponent<PlayerAnimationController>();
+        if (animController != null)
+        {
+            animController.TriggerAttackAnimation(currentWeapon.GetWeaponType());
+        }
+        else if (animator != null)
         {
             if (currentWeapon.GetWeaponType() == WeaponType.Tool)
             {

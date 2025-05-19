@@ -84,6 +84,9 @@ public class PlayerInputManager : Singleton<PlayerInputManager>
         if (Input.GetMouseButtonDown(0))
         {
             if (canAttack == false) return;
+            WeaponAttackHandler attackHandler = FindObjectOfType<WeaponAttackHandler>();
+            if (attackHandler != null && attackHandler.IsAttacking) return;
+
             OnLeftMouseClick?.Invoke();
             OnAttackPressed?.Invoke();
         }

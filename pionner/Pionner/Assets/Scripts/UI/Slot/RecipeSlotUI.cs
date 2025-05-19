@@ -15,6 +15,7 @@ public class RecipeSlotUI : SlotUI, IPointerDownHandler
     [SerializeField] private int amountHaving;
     [SerializeField] private int amountRequired;
     public bool HasEnoughMaterials => amountHaving >= amountRequired;
+    public Sprite Icon => itemData.icon;
 
 
 

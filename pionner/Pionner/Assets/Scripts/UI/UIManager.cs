@@ -29,8 +29,7 @@ public class UIManager : Singleton<UIManager>
         InitUI();
         PlayerInputManager.Instance.OnTabPressed += ToggleInvens;
         PlayerInputManager.Instance.OnKeyBPressed += ToggleBuildMenuUI;
-        PlayerInputManager.Instance.OnEscapePressed += CloseAllWidows;
-        PlayerInputManager.Instance.OnEscapePressed += ToggleExit;
+        PlayerInputManager.Instance.OnEscapePressed += HandleEscapeKey;
         BuildManager.Instance.OnStartBuildMode += ToggleBuildMenuUI;
     }
     protected override void Awake()
@@ -45,19 +44,34 @@ public class UIManager : Singleton<UIManager>
     {
         PlayerInputManager.Instance.OnTabPressed -= ToggleInvens;
         PlayerInputManager.Instance.OnKeyBPressed -= ToggleBuildMenuUI;
-        PlayerInputManager.Instance.OnEscapePressed -= CloseAllWidows;
-        PlayerInputManager.Instance.OnEscapePressed -= ToggleExit;
+        PlayerInputManager.Instance.OnEscapePressed -= HandleEscapeKey;
         BuildManager.Instance.OnStartBuildMode -= ToggleBuildMenuUI;
     }
-        
-    private void ToggleExit()
+
+    private void HandleEscapeKey()
     {
-        if (!IsAnyUIActivated() && PlayerInputManager.Instance.CanAttack)
+        if (currentlyActivatedUIs.Count > 0 )
         {
-            ResetPlayerInputs();
-            gameMenuUI.GetComponent<GameMenuUI>().ToggleMenu();
+            if (currentlyActivatedUIs.Contains(gameMenuUI))
+            {
+                CloseAllWidows();
+                gameMenuUI.GetComponent<GameMenuUI>().ResumeGame();
+                return;
+            }
+            else
+            {
+                CloseAllWidows();
+                return;
+            }
         }
+
+        gameMenuUI.SetActive(true);
+        currentlyActivatedUIs.Add(gameMenuUI);
+        crosshairUI.SetActive(false);
+        SetMouseState(0);
+        gameMenuUI.GetComponent<GameMenuUI>().PauseGame();
     }
+
     private void ToggleUI(GameObject targetUI)
     {
         if ( currentlyActivatedUIs.Count > 0 )
@@ -168,7 +182,6 @@ public class UIManager : Singleton<UIManager>
             ManualCraftSystem manualSystem = craftUI.GetComponent<ManualCraftSystem>();
             AutomatedCraftSystem autoSystem = craftUI.GetComponent<AutomatedCraftSystem>();
 
-            // 수동/자동 UI 패널 참조
             Transform recipeInfo = craftUI.transform.Find("Recipe Info");
             Transform manualPanel = recipeInfo.transform.Find("ManualCraftPanel");
             Transform autoPanel = recipeInfo.transform.Find("AutomatedCraftPanel");
@@ -176,7 +189,6 @@ public class UIManager : Singleton<UIManager>
             Debug.Log(autoPanel, autoPanel);
             if (buildingType == BuildingType.Factory)
             {
-                // 자동화 UI 활성화
                 if (manualPanel) manualPanel.gameObject.SetActive(false);
                 if (autoPanel) autoPanel.gameObject.SetActive(true);
 
@@ -185,13 +197,21 @@ public class UIManager : Singleton<UIManager>
             }
             else
             {
-                // 수동 제작 UI 활성화
                 if (manualPanel) manualPanel.gameObject.SetActive(true);
                 if (autoPanel) autoPanel.gameObject.SetActive(false);
 
                 if (manualSystem) manualSystem.enabled = true;
                 if (autoSystem) autoSystem.enabled = false;
             }
+        }
+    }
+
+    public void CloseGameMenu()
+    {
+        if (currentlyActivatedUIs.Contains(gameMenuUI))
+        {
+            CloseAllWidows();
+            gameMenuUI.GetComponent<GameMenuUI>().ResumeGame();
         }
     }
 

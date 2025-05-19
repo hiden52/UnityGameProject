@@ -39,9 +39,6 @@ public class PlayerAnimationController : MonoBehaviour
 
     void Start()
     {
-        PlayerInputManager.Instance.OnLeftMouseClick += HandleAttack;
-
-        // 플레이어 상태 변경 이벤트 구독
         PlayerStateManager.Instance.OnStateChanged += HandleStateChanged;
 
         // init
@@ -151,6 +148,25 @@ public class PlayerAnimationController : MonoBehaviour
         {
             // 기본(맨손) 공격 - 현재 없음
             // playerAnimator.SetTrigger("Attack");
+        }
+    }
+
+    public void TriggerAttackAnimation(WeaponType weaponType)
+    {
+        switch (weaponType)
+        {
+            case WeaponType.Tool:
+                playerAnimator.SetTrigger("Tool Attack");
+                break;
+            case WeaponType.Sword:
+                playerAnimator.SetTrigger("Sword Attack");
+                break;
+            case WeaponType.Gun:
+                playerAnimator.SetTrigger("Gun Attack");
+                break;
+            default:
+                playerAnimator.SetTrigger("Attack");
+                break;
         }
     }
 }

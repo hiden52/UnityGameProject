@@ -210,6 +210,12 @@ public class BuildManager : Singleton<BuildManager>
 
         }
     }
+
+    public ItemRecipeForwarder GetRecipeForwarder()
+    {
+        if (recipeForwarder != null) return recipeForwarder;
+        else return null;
+    }
 }
 
 

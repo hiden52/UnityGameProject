@@ -8,5 +8,6 @@ public class EquipmentItemObject : ItemObject
     {
         EquipmentItemData equipData = itemData as EquipmentItemData;
         InventoryManager.Instance.AddItem(equipData);
+        AlertManager.Instance.ShowItemObtained(equipData);
     }
 }

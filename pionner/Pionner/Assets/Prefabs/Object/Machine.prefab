@@ -392,6 +392,7 @@ MonoBehaviour:
   - {fileID: 5013533891579546909}
   - {fileID: 3188494817731661309}
   debug: 0
+  buildingData: {fileID: 11400000, guid: 9b690d478403c9341a95b7bde18486e7, type: 2}
 --- !u!33 &3863121580168271740
 MeshFilter:
   m_ObjectHideFlags: 0

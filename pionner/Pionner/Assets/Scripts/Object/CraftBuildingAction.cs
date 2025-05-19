@@ -27,6 +27,10 @@ public class CraftBuildingAction : MonoBehaviour, IIBuildingActions
 
     public void BuildingAction()
     {
+        if(recipeForwarder == null)
+        {
+            recipeForwarder = BuildManager.Instance.GetRecipeForwarder();
+        }
         if (recipeForwarder != null && buildingData != null)
         {
             recipeForwarder.SetCurrentBuilding(buildingData);

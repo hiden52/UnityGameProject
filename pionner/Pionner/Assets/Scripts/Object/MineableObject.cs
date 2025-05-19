@@ -112,6 +112,7 @@ public class MineableObject : DefaultObject, IDamageable, IInteractable
             //int amount = Random.Range(1, 6);
             int amount = 100;
             InventoryManager.Instance.AddItem(itemData, amount);
+            AlertManager.Instance.ShowItemObtained(itemData, amount);
         }
         
     }

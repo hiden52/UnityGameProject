@@ -8,6 +8,8 @@ TagManager:
   - Quickslot UI
   - Inventory UI
   - Enemy
+  - OreNode
+  - SaveTarget
   layers:
   - Default
   - TransparentFX

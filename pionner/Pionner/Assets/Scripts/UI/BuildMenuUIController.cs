@@ -117,16 +117,23 @@ public class BuildMenuUIController : MonoBehaviour
     void SelectBuildingToConstruct(BuildingRecipeData constructionRecipe)
     {
         Debug.Log($"Start to Contruct {constructionRecipe.recipeName}.");
+        Sprite icon = null;
         if (CanBuild())
         {
             BuildManager.Instance.StartBuildMode(constructionRecipe);
         }
         else
         {
-            if(IngredientAlert != null)
+            foreach (RecipeSlotUI slot in buildingInfoUI.RecipeSlotUIs)
             {
-                IngredientAlert.SetActive(true);
+                if (!slot.gameObject.activeSelf) break;
+                if (!slot.HasEnoughMaterials)
+                {
+                    icon = slot.Icon;
+                    break;
+                }
             }
+            AlertManager.Instance.ShowIngredientAlert("재료가 부족합니다!", icon);
             Debug.Log("Can't Build. Not enough ingridients");
         }
         //currentlySelectedRecipe = null;

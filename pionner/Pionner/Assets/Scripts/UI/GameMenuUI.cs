@@ -30,52 +30,43 @@ public class GameMenuUI : MonoBehaviour
         // 초기 상태 설정
         if (menuPanel != null)
             menuPanel.SetActive(false);
-    }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            ToggleMenu();
-        }
-    }
-
-    public void ToggleMenu()
-    {
-        isMenuOpen = !isMenuOpen;
-
-        if (menuPanel != null)
-            menuPanel.SetActive(isMenuOpen);
-
-        Time.timeScale = isMenuOpen ? 0 : 1;
-
-        Cursor.visible = isMenuOpen;
-        Cursor.lockState = isMenuOpen ? CursorLockMode.None : CursorLockMode.Locked;
-    }
-
-    private void CloseMenu()
-    {
         isMenuOpen = false;
+    }
 
-        if (menuPanel != null)
-            menuPanel.SetActive(false);
+    public void PauseGame()
+    {
+        Time.timeScale = 0;
+        menuPanel.SetActive(true);
+    }
 
+    public void ResumeGame()
+    {
         Time.timeScale = 1;
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void SaveGame()
     {
-        SaveLoadManager.Instance.SaveGame();
+        if (SaveLoadManager.Instance != null)
+        {
+            SaveLoadManager.Instance.SaveGame();
+            CloseMenu();
+        }
     }
 
     private void LoadGame()
     {
-        SaveLoadManager.Instance.LoadGame();
-        CloseMenu();
+        if (SaveLoadManager.Instance != null)
+        {
+            SaveLoadManager.Instance.LoadGame();
+            CloseMenu();
+        }
     }
 
+    private void CloseMenu()
+    {
+        UIManager.Instance.CloseGameMenu();
+    }
     private void ExitGame()
     {
         //SaveLoadManager.Instance.SaveGame();

@@ -60,15 +60,18 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
     {
         SaveData saveData = new SaveData();
 
-        // 1. 플레이어 데이터 저장
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        GameObject player = GameObject.Find("Player");
         if (player != null)
         {
             saveData.playerPosition = new Vector3Data(player.transform.position);
             saveData.playerRotation = new Vector3Data(player.transform.eulerAngles);
+            Debug.Log("Saved Position " + player.name + " "+ saveData.playerPosition.ToVector3(), player);
+        }
+        else
+        {
+            Debug.LogError("Player 오브젝트를 찾을 수 없습니다!");
         }
 
-        // 2. 인벤토리 데이터 저장
         if (InventoryManager.Instance != null)
         {
             List<Item> items = InventoryManager.Instance.GetAllItems();
@@ -87,7 +90,6 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
             }
         }
 
-        // 3. 건물 데이터 저장
         BuildingObject[] buildings = FindObjectsOfType<BuildingObject>();
         foreach (BuildingObject building in buildings)
         {
@@ -100,7 +102,6 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
                     building.gameObject.activeSelf
                 );
 
-                // 공장 타입인 경우 생산 데이터 저장
                 if (building.BuildingData.buildingType == BuildingType.Factory)
                 {
                     //AutomatedCraftSystem craftSystem = building.GetComponent<AutomatedCraftSystem>();
@@ -115,11 +116,8 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
             }
         }
 
-        // 4. 게임 시간 저장
-        // (게임 내 시간 시스템이 있다면)
-        // saveData.gameTime = GameTimeManager.Instance.CurrentTime;
+        // saveData.gameTime = GameManager.Instance.CurrentTime;
 
-        // 5. 현재 날짜 시간
         saveData.saveDateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
         return saveData;
@@ -127,29 +125,38 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
 
     private void ApplySaveData(SaveData saveData)
     {
-        // 1. 기존 건물 제거 (또는 비활성화)
         BuildingObject[] existingBuildings = FindObjectsOfType<BuildingObject>();
         foreach (BuildingObject building in existingBuildings)
         {
             Destroy(building.gameObject);
         }
 
-        // 2. 플레이어 위치 복원
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        GameObject player = GameObject.Find("Player");
         if (player != null)
         {
+            Debug.Log($"로드 위치: {player.name} 현재 위치: {player.transform.position} → 로드 위치: {saveData.playerPosition.ToVector3()}", player);
+            
+            Vector3 loadPosition = saveData.playerPosition.ToVector3();
+            if (loadPosition.y < -10 || loadPosition.y > 100)
+            {
+                Debug.LogWarning("로드 위치가 비정상적입니다. 기본 위치로 설정합니다.");
+                loadPosition = new Vector3(0, 1, 0); // 안전한 기본 위치
+            }
+
             player.transform.position = saveData.playerPosition.ToVector3();
             player.transform.eulerAngles = saveData.playerRotation.ToVector3();
         }
+        else
+        {
+            Debug.LogError("Player 오브젝트를 찾을 수 없습니다!");
+        }
 
-        // 3. 인벤토리 복원
         if (InventoryManager.Instance != null)
         {
             InventoryManager.Instance.ClearInventory();
 
             foreach (InventoryItemData itemData in saveData.inventory)
             {
-                // 아이템 데이터 매니저로부터 ID로 ItemData 찾기
                 ItemData data = FindItemDataByID(itemData.itemID);
                 if (data != null)
                 {
@@ -158,10 +165,8 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
             }
         }
 
-        // 4. 건물 복원
         foreach (BuildingSaveData buildingData in saveData.buildings)
         {
-            // 건물 데이터 매니저로부터 ID로 BuildingData 찾기
             UnityEngine.Object prefab = FindBuildingPrefabByID(buildingData.buildingID);
             if (prefab != null)
             {
@@ -171,10 +176,8 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
                     Quaternion.Euler(buildingData.rotation.ToVector3())
                 ) as GameObject;
 
-                // 활성화 상태 설정
                 buildingObj.SetActive(buildingData.isActive);
 
-                // 공장 건물인 경우 생산 데이터 복원
                 if (buildingData.currentRecipeID >= 0)
                 {
                     //AutomatedCraftSystem craftSystem = buildingObj.GetComponent<AutomatedCraftSystem>();
@@ -191,9 +194,8 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
             }
         }
 
-        // 5. 게임 시간 복원
-        // (게임 내 시간 시스템이 있다면)
-        // GameTimeManager.Instance.SetTime(saveData.gameTime);
+
+        // GameManager.Instance.SetTime(saveData.gameTime);
     }
 
     private ItemData FindItemDataByID(int id)
@@ -228,30 +230,32 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
         return null;
     }
 
-    // ID로 RecipeData 찾기 (이것은 구현해야 합니다)
-    private ItemRecipeData FindRecipeByID(string id)
-    {
-        // 레시피 데이터 매니저로부터 ID로 레시피 찾기
-        // 예: return RecipeDatabase.Instance.GetRecipeByID(id);
-        return null; // 실제 구현 필요
-    }
 
     // UI 알림 표시 (이것은 구현해야 합니다)
     private void ShowSaveNotification()
     {
-        // 예: UIManager.Instance.ShowNotification("게임이 저장되었습니다.", 2f);
+        if(AlertManager.Instance != null)
+        {
+            AlertManager.Instance.ShowSaveAlert();
+        }
         Debug.Log("게임이 저장되었습니다."); // 임시 구현
     }
 
     private void ShowLoadNotification()
     {
-        // 예: UIManager.Instance.ShowNotification("게임이 로드되었습니다.", 2f);
+        if (AlertManager.Instance != null)
+        {
+            AlertManager.Instance.ShowLoadAlert();
+        }
         Debug.Log("게임이 로드되었습니다."); // 임시 구현
     }
 
     private void ShowErrorNotification(string message)
     {
-        // 예: UIManager.Instance.ShowErrorNotification(message, 3f);
+        if (AlertManager.Instance != null)
+        {
+            AlertManager.Instance.ShowErrorAlert(message);
+        }
         Debug.LogError(message); // 임시 구현
     }
 }

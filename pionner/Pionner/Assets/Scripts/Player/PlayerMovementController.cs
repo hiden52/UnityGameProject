@@ -194,7 +194,7 @@ public class PlayerMovementController : MonoBehaviour
     }
     private void RotateTowardsMovementDirection()
     {
-        targetRotation = Quaternion.LookRotation(forward);
+        targetRotation = Quaternion.LookRotation(moveDirection);
 
         float currentRotationSpeed = rotationSpeed;
         if (GetComponent<WeaponAttackHandler>()?.CurrentWeapon != null &&
